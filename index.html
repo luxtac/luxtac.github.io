@@ -664,16 +664,15 @@
 <script type="module">
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { STLLoader } from 'three/addons/loaders/STLLoader.js';
 
 const STEPS = [
   { title: 'Base wired chip', caption: 'The sensing head is a 21.8 x 23.8 mm region of a flexible PCB, wired to the Teensy readout.' },
-  { title: 'Put the mold casing on', caption: 'The mold casing is placed over the base. It has a square hole in the middle and slots for the dividers.' },
-  { title: 'Put in the wall grid', caption: 'Row and column walls slot into the casing, forming the gridded channels.' },
+  { title: 'Put the mold casing on', caption: 'The mold casing is placed over the base. It hugs the white silicone square edges, with cut-ins for the walls.' },
+  { title: 'Put in the wall grid', caption: 'Row and column walls nestle into the cut-ins in the casing, forming the gridded channels.' },
   { title: 'Pour the silicone grid', caption: 'White silicone (XP-565, 15:1) is poured in, degassed, and oven-cured about 20 minutes. The grid leaves white silicone pillars.' },
-  { title: 'Paint the colors', caption: 'A brush paints colored rows and columns between the channels, the vibrant grid under the film.' },
-  { title: 'Release the mold casing', caption: 'The mold casing and walls are released, leaving the white silicone grid.' },
-  { title: 'Seal it in black', caption: 'A thin black film is stretched over the white squares, following every recess and edge. It is clear where it touches the colors, so they poke through.' }
+  { title: 'Paint the colors', caption: 'The walls are lifted out first. Then a brush paints colored rows and columns between the channels, the vibrant grid under the film.' },
+  { title: 'Release the mold casing', caption: 'The mold casing is released, leaving the white silicone grid.' },
+  { title: 'Seal it in black', caption: 'A thin black film is stretched over the white squares, following every recess and edge. It covers all the white and a little of the lines, and stays 20% opaque over the rest of the colors, so they poke through.' }
 ];
 
 const stage = document.getElementById('fabStage');
@@ -700,13 +699,6 @@ scene.add(new THREE.AmbientLight(0xffffff, 0.75));
 const dir = new THREE.DirectionalLight(0xffffff, 1.4);
 dir.position.set(20, 32, 18);
 scene.add(dir);
-
-function parseSTL(b64) {
-  const bin = atob(b64);
-  const bytes = new Uint8Array(bin.length);
-  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
-  return new STLLoader().parse(bytes.buffer);
-}
 
 // PCB base: 21.8 x 23.8 mm flex PCB, copper orange. The flex tail is the same copper.
 const pcbMat = new THREE.MeshStandardMaterial({ color: 0xd98a4a, roughness: 0.6, metalness: 0.1 });
@@ -739,36 +731,48 @@ const ledGeo = new THREE.BoxGeometry(1.6, 0.4, 0.8);
 });
 scene.add(chipGroup);
 
-// Mold casing, built from scratch: a square frame with a square hole in the middle and
-// slots the dividers drop into. Outer 26 x 28, hole 22 x 24, 2 tall, sitting on the PCB.
+// Mold casing, built from scratch: a frame that hugs the white silicone square edges
+// (hole 17 x 18.5). Each bar is built from segments with cut-ins where the walls nestle.
 const moldMat = new THREE.MeshStandardMaterial({ color: 0xdfe8ee, roughness: 0.5, metalness: 0 });
 const mold = new THREE.Group();
-const moldBarFB = new THREE.BoxGeometry(26, 2, 2);
-const moldBarLR = new THREE.BoxGeometry(2, 2, 24);
-[[0, -13, moldBarFB], [0, 13, moldBarFB], [-12, 0, moldBarLR], [12, 0, moldBarLR]].forEach(([x, z, g]) => {
-  const b = new THREE.Mesh(g, moldMat);
-  b.position.set(x, 1.4, z);
-  mold.add(b);
-});
+function moldBarX(z, segs) {
+  segs.forEach(([a, b]) => {
+    const len = b - a;
+    const m = new THREE.Mesh(new THREE.BoxGeometry(len, 2, 2), moldMat);
+    m.position.set((a + b) / 2, 1.4, z);
+    mold.add(m);
+  });
+}
+function moldBarZ(x, segs) {
+  segs.forEach(([a, b]) => {
+    const len = b - a;
+    const m = new THREE.Mesh(new THREE.BoxGeometry(2, 2, len), moldMat);
+    m.position.set(x, 1.4, (a + b) / 2);
+    mold.add(m);
+  });
+}
+const fbSegs = [[-10.5, -4.97], [-3.87, -0.55], [0.55, 3.87], [4.97, 10.5]];
+const lrSegs = [[-9.25, -5.35], [-4.25, -0.55], [0.55, 4.25], [5.35, 9.25]];
+moldBarX(-10.25, fbSegs);
+moldBarX(10.25, fbSegs);
+moldBarZ(-9.5, lrSegs);
+moldBarZ(9.5, lrSegs);
 mold.position.y = 22;
 mold.visible = false;
 scene.add(mold);
 
-// Wall grid: real row_wall / col_wall STEPs. Opaque solid light blue so they never
-// flicker in and out while orbiting. Their ends slot into the mold frame bars.
+// Wall grid: opaque solid light blue so they never flicker while orbiting.
+// Slightly shorter than the full span so their ends nestle into the casing cut-ins.
 const wallMat = new THREE.MeshStandardMaterial({ color: 0x9ec8e8, roughness: 0.4, metalness: 0 });
-const rowGeo = parseSTL('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');
-const colGeo = parseSTL('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');
 const walls = new THREE.Group();
 [-4.8, 0, 4.8].forEach((z) => {
-  const w = new THREE.Mesh(rowGeo, wallMat);
-  w.rotation.y = Math.PI / 2;
-  w.position.set(0, 0.4, z);
+  const w = new THREE.Mesh(new THREE.BoxGeometry(18.6, 2, 1), wallMat);
+  w.position.set(0, 1.4, z);
   walls.add(w);
 });
 [-4.42, 0, 4.42].forEach((x) => {
-  const w = new THREE.Mesh(colGeo, wallMat);
-  w.position.set(x, 0.4, 0);
+  const w = new THREE.Mesh(new THREE.BoxGeometry(1, 2, 20.1), wallMat);
+  w.position.set(x, 1.4, 0);
   walls.add(w);
 });
 walls.position.y = 18;
@@ -815,31 +819,87 @@ scene.add(stream);
 // Colored lines. Pattern rule: no color next to or crossing itself. All lines of one
 // color are parallel, and a different color always sits between two lines of the same
 // color. Vertical lines use green, pink, blue only; horizontal lines use yellow,
-// purple, orange only.
-const LINES = [];
-function addLine(axis, pos, color, len, wid) {
-  const mat = new THREE.MeshStandardMaterial({ color, roughness: 0.5, metalness: 0, transparent: true, opacity: 0 });
-  let mesh;
-  if (axis === 'z') mesh = new THREE.Mesh(new THREE.BoxGeometry(wid, 1.6, len), mat);
-  else mesh = new THREE.Mesh(new THREE.BoxGeometry(len, 1.6, wid), mat);
-  mesh.position.set(axis === 'z' ? pos : 0, 1.2, axis === 'z' ? 0 : pos);
-  scene.add(mesh);
-  LINES.push({ axis, pos, color, mesh, mat });
-}
+// purple, orange only. Where a vertical and a horizontal line cross, both lines stop
+// and a small tile takes their place, a light mix of the two crossing colors.
 const GREEN = 0x30d158, PINK = 0xff2d78, BLUE = 0x0aa5ff;
 const YELLOW = 0xffd60a, PURPLE = 0xbf5af2, ORANGE = 0xff7a18;
-// Vertical lines, left to right: green, pink, blue, green, pink.
-addLine('z', -8.85, GREEN, 19.2, 0.82);
-addLine('z', -4.42, PINK, 19.2, 0.82);
-addLine('z', 0, BLUE, 19.2, 0.82);
-addLine('z', 4.42, GREEN, 19.2, 0.82);
-addLine('z', 8.85, PINK, 19.2, 0.82);
-// Horizontal lines, front to back: yellow, purple, orange, yellow, purple.
-addLine('x', -9.6, YELLOW, 18.5, 0.8);
-addLine('x', -4.8, PURPLE, 17.7, 0.8);
-addLine('x', 0, ORANGE, 17.7, 0.8);
-addLine('x', 4.8, YELLOW, 17.7, 0.8);
-addLine('x', 9.6, PURPLE, 18.5, 0.8);
+const vX = [-8.85, -4.42, 0, 4.42, 8.85];
+const vColor = [GREEN, PINK, BLUE, GREEN, PINK];
+const hZ = [-9.6, -4.8, 0, 4.8, 9.6];
+const hColor = [YELLOW, PURPLE, ORANGE, YELLOW, PURPLE];
+function mixColor(c1, c2) {
+  const r1 = (c1 >> 16) & 255, g1 = (c1 >> 8) & 255, b1 = c1 & 255;
+  const r2 = (c2 >> 16) & 255, g2 = (c2 >> 8) & 255, b2 = c2 & 255;
+  let r = Math.round((r1 + r2) / 2), g = Math.round((g1 + g2) / 2), b = Math.round((b1 + b2) / 2);
+  r = Math.round(r + (255 - r) * 0.3);
+  g = Math.round(g + (255 - g) * 0.3);
+  b = Math.round(b + (255 - b) * 0.3);
+  return (r << 16) | (g << 8) | b;
+}
+const LINES = [];
+const TILES = [];
+function lineMat(color) {
+  return new THREE.MeshStandardMaterial({ color, roughness: 0.5, metalness: 0, transparent: true, opacity: 0 });
+}
+// Vertical lines: run Z -9.6 to 9.6, split into segments between the horizontal crossings.
+vX.forEach((vx, vi) => {
+  const mat = lineMat(vColor[vi]);
+  const line = { axis: 'z', pos: vx, color: vColor[vi], mat, tileIdx: [] };
+  let start = -9.6;
+  hZ.forEach((cz) => {
+    if (cz - 0.4 > start + 0.01) {
+      const len = (cz - 0.4) - start;
+      const m = new THREE.Mesh(new THREE.BoxGeometry(0.82, 1.6, len), mat);
+      m.position.set(vx, 1.2, start + len / 2);
+      scene.add(m);
+    }
+    start = cz + 0.4;
+  });
+  if (9.6 > start + 0.01) {
+    const len = 9.6 - start;
+    const m = new THREE.Mesh(new THREE.BoxGeometry(0.82, 1.6, len), mat);
+    m.position.set(vx, 1.2, start + len / 2);
+    scene.add(m);
+  }
+  LINES.push(line);
+});
+// Horizontal lines: interior run X -8.85 to 8.85, perimeter run X -9.25 to 9.25.
+hZ.forEach((hz, hi) => {
+  const mat = lineMat(hColor[hi]);
+  const line = { axis: 'x', pos: hz, color: hColor[hi], mat, tileIdx: [] };
+  const x0 = (hi === 0 || hi === 4) ? -9.25 : -8.85;
+  const x1 = (hi === 0 || hi === 4) ? 9.25 : 8.85;
+  let start = x0;
+  vX.forEach((cx) => {
+    if (cx - 0.41 > start + 0.01) {
+      const len = (cx - 0.41) - start;
+      const m = new THREE.Mesh(new THREE.BoxGeometry(len, 1.6, 0.8), mat);
+      m.position.set(start + len / 2, 1.2, hz);
+      scene.add(m);
+    }
+    start = cx + 0.41;
+  });
+  if (x1 > start + 0.01) {
+    const len = x1 - start;
+    const m = new THREE.Mesh(new THREE.BoxGeometry(len, 1.6, 0.8), mat);
+    m.position.set(start + len / 2, 1.2, hz);
+    scene.add(m);
+  }
+  LINES.push(line);
+});
+// Crossing tiles: one per vertical/horizontal intersection, light mix of both colors.
+vX.forEach((vx, vi) => {
+  hZ.forEach((hz, hi) => {
+    const mat = lineMat(mixColor(vColor[vi], hColor[hi]));
+    const t = new THREE.Mesh(new THREE.BoxGeometry(0.82, 1.6, 0.8), mat);
+    t.position.set(vx, 1.2, hz);
+    scene.add(t);
+    const ti = TILES.length;
+    TILES.push({ mat, vLine: vi, hLine: 5 + hi });
+    LINES[vi].tileIdx.push(ti);
+    LINES[5 + hi].tileIdx.push(ti);
+  });
+});
 
 // Paint brush: wooden handle, metal ferrule, bristles whose tip color matches the line it paints.
 const brush = new THREE.Group();
@@ -866,8 +926,8 @@ brush.visible = false;
 scene.add(brush);
 
 // Black film: a draped sheet that follows the pillar tops, dips into every recess,
-// and wraps the side edges. 100% opaque over the white silicone, 10% opaque where
-// it touches the colored lines, so the colors poke through.
+// and wraps the side edges. 100% opaque over the white silicone and a little of each
+// line's edges; 20% opaque over the open middle of the colored lines, so they poke through.
 const filmW = 20, filmD = 21.5;
 const filmGeo = new THREE.PlaneGeometry(filmW, filmD, 40, 43);
 filmGeo.rotateX(-Math.PI / 2);
@@ -900,14 +960,15 @@ alphaCanvas.width = 400; alphaCanvas.height = 430;
   const ctx = alphaCanvas.getContext('2d');
   ctx.fillStyle = '#ffffff';
   ctx.fillRect(0, 0, 400, 430);
-  ctx.fillStyle = 'rgb(25,25,25)';
-  [-8.85, -4.42, 0, 4.42, 8.85].forEach((wx) => {
+  // 20% opaque over the open middle of each colored line (0.5 mm strip in the center).
+  ctx.fillStyle = 'rgb(51,51,51)';
+  vX.forEach((wx) => {
     const cx = (wx + 10) * 20;
-    ctx.fillRect(cx - 8, 0, 16, 430);
+    ctx.fillRect(cx - 5, 0, 10, 430);
   });
-  [-9.6, -4.8, 0, 4.8, 9.6].forEach((wz) => {
+  hZ.forEach((wz) => {
     const cy = (wz + 10.75) * 20;
-    ctx.fillRect(0, cy - 8, 400, 16);
+    ctx.fillRect(0, cy - 5, 400, 10);
   });
 }
 const filmMat = new THREE.MeshStandardMaterial({
@@ -919,13 +980,14 @@ film.position.y = 14;
 film.visible = false;
 scene.add(film);
 
-// Step targets: moldY, moldOn, wallY, wallOn, filmY, filmOp
+// Step targets: moldY, moldOn, wallY, wallOn, filmY, filmOp.
+// The walls are lifted out before painting (step 5), so the brush paints the open channels.
 const TARGETS = [
   { moldY: 22, moldOn: 0, wallY: 18, wallOn: 0, filmY: 14, filmOp: 0 },
   { moldY: 0.4, moldOn: 1, wallY: 18, wallOn: 0, filmY: 14, filmOp: 0 },
   { moldY: 0.4, moldOn: 1, wallY: 0, wallOn: 1, filmY: 14, filmOp: 0 },
   { moldY: 0.4, moldOn: 1, wallY: 0, wallOn: 1, filmY: 14, filmOp: 0 },
-  { moldY: 0.4, moldOn: 1, wallY: 0, wallOn: 1, filmY: 14, filmOp: 0 },
+  { moldY: 0.4, moldOn: 1, wallY: 18, wallOn: 0, filmY: 14, filmOp: 0 },
   { moldY: 22, moldOn: 0, wallY: 18, wallOn: 0, filmY: 14, filmOp: 0 },
   { moldY: 22, moldOn: 0, wallY: 18, wallOn: 0, filmY: 0, filmOp: 1 }
 ];
@@ -999,6 +1061,13 @@ function animate() {
 
   // Paint step: each line appears individually on the brush's first pass for that
   // color. The brush tip matches the line it paints, looping until the user moves on.
+  // A crossing tile appears when either of the two lines crossing there is painted.
+  function setPaint(paintedCount) {
+    LINES.forEach((Ln, i) => { Ln.mat.opacity = i < paintedCount ? 1 : 0; });
+    TILES.forEach((Tl) => {
+      Tl.mat.opacity = (Tl.vLine < paintedCount || Tl.hLine < paintedCount) ? 1 : 0;
+    });
+  }
   if (current === 4) {
     if (lastStep !== 4) paintClock = 0;
     paintClock += dt;
@@ -1012,13 +1081,11 @@ function animate() {
     if (L.axis === 'z') brush.position.set(L.pos, 4.2, -9.5 + frac * 19);
     else brush.position.set(-9.5 + frac * 19, 4.2, L.pos);
     brush.visible = true;
-    LINES.forEach((Ln, i) => {
-      Ln.mat.opacity = paintClock >= (i + 1) * per ? 1 : 0;
-    });
+    const done = Math.min(LINES.length, Math.floor(paintClock / per));
+    setPaint(done);
   } else {
     brush.visible = false;
-    if (current > 4) LINES.forEach((Ln) => { Ln.mat.opacity = 1; });
-    else LINES.forEach((Ln) => { Ln.mat.opacity = 0; });
+    setPaint(current > 4 ? LINES.length : 0);
   }
   lastStep = current;
 
