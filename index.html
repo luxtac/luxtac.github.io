@@ -394,8 +394,11 @@
 
   /* rainbow corona: a tight, sharp, fully visible rainbow border around the
      visual only (never its caption text). No blur, no fading on the edges.
-     Hover zooms the visual 5% and the rainbow colors flow clockwise around it.
-     The box stays fixed, only the gradient angle turns. */
+     A bright white shine arc rides on the border and sweeps around it as the
+     colors flow. Behind the border, a tighter glow corona (blurred, bright,
+     constant) halos the visual. Hover zooms the visual 5% and the rainbow
+     colors flow clockwise around it at 4s per revolution. The box stays
+     fixed, only the gradient angle turns. */
   @property --corona-angle {
     syntax: '<angle>';
     inherits: false;
@@ -407,19 +410,36 @@
     position: absolute;
     inset: -3px;
     border-radius: 8px;
-    background: conic-gradient(from var(--corona-angle), #ff2d78, #ff7a18, #ffd60a, #30d158, #0aa5ff, #bf5af2, #ff2d78);
+    background:
+      conic-gradient(from var(--corona-angle), transparent 0deg, rgba(255,255,255,0.95) 25deg, transparent 60deg, transparent 360deg),
+      conic-gradient(from var(--corona-angle), #ff2d78, #ff7a18, #ffd60a, #30d158, #0aa5ff, #bf5af2, #ff2d78);
     filter: none;
     opacity: 1;
     z-index: -1;
     pointer-events: none;
-    animation: corona-spin 8s linear infinite;
+    animation: corona-spin 4s linear infinite;
+    animation-play-state: paused;
+  }
+  .corona::after {
+    content: "";
+    position: absolute;
+    inset: -6px;
+    border-radius: 11px;
+    background: conic-gradient(from var(--corona-angle), #ff2d78, #ff7a18, #ffd60a, #30d158, #0aa5ff, #bf5af2, #ff2d78);
+    filter: blur(13px);
+    opacity: 0.48;
+    z-index: -2;
+    pointer-events: none;
+    animation: corona-spin 4s linear infinite;
     animation-play-state: paused;
   }
   .corona:hover { scale: 1.05; }
   .corona:hover::before { animation-play-state: running; }
+  .corona:hover::after { animation-play-state: running; }
   @keyframes corona-spin { to { --corona-angle: 360deg; } }
   @media (prefers-reduced-motion: reduce) {
     .corona::before { animation: none; }
+    .corona::after { animation: none; }
     .corona:hover { scale: 1; }
   }
 
@@ -462,7 +482,7 @@
 
 <header class="hero">
   <div class="container">
-    <p class="eyebrow">Purdue MARS Lab &middot; 2026</p>
+    <p class="eyebrow">Very first tactile array with per taxel shear sensing</p>
     <h1><span>Lux</span>Tac</h1>
     <p class="tagline">A 4&times;4 optical taxel array. Each taxel is a light-to-digital converter that observes LED light back-scattered from a translucent white silicone layer capped by an opaque black film. Pressing thins the layer, so the reading falls with local indentation depth.</p>
     <div class="rainbow-bar"></div>
@@ -473,7 +493,7 @@
         </div>
       </div>
       <div class="hero-stats">
-        <div class="stat"><b>4 &times; 4</b><span>optical taxel array</span></div>
+        <div class="stat"><b>Scalable</b><span>4&times;4, 4&times;8, 8&times;8, 16&times;16, 26&times;8</span></div>
         <div class="stat"><b>R&sup2; = 0.999</b><span>linear to force</span></div>
         <div class="stat"><b>104 mN</b><span>detection threshold</span></div>
         <div class="stat"><b>63% vs 39%</b><span>average robot success, with vs without touch</span></div>
@@ -922,16 +942,18 @@ scene.add(moldB);
 
 // Wall grid: opaque solid light blue so they never flicker while orbiting.
 // Slightly shorter than the full span so their ends nestle into the casing slots.
+// The grid nestles ON TOP of the thin clear acrylic layer (y 0.6 to 2.0),
+// never inside it, so it cannot z-fight with the clear layer.
 const wallMat = new THREE.MeshStandardMaterial({ color: 0x9ec8e8, roughness: 0.4, metalness: 0 });
 const walls = new THREE.Group();
 [-4.8, 0, 4.8].forEach((z) => {
-  const w = new THREE.Mesh(new THREE.BoxGeometry(18.6, 2, 1), wallMat);
-  w.position.set(0, 1.0, z);
+  const w = new THREE.Mesh(new THREE.BoxGeometry(18.6, 1.4, 1), wallMat);
+  w.position.set(0, 1.3, z);
   walls.add(w);
 });
 [-4.42, 0, 4.42].forEach((x) => {
-  const w = new THREE.Mesh(new THREE.BoxGeometry(1, 2, 20.1), wallMat);
-  w.position.set(x, 1.0, 0);
+  const w = new THREE.Mesh(new THREE.BoxGeometry(1, 1.4, 20.1), wallMat);
+  w.position.set(x, 1.3, 0);
   walls.add(w);
 });
 walls.position.y = 18;
@@ -1343,7 +1365,7 @@ window.addEventListener('resize', () => {
   var NS = 'http://www.w3.org/2000/svg';
   var W = 600, H = 340;
   var GX0 = 60, GX1 = 460, PCB_Y = 250;
-  var LED_X = 110, DET_X = 410, DEV_Y = 263;
+  var LED_X = 200, DET_X = 320, DEV_Y = 263;
   var DEF = { force: 55, pos: 50, width: 35, rays: 8, glow: 80, gel: 100, walls: true };
   var S = { force: 55, pos: 50, width: 35, rays: 8, glow: 80, gel: 100, walls: true };
   function gelH(){ return 90 + (S.gel / 100) * 80; }
@@ -1351,9 +1373,15 @@ window.addEventListener('resize', () => {
   function pressX(){ return GX0 + (S.pos / 100) * (GX1 - GX0); }
   function sigma(){ return 30 + (S.width / 100) * 110; }
   function maxDent(){ return (S.force / 100) * gelH() * 0.55; }
+  // The indenter is a circle of radius sigma(). Its contacting edge is a
+  // half circle, and the dent follows that curve: the gel surface is the
+  // circle's lower arc where it dips below the flat roof, flat elsewhere.
   function dentAt(x){
-    var dx = (x - pressX()) / sigma();
-    return maxDent() * Math.exp(-dx * dx);
+    var R = sigma();
+    var D = maxDent();
+    var dx = x - pressX();
+    if (Math.abs(dx) > R) return 0;
+    return Math.max(0, D - R + Math.sqrt(Math.max(0, R * R - dx * dx)));
   }
   function roofY(x){ return gelTop() + dentAt(x); }
   function el(name, attrs){
@@ -1407,13 +1435,15 @@ window.addEventListener('resize', () => {
     svg.appendChild(text(DET_X + 14, DEV_Y + 4, 'TCS34725', { fill: '#0aa5ff', 'font-weight': 700 }));
     svg.appendChild(text(260, 306, 'flex PCB', { fill: '#a8a8ad', 'text-anchor': 'middle' }));
     if (deformed && S.force > 2){
-      var iw = sigma() * 2.2;
-      var ix = pressX() - iw / 2;
+      var R = sigma();
+      var D = maxDent();
+      var cx = pressX();
+      var cy = top + D - R;
       var iy = top - 52;
-      var ibot = roofY(pressX());
-      svg.appendChild(el('rect', { x: ix, y: iy, width: iw, height: Math.max(10, ibot - iy), fill: '#8a8a8e', stroke: '#5a5a5e', 'stroke-width': 1 }));
-      svg.appendChild(el('line', { x1: pressX(), y1: iy - 26, x2: pressX(), y2: iy - 4, stroke: '#ff2d78', 'stroke-width': 3, 'marker-end': 'url(#pdArr)' }));
-      svg.appendChild(text(pressX() + 10, iy - 14, 'force', { fill: '#ff2d78', 'font-weight': 700 }));
+      var ip = 'M' + (cx - R).toFixed(1) + ',' + iy + ' L' + (cx + R).toFixed(1) + ',' + iy + ' L' + (cx + R).toFixed(1) + ',' + cy.toFixed(1) + ' A' + R.toFixed(1) + ',' + R.toFixed(1) + ' 0 0 1 ' + (cx - R).toFixed(1) + ',' + cy.toFixed(1) + ' Z';
+      svg.appendChild(el('path', { d: ip, fill: '#8a8a8e', stroke: '#5a5a5e', 'stroke-width': 1 }));
+      svg.appendChild(el('line', { x1: cx, y1: iy - 26, x2: cx, y2: iy - 4, stroke: '#ff2d78', 'stroke-width': 3, 'marker-end': 'url(#pdArr)' }));
+      svg.appendChild(text(cx + 10, iy - 14, 'force', { fill: '#ff2d78', 'font-weight': 700 }));
     }
     // Colored sides: the left wall is painted red, the right wall green.
     // The roof is the opaque black film (the thick black stroke above).
@@ -1451,9 +1481,10 @@ window.addEventListener('resize', () => {
     }
     // A beam goes out white from the LED, bounces, and comes back to the
     // sensor in the color of what it bounced off of. The return is drawn
-    // with a gradient along its length: pure vibrant color right at the
-    // bounce point, fading a slight amount per pixel to a less vibrant
-    // version of that color by the time it reaches the sensor.
+    // with a strong gradient along its length: pure vibrant color, fully
+    // opaque, right at the bounce point, fading steadily to a pale, nearly
+    // transparent, desaturated version of that color by the time it
+    // reaches the sensor. The fade is meant to be plainly visible.
     function ray(bx, by, surf){
       var outLen = dist(LED_X, DEV_Y, bx, by);
       var retLen = dist(bx, by, DET_X, DEV_Y);
@@ -1479,11 +1510,15 @@ window.addEventListener('resize', () => {
       s0.setAttribute('offset', '0%');
       s0.setAttribute('stop-color', 'rgb(' + col[0] + ',' + col[1] + ',' + col[2] + ')');
       s0.setAttribute('stop-opacity', retOp.toFixed(3));
+      var sm = document.createElementNS(NS, 'stop');
+      sm.setAttribute('offset', '50%');
+      sm.setAttribute('stop-color', desat(col, 0.45));
+      sm.setAttribute('stop-opacity', (retOp * 0.55).toFixed(3));
       var s1 = document.createElementNS(NS, 'stop');
       s1.setAttribute('offset', '100%');
-      s1.setAttribute('stop-color', desat(col, 0.55));
-      s1.setAttribute('stop-opacity', (retOp * 0.6).toFixed(3));
-      g.appendChild(s0); g.appendChild(s1);
+      s1.setAttribute('stop-color', desat(col, 0.85));
+      s1.setAttribute('stop-opacity', (retOp * 0.2).toFixed(3));
+      g.appendChild(s0); g.appendChild(sm); g.appendChild(s1);
       defs.appendChild(g);
       svg.appendChild(el('path', { d: 'M' + bx.toFixed(1) + ',' + by.toFixed(1) + ' L' + DET_X + ',' + DEV_Y, stroke: 'url(#' + gid + ')', 'stroke-width': 2.2, fill: 'none', 'stroke-linecap': 'round' }));
     }
