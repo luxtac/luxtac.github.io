@@ -411,9 +411,9 @@
     <div class="rainbow-bar"></div>
     <figure class="reveal reveal-up">
       <div class="fig-card">
-        <img src="assets/exploded-layers.png" alt="Exploded view of the LuxTac stack">
+        <img src="assets/sensor-render.png" alt="Clean render of the LuxTac sensing head">
       </div>
-      <figcaption class="caption">LuxTac overview. The stack, peeled apart: black opaque film, white translucent silicone, soft acrylic layer, flexible PCB.</figcaption>
+      <figcaption class="caption">LuxTac overview. The sensing head with the colored taxel grid under the opaque black film.</figcaption>
     </figure>
     <div class="lead reveal reveal-up">
       <p>Dense, low-cost tactile arrays have made touch a practical input for robot learning, but the dominant piezoresistive designs report an electrical quantity that is only loosely tied to the physics of contact, which makes them hard to characterize, compare across units, or reproduce in simulation. We present LuxTac, a 4&times;4 optical taxel array in which each taxel is a light-to-digital converter that observes LED light back-scattered from a translucent white silicone layer capped by an opaque, light-absorbing black film. Pressing the surface thins the scattering layer, so the reading falls monotonically with local indentation depth rather than with force directly.</p>
@@ -518,7 +518,11 @@
     </div>
     <figure class="reveal reveal-up">
       <video class="wide-video" src="assets/animation.mp4" controls autoplay muted loop playsinline></video>
-      <figcaption class="caption">Exploded view and sensing principle. The stack peels apart to show the photodiodes and LEDs, then a press dims the light and the taxel grid lights up.</figcaption>
+      <figcaption class="caption">Sensing principle, mode one. The stack peels apart to show the photodiodes and LEDs, then a press dims the light and the taxel grid lights up.</figcaption>
+    </figure>
+    <figure class="reveal reveal-up">
+      <video class="wide-video" src="assets/shear-animation.mp4" controls autoplay muted loop playsinline></video>
+      <figcaption class="caption">Shear sensing, mode two. A single taxel under normal force, shear, and rotation, then a roller press with the taxel grid lighting up (8&times;4 board).</figcaption>
     </figure>
     <figure class="reveal reveal-up narrow">
       <div class="fig-card">
@@ -555,9 +559,10 @@
     </div>
     <div class="fab-steps">
       <div class="fab-step reveal reveal-up"><span class="num">1</span><h4>Laser-cut the molds</h4><p>Two acrylic molds, 2 mm and 0.5 mm thick, laser cut and secured with M2 screws to contain the silicone during casting.</p></div>
-      <div class="fab-step reveal reveal-up"><span class="num">2</span><h4>Cast the white silicone</h4><p>XP-565 at a 15:1 ratio by weight, pigmented with 0.04% white Silk Pig. Degassed, poured slowly to minimize air entrapment, then oven-cured about 20 minutes.</p></div>
-      <div class="fab-step reveal reveal-up"><span class="num">3</span><h4>Paint the color in</h4><p>Colored rows and columns between the channels, the vibrant grid under the film.</p></div>
-      <div class="fab-step reveal reveal-up"><span class="num">4</span><h4>Seal it in black</h4><p>Opaque top layer: Smooth-On Psycho Paint Part A, Part B, black Silk Pig, and NOVOCS silicone solvent in a 1:1:0.5:1 ratio by weight, 0.1 mm.</p></div>
+      <div class="fab-step reveal reveal-up"><span class="num">2</span><h4>Pour the soft acrylic layer</h4><p>A thin light blue soft acrylic layer is poured over the photodiodes and LEDs, just barely covering them, before the white silicone goes on.</p></div>
+      <div class="fab-step reveal reveal-up"><span class="num">3</span><h4>Cast the white silicone</h4><p>XP-565 at a 15:1 ratio by weight, pigmented with 0.04% white Silk Pig. Degassed, poured slowly to minimize air entrapment, then oven-cured about 20 minutes.</p></div>
+      <div class="fab-step reveal reveal-up"><span class="num">4</span><h4>Paint the color in</h4><p>Colored rows and columns between the channels, the vibrant grid under the film.</p></div>
+      <div class="fab-step reveal reveal-up"><span class="num">5</span><h4>Seal it in black</h4><p>Opaque top layer: Smooth-On Psycho Paint Part A, Part B, black Silk Pig, and NOVOCS silicone solvent in a 1:1:0.5:1 ratio by weight, 0.1 mm.</p></div>
     </div>
   </div>
 </section>
@@ -667,6 +672,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 const STEPS = [
   { title: 'Base wired chip', caption: 'The sensing head is a 21.8 x 23.8 mm region of a flexible PCB, wired to the Teensy readout.' },
+  { title: 'Pour the soft acrylic layer', caption: 'A thin light blue soft acrylic layer is poured over the photodiodes and LEDs, just barely covering them.' },
   { title: 'Put the mold casing on', caption: 'The mold casing is placed over the base. One solid ring hugging the white silicone square edges, with little slots for the walls.' },
   { title: 'Put in the wall grid', caption: 'Row and column walls nestle into the slots in the casing, forming the gridded channels.' },
   { title: 'Pour the silicone grid', caption: 'White silicone (XP-565, 15:1) is poured in, degassed, and oven-cured about 20 minutes. The grid leaves white silicone pillars.' },
@@ -729,6 +735,18 @@ const ledGeo = new THREE.BoxGeometry(1.6, 0.4, 0.8);
   });
 });
 scene.add(chipGroup);
+
+// Soft acrylic layer: one thin light blue blanket over the photodiodes and LEDs,
+// just barely covering them. NOT segmented, a single blanket in both versions.
+// Spans y 0.4 to 1.0, just above the photodiode tops (0.9).
+const acrylicMat = new THREE.MeshStandardMaterial({ color: 0x8ec8f0, roughness: 0.5, metalness: 0 });
+const acrylicGeo = new THREE.BoxGeometry(17.7, 0.6, 19.2);
+acrylicGeo.translate(0, 0.3, 0);
+const acrylic = new THREE.Mesh(acrylicGeo, acrylicMat);
+acrylic.position.y = 0.4;
+acrylic.scale.y = 0.001;
+acrylic.visible = false;
+scene.add(acrylic);
 
 // Mold casing: ONE solid connected ring, extruded from a single shape with a notched
 // hole. No segments, no gaps. The little slots are notches in the inner edge where the
@@ -1034,6 +1052,7 @@ scene.add(film);
 // The full mold casing and the walls are both out before painting (step 5).
 const TARGETS = [
   { moldY: 22, moldOn: 0, wallY: 18, wallOn: 0, filmY: 14, filmOp: 0 },
+  { moldY: 22, moldOn: 0, wallY: 18, wallOn: 0, filmY: 14, filmOp: 0 },
   { moldY: 0.4, moldOn: 1, wallY: 18, wallOn: 0, filmY: 14, filmOp: 0 },
   { moldY: 0.4, moldOn: 1, wallY: 0, wallOn: 1, filmY: 14, filmOp: 0 },
   { moldY: 0.4, moldOn: 1, wallY: 0, wallOn: 1, filmY: 14, filmOp: 0 },
@@ -1044,7 +1063,7 @@ let current = 0;
 let pourClock = 0;
 let paintClock = 0;
 let lastStep = -1;
-const state = { moldY: 22, moldOn: 0, wallY: 18, wallOn: 0, filmY: 14, filmOp: 0 };
+const state = { moldY: 22, moldOn: 0, wallY: 18, wallOn: 0, filmY: 14, filmOp: 0, acrylic: 0 };
 
 function showStep(i) {
   current = Math.max(0, Math.min(STEPS.length - 1, i));
@@ -1086,10 +1105,15 @@ function animate() {
   filmMat.opacity = state.filmOp * 0.95;
   film.visible = state.filmOp > 0.01;
 
+  const acrylicTarget = current >= 1 ? 1 : 0;
+  state.acrylic += (acrylicTarget - state.acrylic) * k;
+  acrylic.scale.y = Math.max(state.acrylic, 0.001);
+  acrylic.visible = state.acrylic > 0.01;
+
   // Pour step: the cup appears, tilts, and a thin stream falls while the pillars
   // fill to height over ~1.5 s. Then the cup and stream disappear.
-  if (current === 3) {
-    if (lastStep !== 3) pourClock = 0;
+  if (current === 4) {
+    if (lastStep !== 4) pourClock = 0;
     pourClock += dt;
     const fill = Math.max(0, Math.min(1, (pourClock - 0.3) / 1.5));
     pillarGroup.visible = fill > 0.01;
@@ -1102,7 +1126,7 @@ function animate() {
     streamMat.opacity = pourClock < 0.3 ? 0 : pourClock < 1.6 ? 0.9 : Math.max(0, 0.9 * (1 - (pourClock - 1.6) / 0.4));
     stream.visible = streamMat.opacity > 0.01;
   } else {
-    const full = current > 3;
+    const full = current > 4;
     pillarGroup.visible = full;
     pillarGroup.scale.y = full ? 1 : 0.001;
     cupGroup.visible = false;
@@ -1118,8 +1142,8 @@ function animate() {
       Tl.mat.opacity = (Tl.vLine < paintedCount || Tl.hLine < paintedCount) ? 1 : 0;
     });
   }
-  if (current === 4) {
-    if (lastStep !== 4) paintClock = 0;
+  if (current === 5) {
+    if (lastStep !== 5) paintClock = 0;
     paintClock += dt;
     const per = 0.35;
     const total = LINES.length * per;
@@ -1138,7 +1162,7 @@ function animate() {
     }
   } else {
     brush.visible = false;
-    setPaint(current > 4 ? LINES.length : 0);
+    setPaint(current > 5 ? LINES.length : 0);
   }
   lastStep = current;
 
