@@ -39,13 +39,6 @@
     font-weight: 900;
     letter-spacing: -0.5px;
   }
-  h2 + .sub {
-    text-align: center;
-    color: var(--muted);
-    margin: 0 0 36px;
-    font-size: 17px;
-  }
-  h3 { font-size: 24px; margin: 0 0 12px; font-weight: 700; }
   p { margin: 0 0 16px; }
   .rainbow-bar {
     height: 4px;
@@ -203,7 +196,7 @@
   /* principle */
   .principle-wrap {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 0.9fr 1.1fr;
     gap: 36px;
     align-items: center;
   }
@@ -396,22 +389,40 @@
         <p>When an object presses in, the absorbing black film moves closer to the detector, so less scattered light returns and the reading falls in proportion to depth. Baseline-normalized, each taxel directly reports indentation depth, and force follows from the measured stiffness.</p>
       </div>
       <div class="stack-diagram reveal reveal-right">
-        <svg viewBox="0 0 400 290" role="img" aria-label="LuxTac stack diagram">
-          <rect x="40" y="200" width="320" height="18" rx="4" fill="#2a2a2e"/>
-          <text x="200" y="232" fill="#a8a8ad" font-size="12" text-anchor="middle">flex PCB, TCS34725 + LEDs</text>
-          <rect x="40" y="120" width="320" height="80" rx="6" fill="#e8e4da" opacity="0.92"/>
-          <text x="200" y="164" fill="#555" font-size="13" text-anchor="middle">white scattering silicone (XP-565)</text>
-          <rect x="40" y="104" width="320" height="16" rx="4" fill="#111"/>
-          <text x="200" y="96" fill="#a8a8ad" font-size="12" text-anchor="middle">opaque black film</text>
-          <rect x="150" y="40" width="100" height="52" rx="6" fill="#3a3a3e" stroke="#555" stroke-width="1"/>
-          <text x="200" y="70" fill="#f2f2f2" font-size="12" text-anchor="middle">indenter</text>
-          <line x1="200" y1="92" x2="200" y2="104" stroke="#ff2d78" stroke-width="3"/>
-          <path d="M120 200 L 170 130" stroke="#ffd60a" stroke-width="2" stroke-dasharray="5 4" opacity="0.9"/>
-          <path d="M280 200 L 230 130" stroke="#0aa5ff" stroke-width="2" stroke-dasharray="5 4" opacity="0.9"/>
-          <path d="M170 130 L 200 200" stroke="#30d158" stroke-width="2" stroke-dasharray="5 4" opacity="0.9"/>
-          <text x="60" y="250" fill="#6e6e73" font-size="11">LED light scatters in the white silicone,</text>
-          <text x="60" y="264" fill="#6e6e73" font-size="11">part returns to the detector. Indentation</text>
-          <text x="60" y="278" fill="#6e6e73" font-size="11">brings the black film closer, less light returns.</text>
+                          <svg viewBox="0 0 560 360" role="img" aria-label="LuxTac stack diagram">
+          <defs>
+          <marker id="arrPink" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ff2d78"/></marker>
+          <marker id="arrYellow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ffd60a"/></marker>
+          <marker id="arrGreen" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#30d158"/></marker>
+          <marker id="arrBlue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0aa5ff"/></marker>
+          </defs>
+          
+          <!-- indentation arrow -->
+          <line x1="260" y1="46" x2="260" y2="96" stroke="#ff2d78" stroke-width="3" marker-end="url(#arrPink)"/>
+          <text x="274" y="74" fill="#a8a8ad" font-size="15" font-family="Noto Sans, sans-serif">indentation &#948;</text>
+          
+          <!-- silicone layer (drawn first so the film dip overlaps it) -->
+          <rect x="110" y="122" width="300" height="138" rx="6" fill="#e8e4da" opacity="0.92"/>
+          <text x="260" y="152" fill="#555555" font-size="15" text-anchor="middle" font-family="Noto Sans, sans-serif">white scattering silicone (XP-565)</text>
+          
+          <!-- light rays -->
+          <line x1="168" y1="260" x2="260" y2="200" stroke="#ffd60a" stroke-width="2.5" marker-end="url(#arrYellow)"/>
+          <line x1="260" y1="200" x2="200" y2="162" stroke="#0aa5ff" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#arrBlue)"/>
+          <line x1="260" y1="200" x2="320" y2="162" stroke="#0aa5ff" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#arrBlue)"/>
+          <line x1="260" y1="200" x2="338" y2="260" stroke="#30d158" stroke-width="2.5" stroke-dasharray="6 4" marker-end="url(#arrGreen)"/>
+          <circle cx="260" cy="200" r="5" fill="#ffffff" stroke="#ff7a18" stroke-width="2"/>
+          
+          <!-- black film, sagging in the middle to show indentation -->
+          <path d="M110,112 Q260,124 410,112 L410,122 Q260,134 110,122 Z" fill="#111111" stroke="#444444" stroke-width="1"/>
+          <text x="420" y="122" fill="#a8a8ad" font-size="14" font-family="Noto Sans, sans-serif">opaque black film</text>
+          
+          <!-- PCB -->
+          <rect x="110" y="260" width="300" height="26" rx="4" fill="#2a2a2e"/>
+          <rect x="160" y="266" width="16" height="14" rx="2" fill="#ffd60a"/>
+          <text x="150" y="277" fill="#ffd60a" font-size="13" font-weight="700" text-anchor="end" font-family="Noto Sans, sans-serif">LED</text>
+          <rect x="330" y="266" width="16" height="14" rx="2" fill="#0aa5ff"/>
+          <text x="356" y="277" fill="#0aa5ff" font-size="13" font-weight="700" font-family="Noto Sans, sans-serif">TCS34725</text>
+          <text x="260" y="308" fill="#a8a8ad" font-size="14" text-anchor="middle" font-family="Noto Sans, sans-serif">flex PCB</text>
         </svg>
       </div>
     </div>
