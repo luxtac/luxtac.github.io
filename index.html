@@ -391,9 +391,9 @@
   /* narrow figure for the cropped pcb render */
   figure.narrow { max-width: 760px; margin-left: auto; margin-right: auto; }
 
-  /* rainbow corona: a soft flickering rainbow glow around every visual.
+  /* rainbow corona: a steady bright rainbow glow around every visual.
      Hover zooms the visual 5% and the rainbow colors flow clockwise around it.
-     The box stays fixed, only the gradient angle turns. */
+     The box stays fixed, only the gradient angle turns. No fading in and out. */
   @property --corona-angle {
     syntax: '<angle>';
     inherits: false;
@@ -406,19 +406,15 @@
     inset: -7px;
     border-radius: 22px;
     background: conic-gradient(from var(--corona-angle), #ff2d78, #ff7a18, #ffd60a, #30d158, #0aa5ff, #bf5af2, #ff2d78);
-    filter: blur(10px);
-    opacity: 0.38;
+    filter: blur(13px);
+    opacity: 0.48;
     z-index: -1;
     pointer-events: none;
-    animation: corona-flicker 4.5s ease-in-out infinite, corona-spin 8s linear infinite;
-    animation-play-state: running, paused;
+    animation: corona-spin 8s linear infinite;
+    animation-play-state: paused;
   }
   .corona:hover { scale: 1.05; }
-  .corona:hover::before { animation-play-state: running, running; }
-  @keyframes corona-flicker {
-    0%, 100% { opacity: 0.30; filter: blur(9px); }
-    50% { opacity: 0.48; filter: blur(13px); }
-  }
+  .corona:hover::before { animation-play-state: running; }
   @keyframes corona-spin { to { --corona-angle: 360deg; } }
   @media (prefers-reduced-motion: reduce) {
     .corona::before { animation: none; }
