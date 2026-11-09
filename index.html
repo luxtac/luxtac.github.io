@@ -489,7 +489,7 @@
     <div class="hero-grid reveal reveal-up">
       <div class="corona">
         <div class="hero-photo">
-          <img src="assets/sensor-render.png" alt="Render of the LuxTac sensing head, the colored taxel grid under the black film, and the plain black film on top.">
+          <img src="assets/stack-4b4.jpg" alt="Render of the LuxTac sensing head, the stack peeled apart to show the black film, colored grid, clear soft acrylic layer, and flexible PCB.">
         </div>
       </div>
       <div class="hero-stats">
@@ -499,7 +499,7 @@
         <div class="stat"><b>63% vs 39%</b><span>average robot success, with vs without touch</span></div>
       </div>
     </div>
-    <p class="caption">Render of the LuxTac sensing head. The colored taxel grid under the black film, and the plain black film on top.</p>
+    <p class="caption">Render of the LuxTac sensing head. The stack, peeled apart: black opaque film, colored taxel grid, clear soft acrylic layer, flexible PCB.</p>
   </div>
 </header>
 
@@ -511,7 +511,7 @@
     <div class="rainbow-bar"></div>
     <figure class="reveal reveal-up">
       <div class="fig-card corona">
-        <img src="assets/exploded-layers.png" alt="Exploded view of the LuxTac stack">
+        <img src="assets/stack-4b4-shear.jpg" alt="Exploded view of the LuxTac stack, the black film peeled back to show the colored shear grid, clear soft acrylic layer, and flexible PCB">
       </div>
       <figcaption class="caption">LuxTac overview. The stack, peeled apart: black opaque film, white translucent silicone, soft acrylic layer, flexible PCB.</figcaption>
     </figure>
@@ -558,31 +558,18 @@
           <div class="corona"><svg id="panelB" viewBox="0 0 600 340" role="img" aria-label="Sensor segment under force"></svg></div>
         </div>
       </div>
-      <p class="principle-readout" id="pd-read">Peak indentation 1.00 mm &middot; about 3.3 N</p>
       <div class="principle-controls">
         <div>
-          <label><b>Indentation depth</b> &middot; <span id="force-val">55%</span></label>
-          <input type="range" id="force" data-k="force" min="0" max="100" value="55">
+          <label><b>Indentation depth</b> &middot; <span id="force-val">45%</span></label>
+          <input type="range" id="force" data-k="force" min="0" max="100" value="45">
         </div>
         <div>
-          <label><b>Press position</b> &middot; <span id="pos-val">50%</span></label>
-          <input type="range" id="pos" data-k="pos" min="0" max="100" value="50">
+          <label><b>Press position</b> &middot; <span id="pos-val">61%</span></label>
+          <input type="range" id="pos" data-k="pos" min="0" max="100" value="61">
         </div>
         <div>
-          <label><b>Indenter width</b> &middot; <span id="width-val">35%</span></label>
-          <input type="range" id="width" data-k="width" min="10" max="100" value="35">
-        </div>
-        <div>
-          <label><b>Light rays</b> &middot; <span id="rays-val">8</span></label>
-          <input type="range" id="rays" data-k="rays" min="3" max="12" step="1" value="8">
-        </div>
-        <div>
-          <label><b>Ray brightness</b> &middot; <span id="glow-val">80%</span></label>
-          <input type="range" id="glow" data-k="glow" min="20" max="100" value="80">
-        </div>
-        <div>
-          <label><b>Gel thickness</b> &middot; <span id="gel-val">100%</span></label>
-          <input type="range" id="gel" data-k="gel" min="40" max="100" value="100">
+          <label><b>Indenter width</b> &middot; <span id="width-val">43%</span></label>
+          <input type="range" id="width" data-k="width" min="10" max="100" value="43">
         </div>
         <div class="ctl-row">
           <input type="checkbox" id="walls" checked>
@@ -619,7 +606,7 @@
       <div class="reveal reveal-right">
         <figure>
           <div class="fig-card corona">
-            <img src="assets/pcb-render.png" alt="3D CAD render of the 4 by 4 sensing head, photodiodes and LEDs on the flexible PCB">
+            <img src="assets/pcb-4b4.jpg" alt="3D CAD render of the 4 by 4 sensing head, photodiodes and LEDs on the flexible PCB">
           </div>
           <figcaption class="caption">The 4&times;4 sensing head in 3D. Sixteen TCS34725 photodiodes and nine white LEDs on the flexible PCB.</figcaption>
         </figure>
@@ -646,6 +633,12 @@
         <span class="scale-chip">16&times;16</span>
         <span class="scale-chip">26&times;8</span>
       </div>
+      <figure style="margin-top: 20px;">
+        <div class="fig-card corona">
+          <img src="assets/pcb-4b8.jpg" alt="3D CAD render of the 8 by 4 sensing head, 32 photodiodes and 24 white LEDs on the flexible PCB">
+        </div>
+        <figcaption class="caption">The 8&times;4 board (32 taxels). The same stack and readout, scaled up: 32 TCS34725 photodiodes and 24 white LEDs.</figcaption>
+      </figure>
     </div>
   </div>
 </section>
@@ -849,15 +842,15 @@ pcbGroup.position.y = -20;
 pcbGroup.visible = false;
 scene.add(pcbGroup);
 
-// Soft acrylic layer: one blanket. It is the BASE the rest are molded on.
-// NOT segmented, a single blanket in both versions. Spans y 0 to 1.0.
-// Per the paper the white silicone is 2 mm (2 mm mold); the acrylic base is
-// 1.0 mm, half the silicone thickness, so it reads as a substantial base.
+// Soft acrylic layer: ONE solid rectangular cuboid, a plain box with depth.
+// It is the BASE the rest are molded on. NOT segmented, a single box.
+// Spans y 0.02 to 1.02 (1.0 thick). The bottom sits 0.02 above the PCB top
+// (y 0) so the two faces are never coplanar and cannot z-fight into a grid.
 const acrylicMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.15, metalness: 0, transparent: true, opacity: 0.3, depthWrite: false });
 const acrylicGeo = new THREE.BoxGeometry(17.7, 1.0, 19.2);
 acrylicGeo.translate(0, 0.5, 0);
 const acrylic = new THREE.Mesh(acrylicGeo, acrylicMat);
-acrylic.position.y = 0;
+acrylic.position.y = 0.02;
 acrylic.scale.y = 0.001;
 acrylic.visible = false;
 scene.add(acrylic);
@@ -1142,7 +1135,7 @@ filmGeo.rotateX(-Math.PI / 2);
     }
     for (const vx of vX) if (Math.abs(x - vx) <= 0.41 && Math.abs(z) <= 9.6) return 2.6;
     for (const hz of hZ) if (Math.abs(z - hz) <= 0.4 && Math.abs(x) <= 9.25) return 2.6;
-    return 0;
+    return 1.0;
   }
   const R = 0.2;
   for (let i = 0; i < pos.count; i++) {
@@ -1204,12 +1197,15 @@ const slotMat = new THREE.MeshStandardMaterial({ color: 0x3a3a3a, roughness: 0.6
 [[-10, -11], [10, -11], [-10, 11], [10, 11]].forEach(([sx, sz]) => {
   const shank = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.35, 0.5, 24), screwMat);
   shank.position.set(sx, -0.05, sz);
+  shank.renderOrder = 11;
   screwGroup.add(shank);
   const head = new THREE.Mesh(new THREE.CylinderGeometry(0.65, 0.65, 0.5, 24), screwMat);
   head.position.set(sx, 0.45, sz);
+  head.renderOrder = 11;
   screwGroup.add(head);
   const slot = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.08, 0.18), slotMat);
   slot.position.set(sx, 0.72, sz);
+  slot.renderOrder = 11;
   screwGroup.add(slot);
 });
 screwGroup.position.y = 18;
@@ -1375,8 +1371,8 @@ window.addEventListener('resize', () => {
   var W = 600, H = 340;
   var GX0 = 60, GX1 = 460, PCB_Y = 250;
   var LED_X = 200, DET_X = 320, DEV_Y = 263;
-  var DEF = { force: 55, pos: 50, width: 35, rays: 8, glow: 80, gel: 100, walls: true };
-  var S = { force: 55, pos: 50, width: 35, rays: 8, glow: 80, gel: 100, walls: true };
+  var DEF = { force: 45, pos: 61, width: 43, rays: 12, glow: 100, gel: 40, walls: true };
+  var S = { force: 45, pos: 61, width: 43, rays: 12, glow: 100, gel: 40, walls: true };
   function gelH(){ return 90 + (S.gel / 100) * 80; }
   function gelTop(){ return PCB_Y - gelH(); }
   function pressX(){ return GX0 + (S.pos / 100) * (GX1 - GX0); }
@@ -1498,21 +1494,21 @@ window.addEventListener('resize', () => {
     // opaque, right at the bounce point, fading steadily to a pale, nearly
     // transparent, desaturated version of that color by the time it
     // reaches the sensor. The fade is meant to be plainly visible.
+    // The fade is tied directly to the actual distance the light travels,
+    // with a fixed reference, never normalized by the fan. When deformation
+    // brings a bounce closer to the sensor, the return leg shortens and the
+    // beam that reaches the sensor is brighter. Far bounces stay dim.
     function ray(bx, by, surf){
       var outLen = dist(LED_X, DEV_Y, bx, by);
       var retLen = dist(bx, by, DET_X, DEV_Y);
-      var total = outLen + retLen;
-      var maxPath = dist(LED_X, DEV_Y, GX1, top) + dist(GX1, top, DET_X, DEV_Y);
-      var minPath = dist(LED_X, DEV_Y, GX0, top) + dist(GX0, top, DET_X, DEV_Y);
-      var f = Math.max(0, Math.min(1, (total - minPath) / Math.max(1, maxPath - minPath)));
       var glowF = S.glow / 100;
-      var outOp = (0.9 - 0.45 * f) * glowF;
+      var outOp = (0.95 - 0.5 * Math.min(1, outLen / 340)) * glowF;
       svg.appendChild(el('path', { d: 'M' + LED_X + ',' + DEV_Y + ' L' + bx.toFixed(1) + ',' + by.toFixed(1), stroke: '#ffffff', 'stroke-width': 2.2, opacity: outOp, fill: 'none', 'stroke-linecap': 'round' }));
       var col, base;
       if (surf === 'left'){ col = [255, 59, 48]; base = 0.95; }
       else if (surf === 'right'){ col = [48, 209, 88]; base = 0.95; }
       else { col = [0, 0, 0]; base = 0.95; }
-      var retOp = base * (1 - 0.5 * f) * glowF;
+      var retOp = base * (1 - 0.7 * Math.min(1, retLen / 340)) * glowF;
       var gid = 'pdg' + (gradN++);
       var g = document.createElementNS(NS, 'linearGradient');
       g.setAttribute('id', gid);
@@ -1549,9 +1545,6 @@ window.addEventListener('resize', () => {
   function render(){
     buildPanel(document.getElementById('panelA'), false);
     buildPanel(document.getElementById('panelB'), true);
-    var depthMm = (S.force / 100) * 1.81;
-    var forceN = (S.force / 100) * 6.0;
-    document.getElementById('pd-read').textContent = 'Peak indentation ' + depthMm.toFixed(2) + ' mm \u00b7 about ' + forceN.toFixed(1) + ' N';
   }
   document.querySelectorAll('.principle-controls input[type=range]').forEach(function(inp){
     inp.addEventListener('input', function(){
