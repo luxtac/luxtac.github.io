@@ -687,7 +687,7 @@ renderer.setClearColor(0x161618);
 stage.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(40, stage.clientWidth / stage.clientHeight, 0.1, 1000);
+const camera = new THREE.PerspectiveCamera(40, stage.clientWidth / stage.clientHeight, 1, 200);
 camera.position.set(38, 30, 44);
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.target.set(0, 1.5, 0);
@@ -873,7 +873,7 @@ function mixColor(c1, c2) {
 const LINES = [];
 const TILES = [];
 function lineMat(color) {
-  return new THREE.MeshStandardMaterial({ color, roughness: 0.5, metalness: 0, transparent: true, opacity: 0 });
+  return new THREE.MeshStandardMaterial({ color, roughness: 0.5, metalness: 0, transparent: true, opacity: 0, depthWrite: true });
 }
 // Vertical lines: run Z -9.6 to 9.6, split into segments between the horizontal crossings.
 vX.forEach((vx, vi) => {
@@ -961,8 +961,12 @@ scene.add(brush);
 
 // Black film: a thin shell that follows 0.1 mm away from the outside of the white
 // pillars and the colored lines, wrapping around the sides too. Uniform 50% opacity.
+// The height at each vertex is the highest surface within a small radius, so no
+// triangle of the film can dip below the surface and cut into a pillar or a line.
+// The drape down the sides starts only past the outer edge of the perimeter lines
+// (x = +-9.26, z = +-10.0), so the film rides over the edge lines instead of cutting them.
 const filmW = 21, filmD = 22.5;
-const filmGeo = new THREE.PlaneGeometry(filmW, filmD, 84, 90);
+const filmGeo = new THREE.PlaneGeometry(filmW, filmD, 168, 180);
 filmGeo.rotateX(-Math.PI / 2);
 {
   const pos = filmGeo.attributes.position;
@@ -976,22 +980,26 @@ filmGeo.rotateX(-Math.PI / 2);
     for (const hz of hZ) if (Math.abs(z - hz) <= 0.4 && Math.abs(x) <= 9.25) return 2.0;
     return 0.4;
   }
+  const R = 0.2;
   for (let i = 0; i < pos.count; i++) {
     const x = pos.getX(i), z = pos.getZ(i);
     let s = surfH(x, z);
-    s = Math.max(s, surfH(x + 0.15, z), surfH(x - 0.15, z), surfH(x, z + 0.15), surfH(x, z - 0.15));
+    s = Math.max(s, surfH(x + R, z), surfH(x - R, z), surfH(x, z + R), surfH(x, z - R),
+      surfH(x + R, z + R), surfH(x + R, z - R), surfH(x - R, z + R), surfH(x - R, z - R));
     let y = s + 0.1;
-    const dOut = Math.max(0, Math.abs(x) - 8.43, Math.abs(z) - 9.2);
-    if (dOut > 0.3) y = Math.max(0.5, y - (dOut - 0.3) * 2.5);
+    const dOut = Math.max(0, Math.abs(x) - 9.26, Math.abs(z) - 10.0);
+    if (dOut > 0) y = Math.max(0.5, y - dOut * 2.5);
     pos.setY(i, y);
   }
   filmGeo.computeVertexNormals();
 }
 const filmMat = new THREE.MeshStandardMaterial({
   color: 0x141414, roughness: 0.35, metalness: 0.1,
-  transparent: true, opacity: 0, side: THREE.DoubleSide
+  transparent: true, opacity: 0, side: THREE.DoubleSide,
+  depthWrite: false
 });
 const film = new THREE.Mesh(filmGeo, filmMat);
+film.renderOrder = 10;
 film.position.y = 14;
 film.visible = false;
 scene.add(film);
