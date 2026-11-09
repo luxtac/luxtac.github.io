@@ -338,6 +338,9 @@
   .scale-chip.current { background: var(--rainbow); color: #0b0b0c; border-color: transparent; }
   .scale-chip.current small { color: #0b0b0c; }
 
+  /* narrow figure for the cropped pcb render */
+  figure.narrow { max-width: 760px; margin-left: auto; margin-right: auto; }
+
   /* scroll reveal, same feel as the PhoTac site */
   .reveal { opacity: 0; transition: opacity 1.4s cubic-bezier(0.22,1,0.36,1), transform 1.4s cubic-bezier(0.22,1,0.36,1); }
   .reveal-up { transform: translateY(24px); }
@@ -370,20 +373,20 @@
   <div class="container">
     <p class="eyebrow">Purdue MARS Lab &middot; 2026</p>
     <h1>Lux<span>Tac</span></h1>
-    <p class="tagline">An optical taxel array that reads touch as depth. Sixteen digital light sensors under a scattering silicone skin, each one reporting indentation directly. No camera, no inversion.</p>
+    <p class="tagline">A 4&times;4 optical taxel array. Each taxel is a light-to-digital converter that observes LED light back-scattered from a translucent white silicone layer capped by an opaque black film. Pressing thins the layer, so the reading falls with local indentation depth.</p>
     <div class="rainbow-bar"></div>
     <div class="hero-grid reveal reveal-up">
       <div class="hero-photo">
-        <img src="assets/sensor-photo.jpg" alt="LuxTac sensing head on the test rig, the black film showing the sensor's rainbow colours">
+        <img src="assets/sensor-photo.jpg" alt="LuxTac sensing head on the test rig, the black film showing the sensor's rainbow colors">
       </div>
       <div class="hero-stats">
         <div class="stat"><b>4 &times; 4</b><span>optical taxel array</span></div>
         <div class="stat"><b>R&sup2; = 0.999</b><span>linear to force</span></div>
         <div class="stat"><b>104 mN</b><span>detection threshold</span></div>
-        <div class="stat"><b>87% vs 39%</b><span>robot success, with vs without touch</span></div>
+        <div class="stat"><b>63% vs 39%</b><span>average robot success, with vs without touch</span></div>
       </div>
     </div>
-    <p class="caption">The fabricated LuxTac sensing head on the test rig. The rainbow on the black film is the sensor itself: coloured rows and columns painted between white silicone pillars, sealed under black pigment.</p>
+    <p class="caption">The fabricated LuxTac sensing head on the test rig. The rainbow on the black film is the sensor itself: colored rows and columns painted between white silicone pillars, sealed under black pigment.</p>
   </div>
 </header>
 
@@ -391,8 +394,7 @@
 
 <section class="section" id="abstract">
   <div class="container">
-    <p class="eyebrow reveal reveal-up">Abstract</p>
-    <h2 class="reveal reveal-up">Touch you can simulate</h2>
+    <h2 class="reveal reveal-up">Abstract</h2>
     <div class="rainbow-bar"></div>
     <figure class="reveal reveal-up">
       <div class="fig-card">
@@ -401,16 +403,15 @@
       <figcaption class="caption">LuxTac overview. The stack, peeled apart: black opaque film, white translucent silicone, soft acrylic layer, flexible PCB.</figcaption>
     </figure>
     <div class="lead reveal reveal-up">
-      <p>LuxTac is a 4&times;4 optical taxel array. Each taxel is a light-to-digital converter that observes LED light back-scattered from a translucent white silicone layer capped by an opaque black film. Pressing the surface thins the scattering layer, so the reading falls with local indentation depth rather than with force directly.</p>
-      <p>That lets calibration split into two independent maps: an optical transfer function from depth to signal, and a mechanical stiffness from force to depth, exactly what a penalty-based tactile simulator needs. Over 240 presses, LuxTac responds linearly to force (R&sup2; = 0.999) from a 104 mN threshold to at least 5.8 N, with 2.0% repeatability and 5.9% hysteresis. Adding LuxTac to a visuomotor policy raises success on peg-in-hole and cube sorting from 44% and 33% to 87% and 87%.</p>
+      <p>Dense, low-cost tactile arrays have made touch a practical input for robot learning, but the dominant piezoresistive designs report an electrical quantity that is only loosely tied to the physics of contact, which makes them hard to characterize, compare across units, or reproduce in simulation. We present LuxTac, a 4&times;4 optical taxel array in which each taxel is a light-to-digital converter that observes LED light back-scattered from a translucent white silicone layer capped by an opaque, light-absorbing black film. Pressing the surface thins the scattering layer, so the reading falls monotonically with local indentation depth rather than with force directly.</p>
+      <p>We exploit this to split calibration into two independent maps: an optical transfer function from depth to signal, and a mechanical stiffness from force to depth, which is exactly the quantity a penalty-based tactile simulator needs. Over 240 presses, LuxTac responds linearly to force (R&sup2; = 0.999) from a 104 mN detection threshold to at least 5.8 N, with 2.0% repeatability, 5.9% hysteresis, and a taxel-to-taxel coefficient of variation that drops from 38% to 6% after normalization. Adding LuxTac to a visuomotor policy raises success on peg-in-hole and cube sorting from 44% and 33% to 87% and 40%. Design files and code will be released.</p>
     </div>
   </div>
 </section>
 
 <section class="section alt" id="highlights">
   <div class="container">
-    <p class="eyebrow reveal reveal-up">Key Highlights</p>
-    <h2 class="reveal reveal-up">Why it stands out</h2>
+    <h2 class="reveal reveal-up">Key Highlights</h2>
     <div class="rainbow-bar"></div>
     <div class="stat-grid">
       <div class="stat-card reveal reveal-up"><b>16 taxels</b><span>TCS34725 converters on a 4.42 &times; 4.80 mm grid, 9 white LEDs, flexible PCB.</span></div>
@@ -425,13 +426,12 @@
 
 <section class="section" id="principle">
   <div class="container">
-    <p class="eyebrow reveal reveal-up">Sensing Principle</p>
-    <h2 class="reveal reveal-up">Press it, the light dims</h2>
+    <h2 class="reveal reveal-up">Sensing Principle</h2>
     <div class="rainbow-bar"></div>
     <div class="principle-wrap">
       <div class="reveal reveal-left">
-        <p>Nine white LEDs shine up into a translucent white silicone layer. The silicone scatters the light, and some of it returns to the detectors below. An opaque black film caps the top.</p>
-        <p>When an object presses in, the absorbing black film moves closer to the detector, so less scattered light returns and the reading falls with depth. Baseline-normalized, each taxel directly reports indentation depth, and force follows from the measured stiffness.</p>
+        <p>Each taxel consists of a photodetector and nearby LEDs under a layer of translucent white silicone, capped by an opaque black film. LED light entering the silicone is scattered by the white pigment; part of it returns to the detector, and part reaches the black film and is absorbed. The black film also shields the detector from ambient light.</p>
+        <p>Indenting the surface reduces the local thickness and therefore reduces the returned light. A key consequence is that the raw reading decreases with load and depends on the deformation of the elastomer, not on force directly. Force enters only through the mechanics of the silicone, which we treat as a separate map.</p>
       </div>
       <div class="stack-diagram reveal reveal-right">
                           <svg viewBox="0 0 560 360" role="img" aria-label="LuxTac stack diagram">
@@ -478,28 +478,28 @@
 
 <section class="section alt" id="design">
   <div class="container">
-    <p class="eyebrow reveal reveal-up">Sensor Design</p>
-    <h2 class="reveal reveal-up">Sixteen eyes under one skin</h2>
+    <h2 class="reveal reveal-up">Sensor Design</h2>
     <div class="rainbow-bar"></div>
     <div class="design-grid">
       <div class="reveal reveal-left">
         <ul class="spec-list">
           <li><b>Taxels:</b> 16, TCS34725 (2.0 &times; 2.44 mm), pitch 4.42 &times; 4.80 mm</li>
           <li><b>Illumination:</b> 9 white 0603 LEDs, 3&times;3 grid between sensor columns</li>
-          <li><b>Scattering layer:</b> Smooth-On XP-565, 15:1, 0.08% white pigment</li>
+          <li><b>Scattering layer:</b> Smooth-On XP-565, 15:1, 0.04% white pigment</li>
           <li><b>Top film:</b> Psycho Paint + black Sil-Pig + NOVOCS, 0.1 mm</li>
           <li><b>Head:</b> 21.8 &times; 23.8 mm, 4-layer 0.2 mm flex PCB, Teensy 4.1 readout</li>
           <li><b>Depth at 6 N:</b> 0 to 1.81 &plusmn; 0.07 mm</li>
           <li><b>Normal stiffness:</b> k<sub>n</sub> = 3.86 &plusmn; 0.09 N/mm per taxel</li>
           <li><b>Frame rate:</b> 20 Hz (I&sup2;C multiplexing)</li>
         </ul>
+        <p style="margin-top: 20px;">Each converter integrates an IR-blocking filter, a photodiode array, and a 16-bit integrating ADC per channel, so the analog signal never leaves the package. All 16 converters share one fixed I&sup2;C address, so two TCA9548A switches give each sensor its own bus segment. A Teensy 4.1 polls the 16 sensors and streams a frame over USB serial at a nominal 100 Hz.</p>
       </div>
       <div class="reveal reveal-right">
         <figure>
           <div class="fig-card tall">
             <img src="assets/pcb-layout.png" alt="Sensing-head PCB layout from the KiCad design">
           </div>
-          <figcaption class="caption">Sensing-head layout from the PCB design. Blue: TCS34725 converters. Yellow: interstitial white LEDs. Pitch 4.42 &times; 4.80 mm. The layout shown is the 8&times;4 board (32 sensors, 24 LEDs); the current prototype is 4&times;4 (16 sensors, 9 LEDs) at the same pitch.</figcaption>
+          <figcaption class="caption">Sensing-head layout from the PCB design: 16 light-to-digital converters (TCS34725, 2.0 &times; 2.4 mm) on a 4.42 &times; 4.80 mm grid and 9 interstitial LEDs. The layout shown is the 8&times;4 board (32 sensors, 24 LEDs); the current prototype is 4&times;4 (16 sensors, 9 LEDs) at the same pitch.</figcaption>
         </figure>
       </div>
     </div>
@@ -507,7 +507,7 @@
       <video class="wide-video" src="assets/animation.mp4" controls autoplay muted loop playsinline></video>
       <figcaption class="caption">Exploded view and sensing principle. The stack peels apart to show the photodiodes and LEDs, then a press dims the light and the taxel grid lights up.</figcaption>
     </figure>
-    <figure class="reveal reveal-up">
+    <figure class="reveal reveal-up narrow">
       <div class="fig-card">
         <img src="assets/pcb-render.png" alt="The 4 by 4 sensing head, photodiodes and LEDs on the flexible PCB">
       </div>
@@ -529,14 +529,13 @@
 
 <section class="section" id="fabrication">
   <div class="container">
-    <p class="eyebrow reveal reveal-up">Fabrication</p>
-    <h2 class="reveal reveal-up">Pillars, colour, black</h2>
+    <h2 class="reveal reveal-up">Fabrication</h2>
     <div class="rainbow-bar"></div>
     <div class="fab-steps">
-      <div class="fab-step reveal reveal-up"><span class="num">1</span><h4>Laser-cut the molds</h4><p>Acrylic molds, 2 mm and 0.5 mm, M2 screws. They define the gridded channels and white silicone pillars.</p></div>
-      <div class="fab-step reveal reveal-up"><span class="num">2</span><h4>Cast the white silicone</h4><p>XP-565, 15:1, 0.08% white pigment. Vacuum-degassed, oven-cured about 20 minutes.</p></div>
-      <div class="fab-step reveal reveal-up"><span class="num">3</span><h4>Paint the colour in</h4><p>Coloured rows and columns between the channels, the vibrant grid under the film.</p></div>
-      <div class="fab-step reveal reveal-up"><span class="num">4</span><h4>Seal it in black</h4><p>Opaque black film, Psycho Paint with black Sil-Pig and NOVOCS, 0.1 mm, over everything.</p></div>
+      <div class="fab-step reveal reveal-up"><span class="num">1</span><h4>Laser-cut the molds</h4><p>Two acrylic molds, 2 mm and 0.5 mm thick, laser cut and secured with M2 screws to contain the silicone during casting.</p></div>
+      <div class="fab-step reveal reveal-up"><span class="num">2</span><h4>Cast the white silicone</h4><p>XP-565 at a 15:1 ratio by weight, pigmented with 0.04% white Silk Pig. Degassed, poured slowly to minimize air entrapment, then oven-cured about 20 minutes.</p></div>
+      <div class="fab-step reveal reveal-up"><span class="num">3</span><h4>Paint the color in</h4><p>Colored rows and columns between the channels, the vibrant grid under the film.</p></div>
+      <div class="fab-step reveal reveal-up"><span class="num">4</span><h4>Seal it in black</h4><p>Opaque top layer: Smooth-On Psycho Paint Part A, Part B, black Silk Pig, and NOVOCS silicone solvent in a 1:1:0.5:1 ratio by weight, 0.1 mm.</p></div>
     </div>
   </div>
 </section>
@@ -545,20 +544,22 @@
 
 <section class="section alt" id="results">
   <div class="container">
-    <p class="eyebrow reveal reveal-up">Characterization</p>
-    <h2 class="reveal reveal-up">Measured, not assumed</h2>
+    <h2 class="reveal reveal-up">Characterization</h2>
     <div class="rainbow-bar"></div>
+    <div class="lead reveal reveal-up">
+      <p>Raw readings differ strongly across the array: center taxels have baselines of 2364 &plusmn; 284 counts, edge taxels 1322 &plusmn; 203, and corner taxels 673 &plusmn; 100, consistent with edge and corner detectors collecting scattered light from fewer LEDs. After normalization the response is linear in force. The mean over taxels follows s = 0.02 + 0.170F with R&sup2; = 0.999 from 0.1 N to the 5.8 N limit of the test, and neither a dead zone nor saturation is reached.</p>
+    </div>
     <figure class="reveal reveal-up">
       <div class="fig-card">
         <img src="assets/fig5-response.png" alt="Individual-taxel response over 15 passes, 240 presses">
       </div>
-      <figcaption class="caption">Individual-taxel response over 15 passes (240 presses). (a) Raw reading vs. force; center taxels highest, corners lowest. (b) Normalized signal vs. force, linear s = 0.02 + 0.170F (R&sup2; = 0.999), no dead zone or saturation to 5.8 N. (c) Optical map g(&delta;). (d) Force vs. depth, k<sub>n</sub> = 3.86 &plusmn; 0.09 N/mm.</figcaption>
+      <figcaption class="caption">Individual-taxel response over 15 passes (240 presses). (a) Raw reading vs. force during loading; center taxels have the highest baselines and corner taxels the lowest. (b) Normalized signal vs. force. The response is linear in force, s = 0.02 + 0.170F (R&sup2; = 0.999), with no dead zone or saturation up to 5.8 N. (c) Optical map g(&delta;). (d) Force vs. depth, loading and unloading; k<sub>n</sub> = 3.86 &plusmn; 0.09 N/mm.</figcaption>
     </figure>
     <figure class="reveal reveal-up">
       <div class="fig-card">
         <img src="assets/fig6-uniformity.png" alt="Array uniformity at 0.5, 1.5, 3, and 5.5 N">
       </div>
-      <figcaption class="caption">Array uniformity at 0.5, 1.5, 3, and 5.5 N. Top: baseline-subtracted drop of the pressed taxel. Bottom: normalized signal. Right: distribution with the coefficient of variation, about 38% before and 6% after normalization.</figcaption>
+      <figcaption class="caption">Array uniformity from the individual-taxel presses at 0.5, 1.5, 3, and 5.5 N. Top: baseline-subtracted drop of the pressed taxel; bottom: normalized signal; each row shares one color scale. Right: distribution over all taxels and passes with the coefficient of variation, about 38% before and 6% after normalization.</figcaption>
     </figure>
     <table class="reveal reveal-up">
       <caption>Characterization summary (mean &plusmn; std over 16 taxels)</caption>
@@ -577,21 +578,23 @@
 
 <section class="section" id="robot">
   <div class="container">
-    <p class="eyebrow reveal reveal-up">Robot Experiments</p>
-    <h2 class="reveal reveal-up">Touch doubles success</h2>
+    <h2 class="reveal reveal-up">Robot Experiments</h2>
     <div class="rainbow-bar"></div>
+    <div class="lead reveal reveal-up">
+      <p>The trained policies were evaluated on two real-world manipulation tasks: peg-in-hole insertion and cube sorting. For cube sorting, the vision-only policy successfully completed 5 out of 15 trials (33.3%), while the visuotactile policy achieved 6 out of 15 successful trials (40.0%). For peg-in-hole insertion, the vision-only policy successfully completed 7 out of 16 trials (43.8%), while the LuxTac-based policy achieved 13 out of 15 successful trials (86.7%).</p>
+    </div>
     <figure class="reveal reveal-up">
       <div class="fig-card">
         <img src="assets/policy-timeline.jpg" alt="Temporal tactile observations during peg insertion and cube sorting">
       </div>
-      <figcaption class="caption">Temporal tactile observations during manipulation. Top: peg-in-hole. Middle and bottom: cube sorting (smooth and dotted cubes). Each row pairs video frames with LuxTac heatmaps during grasping.</figcaption>
+      <figcaption class="caption">Temporal tactile observations during end-to-end manipulation using LuxTac. Representative execution sequences for (Task 1) peg-in-hole insertion and (Task 2) cube sorting with smooth and dotted surfaces. Each row illustrates successive manipulation stages, including positioning, grasping, object transport, lowering, and release. The LuxTac heatmaps reveal contact-dependent responses during manipulation.</figcaption>
     </figure>
     <table class="reveal reveal-up">
       <caption>Real-world success rates (95% Wilson confidence intervals)</caption>
       <tr><th>Task</th><th class="num">Vision only</th><th class="num">Vision + LuxTac</th></tr>
       <tr><td>Peg-in-hole</td><td class="num">7/16 (43.8%)</td><td class="num">13/15 (87%)</td></tr>
-      <tr><td>Cube sorting</td><td class="num">5/15 (33.3%)</td><td class="num">13/15 (87%)</td></tr>
-      <tr><td><b>Average</b></td><td class="num"><b>~39%</b></td><td class="num"><b>87%</b></td></tr>
+      <tr><td>Cube sorting</td><td class="num">5/15 (33.3%)</td><td class="num">6/15 (40%)</td></tr>
+      <tr><td><b>Average</b></td><td class="num"><b>39%</b></td><td class="num"><b>63%</b></td></tr>
     </table>
   </div>
 </section>
@@ -600,8 +603,7 @@
 
 <section class="section alt" id="bibtex">
   <div class="container">
-    <p class="eyebrow reveal reveal-up">BibTeX</p>
-    <h2 class="reveal reveal-up">Cite LuxTac</h2>
+    <h2 class="reveal reveal-up">BibTeX</h2>
     <div class="rainbow-bar"></div>
     <div class="reveal reveal-up" style="max-width: 860px; margin: 0 auto;">
 <pre>@misc{prince2026luxtac,
