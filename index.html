@@ -201,13 +201,50 @@
     align-items: center;
   }
   @media (max-width: 820px) { .principle-wrap { grid-template-columns: 1fr; } }
-  .stack-diagram {
+  .principle-demo {
     background: var(--card);
     border: 1px solid var(--card-border);
     border-radius: 16px;
     padding: 24px;
+    margin-top: 28px;
   }
-  .stack-diagram svg { width: 100%; height: auto; display: block; }
+  .principle-panels {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  @media (max-width: 820px) { .principle-panels { grid-template-columns: 1fr; } }
+  .principle-panel h3 {
+    font-size: 16px;
+    color: var(--text);
+    margin: 0 0 10px;
+    text-align: center;
+  }
+  .principle-panel svg { width: 100%; height: auto; display: block; background: #161618; border-radius: 12px; }
+  .principle-readout {
+    text-align: center;
+    color: var(--muted);
+    font-size: 15px;
+    margin: 14px 0 0;
+  }
+  .principle-controls {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px 24px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--card-border);
+  }
+  @media (max-width: 820px) { .principle-controls { grid-template-columns: 1fr; } }
+  .principle-controls label { display: block; font-size: 14px; color: var(--muted); margin-bottom: 6px; }
+  .principle-controls label b { color: var(--text); font-weight: 600; }
+  .principle-controls input[type=range] { width: 100%; accent-color: #ff7a18; }
+  .principle-controls .ctl-row { display: flex; align-items: center; gap: 10px; }
+  .principle-controls button {
+    background: #2a2a2e; color: var(--text); border: 1px solid var(--card-border);
+    border-radius: 8px; padding: 8px 16px; font-size: 14px; cursor: pointer;
+  }
+  .principle-controls button:hover { background: #333338; }
 
   /* design */
   .design-grid {
@@ -354,6 +391,43 @@
   /* narrow figure for the cropped pcb render */
   figure.narrow { max-width: 760px; margin-left: auto; margin-right: auto; }
 
+  /* rainbow corona: a soft flickering rainbow glow around every visual.
+     Hover zooms the visual 10% and the corona slowly turns around it. */
+  .corona { position: relative; z-index: 0; transition: scale 0.45s cubic-bezier(0.22,1,0.36,1); }
+  .corona::before {
+    content: "";
+    position: absolute;
+    inset: -7px;
+    border-radius: 22px;
+    background: conic-gradient(from 0deg, #ff2d78, #ff7a18, #ffd60a, #30d158, #0aa5ff, #bf5af2, #ff2d78);
+    filter: blur(10px);
+    opacity: 0.38;
+    z-index: -1;
+    pointer-events: none;
+    animation: corona-flicker 4.5s ease-in-out infinite, corona-spin 14s linear infinite;
+    animation-play-state: running, paused;
+  }
+  .corona:hover { scale: 1.1; }
+  .corona:hover::before { animation-play-state: running, running; }
+  @keyframes corona-flicker {
+    0%, 100% { opacity: 0.30; filter: blur(9px); }
+    50% { opacity: 0.48; filter: blur(13px); }
+  }
+  @keyframes corona-spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) {
+    .corona::before { animation: none; }
+    .corona:hover { scale: 1; }
+  }
+
+  /* the two mode videos, side by side and smaller */
+  .video-duo {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+  @media (max-width: 820px) { .video-duo { grid-template-columns: 1fr; } }
+
   /* scroll reveal, same feel as the PhoTac site */
   .reveal { opacity: 0; transition: opacity 1.4s cubic-bezier(0.22,1,0.36,1), transform 1.4s cubic-bezier(0.22,1,0.36,1); }
   .reveal-up { transform: translateY(24px); }
@@ -369,7 +443,7 @@
 
 <nav>
   <div class="container">
-    <a class="wordmark" href="#">Lux<span>Tac</span></a>
+    <a class="wordmark" href="#"><span>Lux</span>Tac</a>
     <div class="links">
       <a href="#abstract">Abstract</a>
       <a href="#principle">Principle</a>
@@ -385,12 +459,14 @@
 <header class="hero">
   <div class="container">
     <p class="eyebrow">Purdue MARS Lab &middot; 2026</p>
-    <h1>Lux<span>Tac</span></h1>
+    <h1><span>Lux</span>Tac</h1>
     <p class="tagline">A 4&times;4 optical taxel array. Each taxel is a light-to-digital converter that observes LED light back-scattered from a translucent white silicone layer capped by an opaque black film. Pressing thins the layer, so the reading falls with local indentation depth.</p>
     <div class="rainbow-bar"></div>
     <div class="hero-grid reveal reveal-up">
-      <div class="hero-photo">
-        <img src="assets/sensor-render.png" alt="Render of the LuxTac sensing head, the colored taxel grid and the plain black film">
+      <div class="corona">
+        <div class="hero-photo">
+          <img src="assets/sensor-render.png" alt="Render of the LuxTac sensing head, the colored taxel grid and the plain black film">
+        </div>
       </div>
       <div class="hero-stats">
         <div class="stat"><b>4 &times; 4</b><span>optical taxel array</span></div>
@@ -409,7 +485,7 @@
   <div class="container">
     <h2 class="reveal reveal-up">Abstract</h2>
     <div class="rainbow-bar"></div>
-    <figure class="reveal reveal-up">
+    <figure class="reveal reveal-up corona">
       <div class="fig-card">
         <img src="assets/exploded-layers.png" alt="Exploded view of the LuxTac stack">
       </div>
@@ -441,48 +517,58 @@
   <div class="container">
     <h2 class="reveal reveal-up">Sensing Principle</h2>
     <div class="rainbow-bar"></div>
-    <div class="principle-wrap">
+    <div class="principle-wrap" style="grid-template-columns: 1fr;">
       <div class="reveal reveal-left">
         <p>Each taxel consists of a photodetector and nearby LEDs under a layer of translucent white silicone, capped by an opaque black film. LED light entering the silicone is scattered by the white pigment; part of it returns to the detector, and part reaches the black film and is absorbed. The black film also shields the detector from ambient light.</p>
         <p>Indenting the surface reduces the local thickness and therefore reduces the returned light. A key consequence is that the raw reading decreases with load and depends on the deformation of the elastomer, not on force directly. Force enters only through the mechanics of the silicone, which we treat as a separate map.</p>
       </div>
-      <div class="stack-diagram reveal reveal-right">
-                          <svg viewBox="0 0 560 360" role="img" aria-label="LuxTac stack diagram">
-          <defs>
-          <marker id="arrPink" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ff2d78"/></marker>
-          <marker id="arrYellow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ffd60a"/></marker>
-          <marker id="arrGreen" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#30d158"/></marker>
-          <marker id="arrBlue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0aa5ff"/></marker>
-          </defs>
-          
-          <!-- indentation arrow -->
-          <line x1="260" y1="46" x2="260" y2="96" stroke="#ff2d78" stroke-width="3" marker-end="url(#arrPink)"/>
-          <text x="274" y="74" fill="#a8a8ad" font-size="15" font-family="Noto Sans, sans-serif">indentation &#948;</text>
-          
-          <!-- silicone layer (drawn first so the film dip overlaps it) -->
-          <rect x="110" y="122" width="300" height="138" rx="6" fill="#e8e4da" opacity="0.92"/>
-          <text x="260" y="152" fill="#555555" font-size="15" text-anchor="middle" font-family="Noto Sans, sans-serif">white scattering silicone (XP-565)</text>
-          
-          <!-- light rays -->
-          <line x1="168" y1="260" x2="260" y2="200" stroke="#ffd60a" stroke-width="2.5" marker-end="url(#arrYellow)"/>
-          <line x1="260" y1="200" x2="200" y2="162" stroke="#0aa5ff" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#arrBlue)"/>
-          <line x1="260" y1="200" x2="320" y2="162" stroke="#0aa5ff" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#arrBlue)"/>
-          <line x1="260" y1="200" x2="338" y2="260" stroke="#30d158" stroke-width="2.5" stroke-dasharray="6 4" marker-end="url(#arrGreen)"/>
-          <circle cx="260" cy="200" r="5" fill="#ffffff" stroke="#ff7a18" stroke-width="2"/>
-          
-          <!-- black film, sagging in the middle to show indentation -->
-          <path d="M110,112 Q260,124 410,112 L410,122 Q260,134 110,122 Z" fill="#111111" stroke="#444444" stroke-width="1"/>
-          <text x="420" y="122" fill="#a8a8ad" font-size="14" font-family="Noto Sans, sans-serif">opaque black film</text>
-          
-          <!-- PCB -->
-          <rect x="110" y="260" width="300" height="26" rx="4" fill="#2a2a2e"/>
-          <rect x="160" y="266" width="16" height="14" rx="2" fill="#ffd60a"/>
-          <text x="150" y="277" fill="#ffd60a" font-size="13" font-weight="700" text-anchor="end" font-family="Noto Sans, sans-serif">LED</text>
-          <rect x="330" y="266" width="16" height="14" rx="2" fill="#0aa5ff"/>
-          <text x="356" y="277" fill="#0aa5ff" font-size="13" font-weight="700" font-family="Noto Sans, sans-serif">TCS34725</text>
-          <text x="260" y="308" fill="#a8a8ad" font-size="14" text-anchor="middle" font-family="Noto Sans, sans-serif">flex PCB</text>
-        </svg>
+    </div>
+    <div class="principle-demo reveal reveal-up">
+      <div class="principle-panels">
+        <div class="principle-panel corona">
+          <h3>(a) No force</h3>
+          <svg id="panelA" viewBox="0 0 600 340" role="img" aria-label="Sensor segment under no force"></svg>
+        </div>
+        <div class="principle-panel corona">
+          <h3>(b) Under force</h3>
+          <svg id="panelB" viewBox="0 0 600 340" role="img" aria-label="Sensor segment under force"></svg>
+        </div>
       </div>
+      <p class="principle-readout" id="pd-read">Peak indentation 1.00 mm &middot; about 3.3 N</p>
+      <div class="principle-controls">
+        <div>
+          <label><b>Indentation depth</b> &middot; <span id="force-val">55%</span></label>
+          <input type="range" id="force" data-k="force" min="0" max="100" value="55">
+        </div>
+        <div>
+          <label><b>Press position</b> &middot; <span id="pos-val">50%</span></label>
+          <input type="range" id="pos" data-k="pos" min="0" max="100" value="50">
+        </div>
+        <div>
+          <label><b>Indenter width</b> &middot; <span id="width-val">35%</span></label>
+          <input type="range" id="width" data-k="width" min="10" max="100" value="35">
+        </div>
+        <div>
+          <label><b>Light rays</b> &middot; <span id="rays-val">8</span></label>
+          <input type="range" id="rays" data-k="rays" min="3" max="12" step="1" value="8">
+        </div>
+        <div>
+          <label><b>Ray brightness</b> &middot; <span id="glow-val">80%</span></label>
+          <input type="range" id="glow" data-k="glow" min="20" max="100" value="80">
+        </div>
+        <div>
+          <label><b>Gel thickness</b> &middot; <span id="gel-val">100%</span></label>
+          <input type="range" id="gel" data-k="gel" min="40" max="100" value="100">
+        </div>
+        <div class="ctl-row">
+          <input type="checkbox" id="walls" checked>
+          <label for="walls" style="margin:0;"><b>Show wall bounces</b></label>
+        </div>
+        <div class="ctl-row">
+          <button type="button" id="pd-reset">Reset sliders</button>
+        </div>
+      </div>
+    </div>
     </div>
   </div>
 </section>
@@ -508,22 +594,24 @@
         <p style="margin-top: 20px;">Each converter integrates an IR-blocking filter, a photodiode array, and a 16-bit integrating ADC per channel, so the analog signal never leaves the package. All 16 converters share one fixed I&sup2;C address, so two TCA9548A switches give each sensor its own bus segment. A Teensy 4.1 polls the 16 sensors and streams a frame over USB serial at a nominal 100 Hz.</p>
       </div>
       <div class="reveal reveal-right">
-        <figure>
-          <div class="fig-card tall">
-            <img src="assets/pcb-layout.png" alt="Sensing-head PCB layout from the KiCad design">
+        <figure class="corona">
+          <div class="fig-card">
+            <img src="assets/pcb-render.png" alt="3D CAD render of the 4 by 4 sensing head, photodiodes and LEDs on the flexible PCB">
           </div>
-          <figcaption class="caption">Sensing-head layout from the PCB design: 16 light-to-digital converters (TCS34725, 2.0 &times; 2.4 mm) on a 4.42 &times; 4.80 mm grid and 9 interstitial LEDs. The layout shown is the 8&times;4 board (32 sensors, 24 LEDs); the current prototype is 4&times;4 (16 sensors, 9 LEDs) at the same pitch.</figcaption>
+          <figcaption class="caption">The 4&times;4 sensing head in 3D. Sixteen TCS34725 photodiodes and nine white LEDs on the flexible PCB.</figcaption>
         </figure>
       </div>
     </div>
-    <figure class="reveal reveal-up">
+    <div class="video-duo">
+    <figure class="reveal reveal-up corona">
       <video class="wide-video" src="assets/animation.mp4" controls autoplay muted loop playsinline></video>
       <figcaption class="caption">Sensing principle, mode one. The stack peels apart to show the photodiodes and LEDs, then a press dims the light and the taxel grid lights up.</figcaption>
     </figure>
-    <figure class="reveal reveal-up">
+    <figure class="reveal reveal-up corona">
       <video class="wide-video" src="assets/shear-animation.mp4" controls autoplay muted loop playsinline></video>
       <figcaption class="caption">Shear sensing, mode two. A single taxel under normal force, shear, and rotation, then a roller press with the taxel grid lighting up (8&times;4 board).</figcaption>
     </figure>
+    </div>
     <div class="scales reveal reveal-up">
       <h3>One design, many sizes</h3>
       <p>LuxTac scales without changing the readout. The same stack and the same Teensy readout run every size below.</p>
@@ -543,7 +631,7 @@
     <h2 class="reveal reveal-up">Fabrication</h2>
     <div class="rainbow-bar"></div>
     <div class="fab-anim reveal reveal-up">
-      <div class="fab-stage" id="fabStage"></div>
+      <div class="corona"><div class="fab-stage" id="fabStage"></div></div>
       <p class="fab-caption" id="fabCaption"></p>
       <div class="fab-controls">
         <button id="fabPrev" type="button">Previous</button>
@@ -569,13 +657,13 @@
     <div class="lead reveal reveal-up">
       <p>Raw readings differ strongly across the array: center taxels have baselines of 2364 &plusmn; 284 counts, edge taxels 1322 &plusmn; 203, and corner taxels 673 &plusmn; 100, consistent with edge and corner detectors collecting scattered light from fewer LEDs. After normalization the response is linear in force. The mean over taxels follows s = 0.02 + 0.170F with R&sup2; = 0.999 from 0.1 N to the 5.8 N limit of the test, and neither a dead zone nor saturation is reached.</p>
     </div>
-    <figure class="reveal reveal-up">
+    <figure class="reveal reveal-up corona">
       <div class="fig-card">
         <img src="assets/fig5-response.png" alt="Individual-taxel response over 15 passes, 240 presses">
       </div>
       <figcaption class="caption">Individual-taxel response over 15 passes (240 presses). (a) Raw reading vs. force during loading; center taxels have the highest baselines and corner taxels the lowest. (b) Normalized signal vs. force. The response is linear in force, s = 0.02 + 0.170F (R&sup2; = 0.999), with no dead zone or saturation up to 5.8 N. (c) Optical map g(&delta;). (d) Force vs. depth, loading and unloading; k<sub>n</sub> = 3.86 &plusmn; 0.09 N/mm.</figcaption>
     </figure>
-    <figure class="reveal reveal-up">
+    <figure class="reveal reveal-up corona">
       <div class="fig-card">
         <img src="assets/fig6-uniformity.png" alt="Array uniformity at 0.5, 1.5, 3, and 5.5 N">
       </div>
@@ -603,7 +691,7 @@
     <div class="lead reveal reveal-up">
       <p>The trained policies were evaluated on two real-world manipulation tasks: peg-in-hole insertion and cube sorting. For cube sorting, the vision-only policy successfully completed 5 out of 15 trials (33.3%), while the visuotactile policy achieved 6 out of 15 successful trials (40.0%). For peg-in-hole insertion, the vision-only policy successfully completed 7 out of 16 trials (43.8%), while the LuxTac-based policy achieved 13 out of 15 successful trials (86.7%).</p>
     </div>
-    <figure class="reveal reveal-up">
+    <figure class="reveal reveal-up corona">
       <div class="fig-card">
         <img src="assets/policy-timeline.jpg" alt="Temporal tactile observations during peg insertion and cube sorting">
       </div>
@@ -1207,6 +1295,144 @@ window.addEventListener('resize', () => {
   camera.updateProjectionMatrix();
   renderer.setSize(stage.clientWidth, stage.clientHeight);
 });
+</script>
+
+<script>
+(function(){
+  var NS = 'http://www.w3.org/2000/svg';
+  var W = 600, H = 340;
+  var GX0 = 60, GX1 = 460, PCB_Y = 250;
+  var LED_X = 110, DET_X = 410, DEV_Y = 263;
+  var DEF = { force: 55, pos: 50, width: 35, rays: 8, glow: 80, gel: 100, walls: true };
+  var S = { force: 55, pos: 50, width: 35, rays: 8, glow: 80, gel: 100, walls: true };
+  function gelH(){ return 90 + (S.gel / 100) * 80; }
+  function gelTop(){ return PCB_Y - gelH(); }
+  function pressX(){ return GX0 + (S.pos / 100) * (GX1 - GX0); }
+  function sigma(){ return 30 + (S.width / 100) * 110; }
+  function maxDent(){ return (S.force / 100) * gelH() * 0.55; }
+  function dentAt(x){
+    var dx = (x - pressX()) / sigma();
+    return maxDent() * Math.exp(-dx * dx);
+  }
+  function roofY(x){ return gelTop() + dentAt(x); }
+  var STOPS = [[255,233,168],[255,214,10],[255,122,24],[255,59,48]];
+  function rayColor(dn){
+    var t = Math.max(0, Math.min(1, dn)) * (STOPS.length - 1);
+    var i = Math.min(STOPS.length - 2, Math.floor(t));
+    var f = t - i;
+    var c = STOPS[i].map(function(v, j){ return Math.round(v + (STOPS[i+1][j] - v) * f); });
+    return 'rgb(' + c[0] + ',' + c[1] + ',' + c[2] + ')';
+  }
+  function el(name, attrs){
+    var e = document.createElementNS(NS, name);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+  function text(x, y, str, attrs){
+    var t = el('text', Object.assign({ x: x, y: y, 'font-size': 13, 'font-family': 'Noto Sans, sans-serif' }, attrs || {}));
+    t.textContent = str;
+    return t;
+  }
+  function buildPanel(svg, deformed){
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    if (deformed){
+      var defs = document.createElementNS(NS, 'defs');
+      var marker = document.createElementNS(NS, 'marker');
+      marker.setAttribute('id', 'pdArr');
+      marker.setAttribute('viewBox', '0 0 10 10');
+      marker.setAttribute('refX', '8');
+      marker.setAttribute('refY', '5');
+      marker.setAttribute('markerWidth', '7');
+      marker.setAttribute('markerHeight', '7');
+      marker.setAttribute('orient', 'auto-start-reverse');
+      var mp = document.createElementNS(NS, 'path');
+      mp.setAttribute('d', 'M0,0 L10,5 L0,10 z');
+      mp.setAttribute('fill', '#ff2d78');
+      marker.appendChild(mp);
+      defs.appendChild(marker);
+      svg.appendChild(defs);
+    }
+    var top = gelTop();
+    var NPTS = 60, pts = [], i, x;
+    for (i = 0; i <= NPTS; i++){
+      x = GX0 + (GX1 - GX0) * i / NPTS;
+      pts.push([x, deformed ? roofY(x) : top]);
+    }
+    var d = 'M' + pts[0][0] + ',' + pts[0][1].toFixed(1);
+    for (i = 1; i < pts.length; i++) d += ' L' + pts[i][0].toFixed(1) + ',' + pts[i][1].toFixed(1);
+    d += ' L' + GX1 + ',' + PCB_Y + ' L' + GX0 + ',' + PCB_Y + ' Z';
+    svg.appendChild(el('path', { d: d, fill: '#e8e4da', opacity: '0.92' }));
+    var rd = 'M' + pts[0][0] + ',' + pts[0][1].toFixed(1);
+    for (i = 1; i < pts.length; i++) rd += ' L' + pts[i][0].toFixed(1) + ',' + pts[i][1].toFixed(1);
+    svg.appendChild(el('path', { d: rd, stroke: '#111111', 'stroke-width': 7, fill: 'none', 'stroke-linecap': 'round' }));
+    svg.appendChild(text(GX1 + 8, top + 16, 'opaque black film', { fill: '#a8a8ad', 'font-size': 12 }));
+    svg.appendChild(text(260, top + 34, 'white scattering silicone (XP-565)', { fill: '#555555', 'text-anchor': 'middle' }));
+    svg.appendChild(el('rect', { x: GX0, y: PCB_Y, width: GX1 - GX0, height: 26, rx: 4, fill: '#2a2a2e' }));
+    svg.appendChild(el('rect', { x: LED_X - 8, y: DEV_Y - 7, width: 16, height: 14, rx: 2, fill: '#ffd60a' }));
+    svg.appendChild(text(LED_X - 14, DEV_Y + 4, 'LED', { fill: '#ffd60a', 'font-weight': 700, 'text-anchor': 'end' }));
+    svg.appendChild(el('rect', { x: DET_X - 8, y: DEV_Y - 7, width: 16, height: 14, rx: 2, fill: '#0aa5ff' }));
+    svg.appendChild(text(DET_X + 14, DEV_Y + 4, 'TCS34725', { fill: '#0aa5ff', 'font-weight': 700 }));
+    svg.appendChild(text(260, 306, 'flex PCB', { fill: '#a8a8ad', 'text-anchor': 'middle' }));
+    if (deformed && S.force > 2){
+      var iw = sigma() * 2.2;
+      var ix = pressX() - iw / 2;
+      var iy = top - 52;
+      var ibot = roofY(pressX());
+      svg.appendChild(el('rect', { x: ix, y: iy, width: iw, height: Math.max(10, ibot - iy), fill: '#8a8a8e', stroke: '#5a5a5e', 'stroke-width': 1 }));
+      svg.appendChild(el('line', { x1: pressX(), y1: iy - 26, x2: pressX(), y2: iy - 4, stroke: '#ff2d78', 'stroke-width': 3, 'marker-end': 'url(#pdArr)' }));
+      svg.appendChild(text(pressX() + 10, iy - 14, 'force', { fill: '#ff2d78', 'font-weight': 700 }));
+    }
+    function ray(bx, by, dn, thin){
+      var col = rayColor(dn);
+      var op = (0.35 + 0.65 * dn) * (S.glow / 100);
+      var sw = (thin ? 1.2 : 1.6) + 2.2 * dn;
+      var path = 'M' + LED_X + ',' + DEV_Y + ' L' + bx.toFixed(1) + ',' + by.toFixed(1) + ' L' + DET_X + ',' + DEV_Y;
+      svg.appendChild(el('path', { d: path, stroke: col, 'stroke-width': sw + 4, opacity: op * 0.25, fill: 'none', 'stroke-linecap': 'round' }));
+      svg.appendChild(el('path', { d: path, stroke: col, 'stroke-width': sw, opacity: op, fill: 'none', 'stroke-linecap': 'round' }));
+    }
+    var n = Math.round(S.rays), j, bx, by, dn;
+    for (j = 0; j < n; j++){
+      bx = GX0 + (GX1 - GX0) * (0.08 + 0.84 * (n === 1 ? 0.5 : j / (n - 1)));
+      by = deformed ? roofY(bx) : top;
+      dn = deformed ? dentAt(bx) / Math.max(1, maxDent()) : 0;
+      ray(bx, by, dn, false);
+    }
+    if (S.walls){
+      var midY = (top + PCB_Y) / 2;
+      ray(GX0, midY, deformed ? dentAt(GX0) / Math.max(1, maxDent()) : 0, true);
+      ray(GX1, midY, deformed ? dentAt(GX1) / Math.max(1, maxDent()) : 0, true);
+    }
+  }
+  function render(){
+    buildPanel(document.getElementById('panelA'), false);
+    buildPanel(document.getElementById('panelB'), true);
+    var depthMm = (S.force / 100) * 1.81;
+    var forceN = (S.force / 100) * 6.0;
+    document.getElementById('pd-read').textContent = 'Peak indentation ' + depthMm.toFixed(2) + ' mm \u00b7 about ' + forceN.toFixed(1) + ' N';
+  }
+  document.querySelectorAll('.principle-controls input[type=range]').forEach(function(inp){
+    inp.addEventListener('input', function(){
+      S[inp.dataset.k] = parseFloat(inp.value);
+      var val = document.getElementById(inp.dataset.k + '-val');
+      val.textContent = inp.value + (inp.dataset.k === 'rays' ? '' : '%');
+      render();
+    });
+  });
+  document.getElementById('walls').addEventListener('change', function(e){
+    S.walls = e.target.checked;
+    render();
+  });
+  document.getElementById('pd-reset').addEventListener('click', function(){
+    S = Object.assign({}, DEF);
+    document.querySelectorAll('.principle-controls input[type=range]').forEach(function(inp){
+      inp.value = DEF[inp.dataset.k];
+      document.getElementById(inp.dataset.k + '-val').textContent = DEF[inp.dataset.k] + (inp.dataset.k === 'rays' ? '' : '%');
+    });
+    document.getElementById('walls').checked = true;
+    render();
+  });
+  render();
+})();
 </script>
 </body>
 </html>
