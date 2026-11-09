@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>LuxTac: An Optical Taxel Array</title>
+<link rel="icon" type="image/png" href="assets/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700;900&display=swap" rel="stylesheet">
@@ -1348,14 +1349,6 @@ window.addEventListener('resize', () => {
     return maxDent() * Math.exp(-dx * dx);
   }
   function roofY(x){ return gelTop() + dentAt(x); }
-  var STOPS = [[255,233,168],[255,214,10],[255,122,24],[255,59,48]];
-  function rayColor(dn){
-    var t = Math.max(0, Math.min(1, dn)) * (STOPS.length - 1);
-    var i = Math.min(STOPS.length - 2, Math.floor(t));
-    var f = t - i;
-    var c = STOPS[i].map(function(v, j){ return Math.round(v + (STOPS[i+1][j] - v) * f); });
-    return 'rgb(' + c[0] + ',' + c[1] + ',' + c[2] + ')';
-  }
   function el(name, attrs){
     var e = document.createElementNS(NS, name);
     for (var k in attrs) e.setAttribute(k, attrs[k]);
@@ -1415,25 +1408,46 @@ window.addEventListener('resize', () => {
       svg.appendChild(el('line', { x1: pressX(), y1: iy - 26, x2: pressX(), y2: iy - 4, stroke: '#ff2d78', 'stroke-width': 3, 'marker-end': 'url(#pdArr)' }));
       svg.appendChild(text(pressX() + 10, iy - 14, 'force', { fill: '#ff2d78', 'font-weight': 700 }));
     }
-    function ray(bx, by, dn, thin){
-      var col = rayColor(dn);
-      var op = (0.35 + 0.65 * dn) * (S.glow / 100);
-      var sw = (thin ? 1.2 : 1.6) + 2.2 * dn;
-      var path = 'M' + LED_X + ',' + DEV_Y + ' L' + bx.toFixed(1) + ',' + by.toFixed(1) + ' L' + DET_X + ',' + DEV_Y;
-      svg.appendChild(el('path', { d: path, stroke: col, 'stroke-width': sw + 4, opacity: op * 0.25, fill: 'none', 'stroke-linecap': 'round' }));
-      svg.appendChild(el('path', { d: path, stroke: col, 'stroke-width': sw, opacity: op, fill: 'none', 'stroke-linecap': 'round' }));
+    // Colored sides: the left wall is painted red, the right wall green.
+    // The roof is the opaque black film (the thick black stroke above).
+    var topL = deformed ? roofY(GX0) : top;
+    var topR = deformed ? roofY(GX1) : top;
+    svg.appendChild(el('line', { x1: GX0, y1: topL, x2: GX0, y2: PCB_Y, stroke: '#ff3b30', 'stroke-width': 6, 'stroke-linecap': 'round' }));
+    svg.appendChild(el('line', { x1: GX1, y1: topR, x2: GX1, y2: PCB_Y, stroke: '#30d158', 'stroke-width': 6, 'stroke-linecap': 'round' }));
+    function dist(x1, y1, x2, y2){ return Math.hypot(x2 - x1, y2 - y1); }
+    var maxPath = dist(LED_X, DEV_Y, GX1, top) + dist(GX1, top, DET_X, DEV_Y);
+    // A beam goes out white from the LED, bounces, and comes back to the sensor
+    // in the color of what it bounced off of. The return dims with more travel.
+    function ray(bx, by, surf){
+      var outLen = dist(LED_X, DEV_Y, bx, by);
+      var retLen = dist(bx, by, DET_X, DEV_Y);
+      var dim = Math.max(0.15, 1 - 0.7 * ((outLen + retLen) / maxPath));
+      var glowF = S.glow / 100;
+      var outOp = 0.85 * glowF;
+      var retCol, retBase;
+      if (surf === 'left'){ retCol = 'rgb(255,59,48)'; retBase = 0.9; }
+      else if (surf === 'right'){ retCol = 'rgb(48,209,88)'; retBase = 0.9; }
+      else { retCol = 'rgb(90,90,90)'; retBase = 0.25; }
+      var retOp = retBase * dim * glowF;
+      svg.appendChild(el('path', { d: 'M' + LED_X + ',' + DEV_Y + ' L' + bx.toFixed(1) + ',' + by.toFixed(1), stroke: '#ffffff', 'stroke-width': 2.2, opacity: outOp, fill: 'none', 'stroke-linecap': 'round' }));
+      svg.appendChild(el('path', { d: 'M' + bx.toFixed(1) + ',' + by.toFixed(1) + ' L' + DET_X + ',' + DEV_Y, stroke: retCol, 'stroke-width': 2.2, opacity: retOp, fill: 'none', 'stroke-linecap': 'round' }));
     }
-    var n = Math.round(S.rays), j, bx, by, dn;
+    function surfFor(bx){
+      var f = (bx - GX0) / (GX1 - GX0);
+      if (f < 0.35) return 'left';
+      if (f > 0.65) return 'right';
+      return 'top';
+    }
+    var n = Math.round(S.rays), j, bx, by;
     for (j = 0; j < n; j++){
       bx = GX0 + (GX1 - GX0) * (0.08 + 0.84 * (n === 1 ? 0.5 : j / (n - 1)));
       by = deformed ? roofY(bx) : top;
-      dn = deformed ? dentAt(bx) / Math.max(1, maxDent()) : 0;
-      ray(bx, by, dn, false);
+      ray(bx, by, surfFor(bx));
     }
     if (S.walls){
       var midY = (top + PCB_Y) / 2;
-      ray(GX0, midY, deformed ? dentAt(GX0) / Math.max(1, maxDent()) : 0, true);
-      ray(GX1, midY, deformed ? dentAt(GX1) / Math.max(1, maxDent()) : 0, true);
+      ray(GX0, midY, 'left');
+      ray(GX1, midY, 'right');
     }
   }
   function render(){
