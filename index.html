@@ -559,23 +559,15 @@
   <div class="container">
     <h2 class="reveal reveal-up">Sensor Design</h2>
     <div class="rainbow-bar"></div>
-    <div class="video-duo">
+    <div class="design-grid">
+      <div>
     <figure class="reveal reveal-up">
       <div class="fig-card corona">
         <img src="assets/stack-4b4.jpg" alt="Exploded view of the LuxTac stack, the black film peeled back to show the colored taxel grid, clear soft acrylic layer, and flexible PCB">
       </div>
       <figcaption class="caption">The LuxTac stack, black film peeled back to show the colored taxel grid.</figcaption>
     </figure>
-    <figure class="reveal reveal-up">
-      <div class="fig-card corona">
-        <img src="assets/stack-4b4-shear.jpg" alt="Exploded view of the LuxTac stack, the black film peeled back to show the colored shear grid, clear soft acrylic layer, and flexible PCB">
-      </div>
-      <figcaption class="caption">LuxTac overview. The stack, peeled apart: black opaque film, white translucent silicone, soft acrylic layer, flexible PCB.</figcaption>
-    </figure>
-    </div>
-    <div class="design-grid">
-      <div class="reveal reveal-left">
-        <ul class="spec-list">
+        <ul class="spec-list reveal reveal-left">
           <li><b>Taxels:</b> 16, TCS34725 (2.0 &times; 2.44 mm), pitch 4.42 &times; 4.80 mm</li>
           <li><b>Illumination:</b> 9 white 0603 LEDs, 3&times;3 grid between sensor columns</li>
           <li><b>Scattering layer:</b> Smooth-On XP-565, 15:1, 0.04% white pigment</li>
@@ -586,8 +578,14 @@
           <li><b>Frame rate:</b> 20 Hz (I&sup2;C multiplexing)</li>
         </ul>
       </div>
-      <div class="reveal reveal-right">
-        <figure>
+      <div>
+    <figure class="reveal reveal-up">
+      <div class="fig-card corona">
+        <img src="assets/stack-4b4-shear.jpg" alt="Exploded view of the LuxTac stack, the black film peeled back to show the colored shear grid, clear soft acrylic layer, and flexible PCB">
+      </div>
+      <figcaption class="caption">LuxTac overview. The stack, peeled apart: black opaque film, white translucent silicone, soft acrylic layer, flexible PCB.</figcaption>
+    </figure>
+        <figure class="reveal reveal-right">
           <div class="fig-card corona">
             <img src="assets/pcb-4b4.jpg" alt="3D CAD render of the 4 by 4 sensing head, photodiodes and LEDs on the flexible PCB">
           </div>
@@ -746,7 +744,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 const STEPS = [
-  { title: 'Put the mold casing on', caption: 'The mold casing is placed down, before the acrylic pour. Its slotted inner edge has notches where the wall grid will nestle later.' },
+  { title: 'Put the mold casing on', caption: 'A plain smooth mold casing is placed down, before the acrylic pour. One big square opening, no slots, for the soft acrylic base.' },
   { title: 'Pour the soft acrylic', caption: 'A clear soft acrylic layer is poured into the mold and left to set. It is mostly transparent, slightly grey, and forms the soft base the silicone stack sits on.' },
   { title: 'Put the mold casing on', caption: 'The mold casing is placed down again, this time on top of the soft acrylic base, ready for the silicone.' },
   { title: 'Put in the wall grid', caption: 'Row and column walls nestle into the slots in the casing, forming the gridded channels on top of the acrylic.' },
@@ -874,6 +872,34 @@ const moldB = new THREE.Mesh(buildMoldGeometry(), moldMat);
 moldB.position.y = 22;
 moldB.visible = false;
 scene.add(moldB);
+
+// Smooth mold casing for the soft acrylic base: a plain ring with a plain
+// rectangular hole, no slots or notches. Same outer 21 x 22.5 and hole
+// 17 x 18.5 as the slotted casing, 2 tall. The acrylic pours into this as
+// ONE big square, not a grid. The slotted casing (moldB) is only for the
+// silicone stack, where the wall grid nestles into its slots.
+function buildMoldGeometrySmooth() {
+  const outer = new THREE.Shape();
+  outer.moveTo(-10.5, -11.25);
+  outer.lineTo(10.5, -11.25);
+  outer.lineTo(10.5, 11.25);
+  outer.lineTo(-10.5, 11.25);
+  outer.closePath();
+  const hole = new THREE.Path();
+  hole.moveTo(-8.5, -9.25);
+  hole.lineTo(8.5, -9.25);
+  hole.lineTo(8.5, 9.25);
+  hole.lineTo(-8.5, 9.25);
+  hole.closePath();
+  outer.holes.push(hole);
+  const geo = new THREE.ExtrudeGeometry(outer, { depth: 2, bevelEnabled: false });
+  geo.rotateX(-Math.PI / 2);
+  return geo;
+}
+const moldA = new THREE.Mesh(buildMoldGeometrySmooth(), moldMat);
+moldA.position.y = 22;
+moldA.visible = false;
+scene.add(moldA);
 
 // Soft acrylic base: a fresh square box with height, poured first into the mold.
 // Mostly transparent, slightly grey. It sits on the PCB (y 0 to 1.0) and the
@@ -1098,7 +1124,7 @@ filmGeo.rotateX(-Math.PI / 2);
       surfH(x + R, z + R), surfH(x + R, z - R), surfH(x - R, z + R), surfH(x - R, z - R));
     let y = s + 0.1;
     const dOut = Math.max(0, Math.abs(x) - 9.26, Math.abs(z) - 10.0);
-    if (dOut > 0) y = Math.max(1.0, y - dOut * 2.5);
+    if (dOut > 0) y = Math.max(0.1, y - dOut * 2.5);
     pos.setY(i, y);
   }
   filmGeo.computeVertexNormals();
@@ -1165,27 +1191,29 @@ screwGroup.position.y = 18;
 screwGroup.visible = false;
 scene.add(screwGroup);
 
-// Step targets: moldY, moldOn, wallY, wallOn, filmY, filmOp, pcbY, pcbOn, screwY, screwOn.
-// The mold casing is placed twice: at y=0 for the soft acrylic base (steps 1-2),
-// then at y=1.0 on top of the acrylic for the silicone stack (steps 3-5).
+// Step targets: moldAY, moldAOn, moldBY, moldBOn, wallY, wallOn, filmY, filmOp, pcbY, pcbOn, screwY, screwOn.
+// Two molds, not one. The smooth casing (moldA) is placed at y=0 for the soft
+// acrylic base (steps 1-2), so the acrylic pours as ONE big square. The slotted
+// casing (moldB) is placed at y=1.0 on top of the acrylic for the silicone stack
+// (steps 3-5), where the wall grid nestles into its slots.
 // The walls sit on top of the acrylic, so their in-position is y=1.0.
 // The flexible PCB and the screws only come in at the last step, to fasten the
 // finished stack from below. The mold casing and the walls are both out before painting.
 const TARGETS = [
-  { moldBY: 0, moldBOn: 1, wallY: 18, wallOn: 0, filmY: 14, filmOp: 0, pcbY: -20, pcbOn: 0, screwY: 18, screwOn: 0 },
-  { moldBY: 0, moldBOn: 1, wallY: 18, wallOn: 0, filmY: 14, filmOp: 0, pcbY: -20, pcbOn: 0, screwY: 18, screwOn: 0 },
-  { moldBY: 1, moldBOn: 1, wallY: 18, wallOn: 0, filmY: 14, filmOp: 0, pcbY: -20, pcbOn: 0, screwY: 18, screwOn: 0 },
-  { moldBY: 1, moldBOn: 1, wallY: 1, wallOn: 1, filmY: 14, filmOp: 0, pcbY: -20, pcbOn: 0, screwY: 18, screwOn: 0 },
-  { moldBY: 1, moldBOn: 1, wallY: 1, wallOn: 1, filmY: 14, filmOp: 0, pcbY: -20, pcbOn: 0, screwY: 18, screwOn: 0 },
-  { moldBY: 22, moldBOn: 0, wallY: 18, wallOn: 0, filmY: 14, filmOp: 0, pcbY: -20, pcbOn: 0, screwY: 18, screwOn: 0 },
-  { moldBY: 22, moldBOn: 0, wallY: 18, wallOn: 0, filmY: 0, filmOp: 1, pcbY: -20, pcbOn: 0, screwY: 18, screwOn: 0 },
-  { moldBY: 22, moldBOn: 0, wallY: 18, wallOn: 0, filmY: 0, filmOp: 1, pcbY: 0, pcbOn: 1, screwY: 0, screwOn: 1 }
+  { moldAY: 0, moldAOn: 1, moldBY: 22, moldBOn: 0, wallY: 18, wallOn: 0, filmY: 14, filmOp: 0, pcbY: -20, pcbOn: 0, screwY: 18, screwOn: 0 },
+  { moldAY: 0, moldAOn: 1, moldBY: 22, moldBOn: 0, wallY: 18, wallOn: 0, filmY: 14, filmOp: 0, pcbY: -20, pcbOn: 0, screwY: 18, screwOn: 0 },
+  { moldAY: 22, moldAOn: 0, moldBY: 1, moldBOn: 1, wallY: 18, wallOn: 0, filmY: 14, filmOp: 0, pcbY: -20, pcbOn: 0, screwY: 18, screwOn: 0 },
+  { moldAY: 22, moldAOn: 0, moldBY: 1, moldBOn: 1, wallY: 1, wallOn: 1, filmY: 14, filmOp: 0, pcbY: -20, pcbOn: 0, screwY: 18, screwOn: 0 },
+  { moldAY: 22, moldAOn: 0, moldBY: 1, moldBOn: 1, wallY: 1, wallOn: 1, filmY: 14, filmOp: 0, pcbY: -20, pcbOn: 0, screwY: 18, screwOn: 0 },
+  { moldAY: 22, moldAOn: 0, moldBY: 22, moldBOn: 0, wallY: 18, wallOn: 0, filmY: 14, filmOp: 0, pcbY: -20, pcbOn: 0, screwY: 18, screwOn: 0 },
+  { moldAY: 22, moldAOn: 0, moldBY: 22, moldBOn: 0, wallY: 18, wallOn: 0, filmY: 0, filmOp: 1, pcbY: -20, pcbOn: 0, screwY: 18, screwOn: 0 },
+  { moldAY: 22, moldAOn: 0, moldBY: 22, moldBOn: 0, wallY: 18, wallOn: 0, filmY: 0, filmOp: 1, pcbY: 0, pcbOn: 1, screwY: 0, screwOn: 1 }
 ];
 let current = 0;
 let pourClock = 0;
 let paintClock = 0;
 let lastStep = -1;
-const state = { moldBY: 22, moldBOn: 0, wallY: 18, wallOn: 0, filmY: 14, filmOp: 0, pcbY: -20, pcbOn: 0, screwY: 18, screwOn: 0 };
+const state = { moldAY: 22, moldAOn: 0, moldBY: 22, moldBOn: 0, wallY: 18, wallOn: 0, filmY: 14, filmOp: 0, pcbY: -20, pcbOn: 0, screwY: 18, screwOn: 0 };
 
 function showStep(i) {
   current = Math.max(0, Math.min(STEPS.length - 1, i));
@@ -1212,6 +1240,8 @@ function animate() {
   const dt = Math.min(clock.getDelta(), 0.05);
   const t = TARGETS[current];
   const k = 0.09;
+  state.moldAY += (t.moldAY - state.moldAY) * k;
+  state.moldAOn += (t.moldAOn - state.moldAOn) * k;
   state.moldBY += (t.moldBY - state.moldBY) * k;
   state.moldBOn += (t.moldBOn - state.moldBOn) * k;
   state.wallY += (t.wallY - state.wallY) * k;
@@ -1223,6 +1253,8 @@ function animate() {
   state.screwY += (t.screwY - state.screwY) * k;
   state.screwOn += (t.screwOn - state.screwOn) * k;
 
+  moldA.position.y = state.moldAY;
+  moldA.visible = state.moldAOn > 0.01;
   moldB.position.y = state.moldBY;
   moldB.visible = state.moldBOn > 0.01;
   walls.position.y = state.wallY;
