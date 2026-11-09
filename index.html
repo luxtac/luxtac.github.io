@@ -671,7 +671,7 @@ const STEPS = [
   { title: 'Put in the wall grid', caption: 'Row and column walls nestle into the slots in the casing, forming the gridded channels.' },
   { title: 'Pour the silicone grid', caption: 'White silicone (XP-565, 15:1) is poured in, degassed, and oven-cured about 20 minutes. The grid leaves white silicone pillars.' },
   { title: 'Paint the colors', caption: 'The full mold casing and the walls are taken out first. Then a brush paints colored rows and columns between the channels, the vibrant grid under the film.' },
-  { title: 'Seal it in black', caption: 'A thin black film is stretched over the white squares, following every recess and edge. It covers all the white and a little of the lines, and stays 20% opaque over the rest of the colors, so they poke through.' }
+  { title: 'Seal it in black', caption: 'A thin black film is stretched over the white squares, following every recess and edge. It is 95% opaque, but only 30% opaque over the middle of the colored lines, so the colors poke through there.' }
 ];
 
 const stage = document.getElementById('fabStage');
@@ -993,10 +993,35 @@ filmGeo.rotateX(-Math.PI / 2);
   }
   filmGeo.computeVertexNormals();
 }
+// Opacity regions (film shape is locked, this only changes how see-through it is):
+// the whole film is 95% opaque, but the middle 80% of the area above the lines,
+// as seen from the top, is 30% opaque so the colors poke through there.
+// Canvas alphaMap: white = 95% (base), grey rgb(81) = 30% (0.95 * 81/255).
+const filmAlpha = document.createElement('canvas');
+filmAlpha.width = 420;
+filmAlpha.height = 450;
+{
+  const ctx = filmAlpha.getContext('2d');
+  const pxPerMm = 20;
+  const cx = (wx) => (wx + 10.5) * pxPerMm;
+  const cy = (wz) => (wz + 11.25) * pxPerMm;
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, 420, 450);
+  ctx.fillStyle = 'rgb(81,81,81)';
+  // Vertical lines: middle 80% of their length (z -7.68 to 7.68).
+  vX.forEach((vx) => {
+    ctx.fillRect(cx(vx - 0.41), cy(-7.68), 0.82 * pxPerMm, 15.36 * pxPerMm);
+  });
+  // Horizontal lines: middle 80% of their length (x -7.4 to 7.4).
+  hZ.forEach((hz) => {
+    ctx.fillRect(cx(-7.4), cy(hz - 0.4), 14.8 * pxPerMm, 0.8 * pxPerMm);
+  });
+}
+const filmAlphaTex = new THREE.CanvasTexture(filmAlpha);
 const filmMat = new THREE.MeshStandardMaterial({
   color: 0x141414, roughness: 0.35, metalness: 0.1,
   transparent: true, opacity: 0, side: THREE.DoubleSide,
-  depthWrite: false
+  depthWrite: false, alphaMap: filmAlphaTex
 });
 const film = new THREE.Mesh(filmGeo, filmMat);
 film.renderOrder = 10;
@@ -1057,7 +1082,7 @@ function animate() {
   walls.position.y = state.wallY;
   walls.visible = state.wallOn > 0.01;
   film.position.y = state.filmY;
-  filmMat.opacity = state.filmOp * 0.5;
+  filmMat.opacity = state.filmOp * 0.95;
   film.visible = state.filmOp > 0.01;
 
   // Pour step: the cup appears, tilts, and a thin stream falls while the pillars
