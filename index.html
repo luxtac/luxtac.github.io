@@ -410,7 +410,7 @@
     opacity: 0.38;
     z-index: -1;
     pointer-events: none;
-    animation: corona-flicker 4.5s ease-in-out infinite, corona-spin 14s linear infinite;
+    animation: corona-flicker 4.5s ease-in-out infinite, corona-spin 8s linear infinite;
     animation-play-state: running, paused;
   }
   .corona:hover { scale: 1.05; }
@@ -597,7 +597,6 @@
           <li><b>Normal stiffness:</b> k<sub>n</sub> = 3.86 &plusmn; 0.09 N/mm per taxel</li>
           <li><b>Frame rate:</b> 20 Hz (I&sup2;C multiplexing)</li>
         </ul>
-        <p style="margin-top: 20px;">Each converter integrates an IR-blocking filter, a photodiode array, and a 16-bit integrating ADC per channel, so the analog signal never leaves the package. All 16 converters share one fixed I&sup2;C address, so two TCA9548A switches give each sensor its own bus segment. A Teensy 4.1 polls the 16 sensors and streams a frame over USB serial at a nominal 100 Hz.</p>
       </div>
       <div class="reveal reveal-right">
         <figure class="corona">
@@ -608,6 +607,7 @@
         </figure>
       </div>
     </div>
+    <p class="reveal reveal-up" style="margin-top: 28px;">Each converter integrates an IR-blocking filter, a photodiode array, and a 16-bit integrating ADC per channel, so the analog signal never leaves the package. All 16 converters share one fixed I&sup2;C address, so two TCA9548A switches give each sensor its own bus segment. A Teensy 4.1 polls the 16 sensors and streams a frame over USB serial at a nominal 100 Hz.</p>
     <div class="video-duo">
     <figure class="reveal reveal-up corona">
       <video class="wide-video" src="assets/animation.mp4" controls autoplay muted loop playsinline></video>
