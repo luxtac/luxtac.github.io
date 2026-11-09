@@ -427,7 +427,7 @@
     border-radius: 11px;
     background: conic-gradient(from var(--corona-angle), #ff2d78, #ff7a18, #ffd60a, #30d158, #0aa5ff, #bf5af2, #ff2d78);
     filter: blur(13px);
-    opacity: 0.48;
+    opacity: 0.96;
     z-index: -2;
     pointer-events: none;
     animation: corona-spin 4s linear infinite;
@@ -802,7 +802,7 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(40, stage.clientWidth / stage.clientHeight, 1, 200);
 camera.position.set(38, 30, 44);
 const controls = new OrbitControls(camera, renderer.domElement);
-controls.target.set(0, 1.1, 0);
+controls.target.set(0, 1.5, 0);
 controls.enableDamping = true;
 controls.dampingFactor = 0.08;
 
@@ -849,11 +849,13 @@ pcbGroup.position.y = -20;
 pcbGroup.visible = false;
 scene.add(pcbGroup);
 
-// Soft acrylic layer: one thin light blue blanket. It is the BASE the rest are
-// molded on. NOT segmented, a single blanket in both versions. Spans y 0 to 0.6.
+// Soft acrylic layer: one blanket. It is the BASE the rest are molded on.
+// NOT segmented, a single blanket in both versions. Spans y 0 to 1.0.
+// Per the paper the white silicone is 2 mm (2 mm mold); the acrylic base is
+// 1.0 mm, half the silicone thickness, so it reads as a substantial base.
 const acrylicMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.15, metalness: 0, transparent: true, opacity: 0.3, depthWrite: false });
-const acrylicGeo = new THREE.BoxGeometry(17.7, 0.6, 19.2);
-acrylicGeo.translate(0, 0.3, 0);
+const acrylicGeo = new THREE.BoxGeometry(17.7, 1.0, 19.2);
+acrylicGeo.translate(0, 0.5, 0);
 const acrylic = new THREE.Mesh(acrylicGeo, acrylicMat);
 acrylic.position.y = 0;
 acrylic.scale.y = 0.001;
@@ -862,7 +864,7 @@ scene.add(acrylic);
 
 // Mold casing: ONE solid connected ring, extruded from a single shape with a notched
 // hole. No segments, no gaps. The little slots are notches in the inner edge where the
-// walls fit in. Outer 21 x 22.5, hole 17 x 18.5, 2 tall.
+// walls fit in. Outer 21 x 22.5, hole 17 x 18.5, 3 tall.
 function buildMoldGeometry() {
   const outer = new THREE.Shape();
   outer.moveTo(-10.5, -11.25);
@@ -906,7 +908,7 @@ function buildMoldGeometry() {
   hole.lineTo(ix0, iz0);
   hole.closePath();
   outer.holes.push(hole);
-  const geo = new THREE.ExtrudeGeometry(outer, { depth: 2, bevelEnabled: false });
+  const geo = new THREE.ExtrudeGeometry(outer, { depth: 3, bevelEnabled: false });
   geo.rotateX(-Math.PI / 2);
   return geo;
 }
@@ -926,7 +928,7 @@ function buildMoldGeometrySmooth() {
   hole.lineTo(-8.85, 9.6);
   hole.closePath();
   outer.holes.push(hole);
-  const geo = new THREE.ExtrudeGeometry(outer, { depth: 2, bevelEnabled: false });
+  const geo = new THREE.ExtrudeGeometry(outer, { depth: 3, bevelEnabled: false });
   geo.rotateX(-Math.PI / 2);
   return geo;
 }
@@ -942,18 +944,18 @@ scene.add(moldB);
 
 // Wall grid: opaque solid light blue so they never flicker while orbiting.
 // Slightly shorter than the full span so their ends nestle into the casing slots.
-// The grid nestles ON TOP of the thin clear acrylic layer (y 0.6 to 2.0),
+// The grid nestles ON TOP of the clear acrylic layer (y 1.0 to 3.0),
 // never inside it, so it cannot z-fight with the clear layer.
 const wallMat = new THREE.MeshStandardMaterial({ color: 0x9ec8e8, roughness: 0.4, metalness: 0 });
 const walls = new THREE.Group();
 [-4.8, 0, 4.8].forEach((z) => {
-  const w = new THREE.Mesh(new THREE.BoxGeometry(18.6, 1.4, 1), wallMat);
-  w.position.set(0, 1.3, z);
+  const w = new THREE.Mesh(new THREE.BoxGeometry(18.6, 2, 1), wallMat);
+  w.position.set(0, 2.0, z);
   walls.add(w);
 });
 [-4.42, 0, 4.42].forEach((x) => {
-  const w = new THREE.Mesh(new THREE.BoxGeometry(1, 1.4, 20.1), wallMat);
-  w.position.set(x, 1.3, 0);
+  const w = new THREE.Mesh(new THREE.BoxGeometry(1, 2, 20.1), wallMat);
+  w.position.set(x, 2.0, 0);
   walls.add(w);
 });
 walls.position.y = 18;
@@ -961,8 +963,12 @@ walls.visible = false;
 scene.add(walls);
 
 // White silicone pillars: 4x4 grid, pitch 4.42 x 4.80 mm. Hidden until the pour.
+// The pillars rest ON TOP of the clear acrylic layer (y 1.0 to 3.0),
+// never inside it, so no grid shows through the clear layer. The group sits
+// at y 1.0, so the pour grows the pillars up from the acrylic surface.
+// Pillar height 2.0 matches the paper's 2 mm white silicone layer.
 const pillarGroup = new THREE.Group();
-pillarGroup.position.y = 0;
+pillarGroup.position.y = 1.0;
 const pillarMat = new THREE.MeshStandardMaterial({ color: 0xf2ede4, roughness: 0.85, metalness: 0 });
 const pillarGeo = new THREE.BoxGeometry(3.6, 2, 4.0);
 pillarGeo.translate(0, 1, 0);
@@ -1031,6 +1037,7 @@ function lineMat(color) {
   return new THREE.MeshStandardMaterial({ color, roughness: 0.5, metalness: 0, transparent: true, opacity: 0, depthWrite: true, emissive: color, emissiveIntensity: 1.0 });
 }
 // Vertical lines: run Z -9.6 to 9.6, split into segments between the horizontal crossings.
+// They rest ON TOP of the clear acrylic (y 1.0 to 2.6), never inside it.
 vX.forEach((vx, vi) => {
   const mat = lineMat(vColor[vi]);
   const line = { axis: 'z', pos: vx, color: vColor[vi], mat, tileIdx: [] };
@@ -1039,7 +1046,7 @@ vX.forEach((vx, vi) => {
     if (cz - 0.4 > start + 0.01) {
       const len = (cz - 0.4) - start;
       const m = new THREE.Mesh(new THREE.BoxGeometry(0.82, 1.6, len), mat);
-      m.position.set(vx, 0.8, start + len / 2);
+      m.position.set(vx, 1.8, start + len / 2);
       scene.add(m);
     }
     start = cz + 0.4;
@@ -1047,12 +1054,13 @@ vX.forEach((vx, vi) => {
   if (9.6 > start + 0.01) {
     const len = 9.6 - start;
     const m = new THREE.Mesh(new THREE.BoxGeometry(0.82, 1.6, len), mat);
-    m.position.set(vx, 0.8, start + len / 2);
+    m.position.set(vx, 1.8, start + len / 2);
     scene.add(m);
   }
   LINES.push(line);
 });
 // Horizontal lines: interior run X -8.85 to 8.85, perimeter run X -9.25 to 9.25.
+// They rest ON TOP of the clear acrylic (y 1.0 to 2.6), never inside it.
 hZ.forEach((hz, hi) => {
   const mat = lineMat(hColor[hi]);
   const line = { axis: 'x', pos: hz, color: hColor[hi], mat, tileIdx: [] };
@@ -1063,7 +1071,7 @@ hZ.forEach((hz, hi) => {
     if (cx - 0.41 > start + 0.01) {
       const len = (cx - 0.41) - start;
       const m = new THREE.Mesh(new THREE.BoxGeometry(len, 1.6, 0.8), mat);
-      m.position.set(start + len / 2, 0.8, hz);
+      m.position.set(start + len / 2, 1.8, hz);
       scene.add(m);
     }
     start = cx + 0.41;
@@ -1071,17 +1079,18 @@ hZ.forEach((hz, hi) => {
   if (x1 > start + 0.01) {
     const len = x1 - start;
     const m = new THREE.Mesh(new THREE.BoxGeometry(len, 1.6, 0.8), mat);
-    m.position.set(start + len / 2, 0.8, hz);
+    m.position.set(start + len / 2, 1.8, hz);
     scene.add(m);
   }
   LINES.push(line);
 });
 // Crossing tiles: one per vertical/horizontal intersection, light mix of both colors.
+// They rest ON TOP of the clear acrylic (y 1.0 to 2.6), never inside it.
 vX.forEach((vx, vi) => {
   hZ.forEach((hz, hi) => {
     const mat = lineMat(mixColor(vColor[vi], hColor[hi]));
     const t = new THREE.Mesh(new THREE.BoxGeometry(0.82, 1.6, 0.8), mat);
-    t.position.set(vx, 0.8, hz);
+    t.position.set(vx, 1.8, hz);
     scene.add(t);
     const ti = TILES.length;
     TILES.push({ mat, vLine: vi, hLine: 5 + hi });
@@ -1129,10 +1138,10 @@ filmGeo.rotateX(-Math.PI / 2);
   const pz = [-7.2, -2.4, 2.4, 7.2];
   function surfH(x, z) {
     for (const cx of px) for (const cz of pz) {
-      if (Math.abs(x - cx) <= 1.8 && Math.abs(z - cz) <= 2.0) return 2.0;
+      if (Math.abs(x - cx) <= 1.8 && Math.abs(z - cz) <= 2.0) return 3.0;
     }
-    for (const vx of vX) if (Math.abs(x - vx) <= 0.41 && Math.abs(z) <= 9.6) return 1.6;
-    for (const hz of hZ) if (Math.abs(z - hz) <= 0.4 && Math.abs(x) <= 9.25) return 1.6;
+    for (const vx of vX) if (Math.abs(x - vx) <= 0.41 && Math.abs(z) <= 9.6) return 2.6;
+    for (const hz of hZ) if (Math.abs(z - hz) <= 0.4 && Math.abs(x) <= 9.25) return 2.6;
     return 0;
   }
   const R = 0.2;
@@ -1143,7 +1152,7 @@ filmGeo.rotateX(-Math.PI / 2);
       surfH(x + R, z + R), surfH(x + R, z - R), surfH(x - R, z + R), surfH(x - R, z - R));
     let y = s + 0.1;
     const dOut = Math.max(0, Math.abs(x) - 9.26, Math.abs(z) - 10.0);
-    if (dOut > 0) y = Math.max(0.1, y - dOut * 2.5);
+    if (dOut > 0) y = Math.max(-0.4, y - dOut * 2.5);
     pos.setY(i, y);
   }
   filmGeo.computeVertexNormals();
@@ -1414,6 +1423,10 @@ window.addEventListener('resize', () => {
     }
     svg.appendChild(defs);
     var top = gelTop();
+    // The surface the rays bounce off: the dented roof in the deformed panel,
+    // the flat roof in the static (no force) panel. The rays must follow the
+    // same surface that is drawn, or the static panel shows deformed rays.
+    function surfY(x){ return deformed ? roofY(x) : top; }
     var NPTS = 60, pts = [], i, x;
     for (i = 0; i <= NPTS; i++){
       x = GX0 + (GX1 - GX0) * i / NPTS;
@@ -1443,7 +1456,7 @@ window.addEventListener('resize', () => {
       var ip = 'M' + (cx - R).toFixed(1) + ',' + iy + ' L' + (cx + R).toFixed(1) + ',' + iy + ' L' + (cx + R).toFixed(1) + ',' + cy.toFixed(1) + ' A' + R.toFixed(1) + ',' + R.toFixed(1) + ' 0 0 1 ' + (cx - R).toFixed(1) + ',' + cy.toFixed(1) + ' Z';
       svg.appendChild(el('path', { d: ip, fill: '#8a8a8e', stroke: '#5a5a5e', 'stroke-width': 1 }));
       svg.appendChild(el('line', { x1: cx, y1: iy - 26, x2: cx, y2: iy - 4, stroke: '#ff2d78', 'stroke-width': 3, 'marker-end': 'url(#pdArr)' }));
-      svg.appendChild(text(cx + 10, iy - 14, 'force', { fill: '#ff2d78', 'font-weight': 700 }));
+      svg.appendChild(text(cx, iy + 20, 'force', { fill: '#ffffff', 'font-weight': 700, 'text-anchor': 'middle' }));
     }
     // Colored sides: the left wall is painted red, the right wall green.
     // The roof is the opaque black film (the thick black stroke above).
@@ -1472,9 +1485,9 @@ window.addEventListener('resize', () => {
       for (t = step; t < 800; t += step){
         x = LED_X + dx * t;
         y = DEV_Y + dy * t;
-        if (x >= GX0 && x <= GX1 && y <= roofY(x)) return { x: x, y: y, surf: 'top' };
-        if (x <= GX0 && y >= roofY(GX0) && y <= PCB_Y) return { x: GX0, y: y, surf: 'left' };
-        if (x >= GX1 && y >= roofY(GX1) && y <= PCB_Y) return { x: GX1, y: y, surf: 'right' };
+        if (x >= GX0 && x <= GX1 && y <= surfY(x)) return { x: x, y: y, surf: 'top' };
+        if (x <= GX0 && y >= surfY(GX0) && y <= PCB_Y) return { x: GX0, y: y, surf: 'left' };
+        if (x >= GX1 && y >= surfY(GX1) && y <= PCB_Y) return { x: GX1, y: y, surf: 'right' };
         if (x < GX0 - 5 || x > GX1 + 5) return null;
       }
       return null;
@@ -1498,7 +1511,7 @@ window.addEventListener('resize', () => {
       var col, base;
       if (surf === 'left'){ col = [255, 59, 48]; base = 0.95; }
       else if (surf === 'right'){ col = [48, 209, 88]; base = 0.95; }
-      else { col = [20, 20, 20]; base = 0.35; }
+      else { col = [0, 0, 0]; base = 0.95; }
       var retOp = base * (1 - 0.5 * f) * glowF;
       var gid = 'pdg' + (gradN++);
       var g = document.createElementNS(NS, 'linearGradient');
