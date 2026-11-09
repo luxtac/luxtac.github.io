@@ -671,7 +671,7 @@ const STEPS = [
   { title: 'Put in the wall grid', caption: 'Row and column walls nestle into the slots in the casing, forming the gridded channels.' },
   { title: 'Pour the silicone grid', caption: 'White silicone (XP-565, 15:1) is poured in, degassed, and oven-cured about 20 minutes. The grid leaves white silicone pillars.' },
   { title: 'Paint the colors', caption: 'The full mold casing and the walls are taken out first. Then a brush paints colored rows and columns between the channels, the vibrant grid under the film.' },
-  { title: 'Seal it in black', caption: 'A thin black film is stretched over the white squares, following every recess and edge. It is 95% opaque, but only 30% opaque over the middle of the colored lines, so the colors poke through there.' }
+  { title: 'Seal it in black', caption: 'A thin black film is stretched over the white squares, following every recess and edge. It is 95% opaque, but only 50% opaque over the colored lines, so the colors poke through along their full length.' }
 ];
 
 const stage = document.getElementById('fabStage');
@@ -994,9 +994,10 @@ filmGeo.rotateX(-Math.PI / 2);
   filmGeo.computeVertexNormals();
 }
 // Opacity regions (film shape is locked, this only changes how see-through it is):
-// the whole film is 95% opaque, but the middle 80% of the area above the lines,
-// as seen from the top, is 30% opaque so the colors poke through there.
-// Canvas alphaMap: white = 95% (base), grey rgb(81) = 30% (0.95 * 81/255).
+// the whole film is 95% opaque, but the area above the lines, as seen from the top,
+// is 50% opaque so the colors poke through along the full length of every line.
+// The 50% strips are slightly wider than the lines, so they grow and creep closer together.
+// Canvas alphaMap: white = 95% (base), grey rgb(134) = 50% (0.95 * 134/255).
 const filmAlpha = document.createElement('canvas');
 filmAlpha.width = 420;
 filmAlpha.height = 450;
@@ -1007,14 +1008,14 @@ filmAlpha.height = 450;
   const cy = (wz) => (wz + 11.25) * pxPerMm;
   ctx.fillStyle = '#ffffff';
   ctx.fillRect(0, 0, 420, 450);
-  ctx.fillStyle = 'rgb(81,81,81)';
-  // Vertical lines: middle 80% of their length (z -7.68 to 7.68).
+  ctx.fillStyle = 'rgb(134,134,134)';
+  // Vertical lines: full length (z -9.6 to 9.6), slightly wider than the line.
   vX.forEach((vx) => {
-    ctx.fillRect(cx(vx - 0.41), cy(-7.68), 0.82 * pxPerMm, 15.36 * pxPerMm);
+    ctx.fillRect(cx(vx - 0.51), cy(-9.6), 1.02 * pxPerMm, 19.2 * pxPerMm);
   });
-  // Horizontal lines: middle 80% of their length (x -7.4 to 7.4).
+  // Horizontal lines: full length (x -9.25 to 9.25), slightly wider than the line.
   hZ.forEach((hz) => {
-    ctx.fillRect(cx(-7.4), cy(hz - 0.4), 14.8 * pxPerMm, 0.8 * pxPerMm);
+    ctx.fillRect(cx(-9.25), cy(hz - 0.5), 18.5 * pxPerMm, 1.0 * pxPerMm);
   });
 }
 const filmAlphaTex = new THREE.CanvasTexture(filmAlpha);
