@@ -295,6 +295,49 @@
   footer p { max-width: 900px; margin: 0 auto 12px; }
   footer p:last-child { margin-bottom: 0; }
 
+
+  /* animation video */
+  .wide-video {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 16px;
+    border: 1px solid var(--card-border);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    background: #000;
+  }
+
+  /* scales */
+  .scales {
+    text-align: center;
+    margin: 44px auto 0;
+    max-width: 860px;
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 28px 24px;
+  }
+  .scales h3 { margin: 0 0 8px; }
+  .scales p { color: var(--muted); margin: 0; font-size: 16px; }
+  .scale-chips {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 20px;
+  }
+  .scale-chip {
+    background: #222;
+    border: 1px solid #333;
+    border-radius: 999px;
+    padding: 10px 20px;
+    font-size: 18px;
+    font-weight: 700;
+  }
+  .scale-chip small { font-size: 12px; font-weight: 400; opacity: 0.75; margin-left: 6px; }
+  .scale-chip.current { background: var(--rainbow); color: #0b0b0c; border-color: transparent; }
+  .scale-chip.current small { color: #0b0b0c; }
+
   /* scroll reveal, same feel as the PhoTac site */
   .reveal { opacity: 0; transition: opacity 1.4s cubic-bezier(0.22,1,0.36,1), transform 1.4s cubic-bezier(0.22,1,0.36,1); }
   .reveal-up { transform: translateY(24px); }
@@ -352,8 +395,10 @@
     <h2 class="reveal reveal-up">Touch you can simulate</h2>
     <div class="rainbow-bar"></div>
     <figure class="reveal reveal-up">
-      <img class="wide" src="assets/placeholder-overview.png" alt="Overview figure placeholder">
-      <figcaption class="caption">Overview. (a) Photo of the fabricated pad. (b) Exploded stack. (c) Sensor mounted on the gripper. (d) Example 4&times;4 tactile frame during a grasp.</figcaption>
+      <div class="fig-card">
+        <img src="assets/exploded-layers.png" alt="Exploded view of the LuxTac stack">
+      </div>
+      <figcaption class="caption">LuxTac overview. The stack, peeled apart: black opaque film, white translucent silicone, soft acrylic layer, flexible PCB.</figcaption>
     </figure>
     <div class="lead reveal reveal-up">
       <p>LuxTac is a 4&times;4 optical taxel array. Each taxel is a digital light-to-digital converter that observes LED light back-scattered from a translucent white silicone layer capped by an opaque black film. Pressing the surface thins the scattering layer, so the reading falls with local indentation depth rather than with force directly.</p>
@@ -459,9 +504,26 @@
       </div>
     </div>
     <figure class="reveal reveal-up">
-      <img class="wide" src="assets/placeholder-exploded.png" alt="Exploded view placeholder">
-      <figcaption class="caption">Exploded view. PCB with sensors and LEDs, white XP-565 layer, black top film.</figcaption>
+      <video class="wide-video" src="assets/animation.mp4" controls autoplay muted loop playsinline></video>
+      <figcaption class="caption">Exploded view and sensing principle. The stack peels apart to show the photodiodes and LEDs, then a press dims the light and the taxel grid lights up.</figcaption>
     </figure>
+    <figure class="reveal reveal-up">
+      <div class="fig-card">
+        <img src="assets/pcb-render.png" alt="The 4 by 4 sensing head, photodiodes and LEDs on the flexible PCB">
+      </div>
+      <figcaption class="caption">The 4&times;4 sensing head. Sixteen TCS34725 photodiodes and nine white LEDs on the flexible PCB.</figcaption>
+    </figure>
+    <div class="scales reveal reveal-up">
+      <h3>One design, many sizes</h3>
+      <p>LuxTac scales without changing the readout. The same stack and the same Teensy readout run every size below.</p>
+      <div class="scale-chips">
+        <span class="scale-chip current">4&times;4 <small>current</small></span>
+        <span class="scale-chip">4&times;8</span>
+        <span class="scale-chip">8&times;8</span>
+        <span class="scale-chip">16&times;16</span>
+        <span class="scale-chip">26&times;8</span>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -477,8 +539,8 @@
       <div class="fab-step reveal reveal-up"><span class="num">4</span><h4>Seal it in black</h4><p>Opaque black film, Psycho Paint with black Sil-Pig and NOVOCS, 0.1 mm, over everything.</p></div>
     </div>
     <figure class="reveal reveal-up">
-      <img class="wide" src="assets/placeholder-fab-animation.png" alt="Fabrication animation placeholder">
-      <figcaption class="caption">Fabrication animation. Mold, pour, paint, seal, animated step by step.</figcaption>
+      <img class="photo" src="assets/fab-bench.jpg" alt="Fabrication bench with silicone, pigments, and the precision balance">
+      <figcaption class="caption">The fabrication bench. Smooth-On silicone and Psycho Paint, pigments, and the precision balance for the 15:1 mix.</figcaption>
     </figure>
   </div>
 </section>
