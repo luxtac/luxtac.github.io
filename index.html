@@ -485,7 +485,7 @@
     <div class="hero-grid reveal reveal-up">
       <div class="corona">
         <div class="hero-photo">
-          <img src="assets/sensor-photos.png" alt="The LuxTac sensing head, two views: the plain black film, and the colored taxel grid showing through the film.">
+          <img src="assets/hero-render.png" alt="Render of the LuxTac sensing head.">
         </div>
       </div>
       <div class="hero-stats">
@@ -505,18 +505,6 @@
   <div class="container">
     <h2 class="reveal reveal-up">Abstract</h2>
     <div class="rainbow-bar"></div>
-    <figure class="reveal reveal-up">
-      <div class="fig-card corona">
-        <img src="assets/stack-4b4-shear.jpg" alt="Exploded view of the LuxTac stack, the black film peeled back to show the colored shear grid, clear soft acrylic layer, and flexible PCB">
-      </div>
-      <figcaption class="caption">LuxTac overview. The stack, peeled apart: black opaque film, white translucent silicone, soft acrylic layer, flexible PCB.</figcaption>
-    </figure>
-    <figure class="reveal reveal-up">
-      <div class="fig-card corona">
-        <img src="assets/stack-4b4.jpg" alt="Exploded view of the LuxTac stack, the black film peeled back to show the colored taxel grid, clear soft acrylic layer, and flexible PCB">
-      </div>
-      <figcaption class="caption">The LuxTac stack, black film peeled back to show the colored taxel grid.</figcaption>
-    </figure>
     <div class="lead reveal reveal-up">
       <p>Dense, low-cost tactile arrays have made touch a practical input for robot learning, but the dominant piezoresistive designs report an electrical quantity that is only loosely tied to the physics of contact, which makes them hard to characterize, compare across units, or reproduce in simulation. We present LuxTac, a 4&times;4 optical taxel array in which each taxel is a light-to-digital converter that observes LED light back-scattered from a translucent white silicone layer capped by an opaque, light-absorbing black film. Pressing the surface thins the scattering layer, so the reading falls monotonically with local indentation depth rather than with force directly.</p>
       <p>We exploit this to split calibration into two independent maps: an optical transfer function from depth to signal, and a mechanical stiffness from force to depth, which is exactly the quantity a penalty-based tactile simulator needs. Over 240 presses, LuxTac responds linearly to force (R&sup2; = 0.999) from a 104 mN detection threshold to at least 5.8 N, with 2.0% repeatability, 5.9% hysteresis, and a taxel-to-taxel coefficient of variation that drops from 38% to 6% after normalization. Adding LuxTac to a visuomotor policy raises success on peg-in-hole and cube sorting from 44% and 33% to 87% and 40%. Design files and code will be released.</p>
@@ -571,6 +559,20 @@
   <div class="container">
     <h2 class="reveal reveal-up">Sensor Design</h2>
     <div class="rainbow-bar"></div>
+    <div class="video-duo">
+    <figure class="reveal reveal-up">
+      <div class="fig-card corona">
+        <img src="assets/stack-4b4.jpg" alt="Exploded view of the LuxTac stack, the black film peeled back to show the colored taxel grid, clear soft acrylic layer, and flexible PCB">
+      </div>
+      <figcaption class="caption">The LuxTac stack, black film peeled back to show the colored taxel grid.</figcaption>
+    </figure>
+    <figure class="reveal reveal-up">
+      <div class="fig-card corona">
+        <img src="assets/stack-4b4-shear.jpg" alt="Exploded view of the LuxTac stack, the black film peeled back to show the colored shear grid, clear soft acrylic layer, and flexible PCB">
+      </div>
+      <figcaption class="caption">LuxTac overview. The stack, peeled apart: black opaque film, white translucent silicone, soft acrylic layer, flexible PCB.</figcaption>
+    </figure>
+    </div>
     <div class="design-grid">
       <div class="reveal reveal-left">
         <ul class="spec-list">
@@ -632,9 +634,10 @@
       </div>
     </div>
     <div class="fab-steps">
-      <div class="fab-step reveal reveal-up"><span class="num">1</span><h4>Cast the white silicone</h4><p>XP-565 at a 15:1 ratio by weight, pigmented with 0.04% white Silk Pig. Cast into laser-cut acrylic molds, 2 mm and 0.5 mm thick, secured with M2 screws. Degassed, poured slowly to minimize air entrapment, then oven-cured about 20 minutes.</p></div>
-      <div class="fab-step reveal reveal-up"><span class="num">2</span><h4>Paint the color in</h4><p>Colored rows and columns between the channels, the vibrant grid under the film.</p></div>
-      <div class="fab-step reveal reveal-up"><span class="num">3</span><h4>Seal it in black</h4><p>Opaque top layer: Smooth-On Psycho Paint Part A, Part B, black Silk Pig, and NOVOCS silicone solvent in a 1:1:0.5:1 ratio by weight, 0.1 mm.</p></div>
+      <div class="fab-step reveal reveal-up"><span class="num">1</span><h4>Pour the soft acrylic</h4><p>A clear soft acrylic layer, mostly transparent and slightly grey, poured into the mold to form the soft base the silicone stack sits on.</p></div>
+      <div class="fab-step reveal reveal-up"><span class="num">2</span><h4>Cast the white silicone</h4><p>XP-565 at a 15:1 ratio by weight, pigmented with 0.04% white Silk Pig. Cast into laser-cut acrylic molds, 2 mm and 0.5 mm thick, secured with M2 screws. Degassed, poured slowly to minimize air entrapment, then oven-cured about 20 minutes.</p></div>
+      <div class="fab-step reveal reveal-up"><span class="num">3</span><h4>Paint the color in</h4><p>Colored rows and columns between the channels, the vibrant grid under the film.</p></div>
+      <div class="fab-step reveal reveal-up"><span class="num">4</span><h4>Seal it in black</h4><p>Opaque top layer: Smooth-On Psycho Paint Part A, Part B, black Silk Pig, and NOVOCS silicone solvent in a 1:1:0.5:1 ratio by weight, 0.1 mm.</p></div>
     </div>
   </div>
 </section>
@@ -743,9 +746,11 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 const STEPS = [
-  { title: 'Put the mold casing on', caption: 'The mold casing is placed down, before the pour. Its slotted inner edge has notches where the wall grid will nestle.' },
-  { title: 'Put in the wall grid', caption: 'Row and column walls nestle into the slots in the casing, forming the gridded channels.' },
-  { title: 'Pour the silicone grid', caption: 'White silicone (XP-565, 15:1) is poured in, degassed, and oven-cured about 20 minutes. The grid leaves white silicone pillars.' },
+  { title: 'Put the mold casing on', caption: 'The mold casing is placed down, before the acrylic pour. Its slotted inner edge has notches where the wall grid will nestle later.' },
+  { title: 'Pour the soft acrylic', caption: 'A clear soft acrylic layer is poured into the mold and left to set. It is mostly transparent, slightly grey, and forms the soft base the silicone stack sits on.' },
+  { title: 'Put the mold casing on', caption: 'The mold casing is placed down again, this time on top of the soft acrylic base, ready for the silicone.' },
+  { title: 'Put in the wall grid', caption: 'Row and column walls nestle into the slots in the casing, forming the gridded channels on top of the acrylic.' },
+  { title: 'Pour the silicone grid', caption: 'White silicone (XP-565, 15:1) is poured in on top of the acrylic, degassed, and oven-cured about 20 minutes. The grid leaves white silicone pillars.' },
   { title: 'Paint the colors', caption: 'The mold casing and the walls are taken out first. Then a brush paints colored rows and columns between the channels, the vibrant grid under the film.' },
   { title: 'Seal it in black', caption: 'A thin black film is stretched over the white squares, following every recess and edge. It is 95% opaque, but only 50% opaque over the colored lines, so the colors poke through along their full length.' },
   { title: 'Secure onto the flexible PCB', caption: 'The finished stack is secured onto the flexible PCB below it, so the photodiodes and LEDs sit under the finished stack.' }
@@ -767,7 +772,7 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(40, stage.clientWidth / stage.clientHeight, 1, 200);
 camera.position.set(38, 30, 44);
 const controls = new OrbitControls(camera, renderer.domElement);
-controls.target.set(0, 1.0, 0);
+controls.target.set(0, 1.5, 0);
 controls.enableDamping = true;
 controls.dampingFactor = 0.08;
 
@@ -870,9 +875,25 @@ moldB.position.y = 22;
 moldB.visible = false;
 scene.add(moldB);
 
+// Soft acrylic base: a fresh square box with height, poured first into the mold.
+// Mostly transparent, slightly grey. It sits on the PCB (y 0 to 1.0) and the
+// silicone stack (pillars, walls, lines) is built on top of it. The group is
+// lifted 0.02 so the acrylic bottom does not z-fight with the PCB top.
+const acrylicGroup = new THREE.Group();
+const acrylicMat = new THREE.MeshStandardMaterial({ color: 0x9aa0a6, roughness: 0.3, metalness: 0, transparent: true, opacity: 0.3, depthWrite: false });
+const acrylicGeo = new THREE.BoxGeometry(17.7, 1.0, 19.2);
+acrylicGeo.translate(0, 0.5, 0);
+const acrylic = new THREE.Mesh(acrylicGeo, acrylicMat);
+acrylic.renderOrder = 5;
+acrylicGroup.add(acrylic);
+acrylicGroup.position.y = 0.02;
+acrylicGroup.scale.y = 0.001;
+acrylicGroup.visible = false;
+scene.add(acrylicGroup);
+
 // Wall grid: opaque solid light blue so they never flicker while orbiting.
 // Slightly shorter than the full span so their ends nestle into the casing slots.
-// The grid sits directly on the flexible PCB (y 0 to 2.0).
+// The grid sits on top of the soft acrylic base (y 1.0 to 3.0).
 const wallMat = new THREE.MeshStandardMaterial({ color: 0x9ec8e8, roughness: 0.4, metalness: 0 });
 const walls = new THREE.Group();
 [-4.8, 0, 4.8].forEach((z) => {
@@ -890,10 +911,10 @@ walls.visible = false;
 scene.add(walls);
 
 // White silicone pillars: 4x4 grid, pitch 4.42 x 4.80 mm. Hidden until the pour.
-// The pillars sit directly on the flexible PCB (y 0 to 2.0).
+// The pillars sit on top of the soft acrylic base (y 1.0 to 3.0).
 // Pillar height 2.0 matches the paper's 2 mm white silicone layer.
 const pillarGroup = new THREE.Group();
-pillarGroup.position.y = 0;
+pillarGroup.position.y = 1.0;
 const pillarMat = new THREE.MeshStandardMaterial({ color: 0xf2ede4, roughness: 0.85, metalness: 0 });
 const pillarGeo = new THREE.BoxGeometry(3.6, 2, 4.0);
 pillarGeo.translate(0, 1, 0);
@@ -962,7 +983,7 @@ function lineMat(color) {
   return new THREE.MeshStandardMaterial({ color, roughness: 0.5, metalness: 0, transparent: true, opacity: 0, depthWrite: true, emissive: color, emissiveIntensity: 1.0 });
 }
 // Vertical lines: run Z -9.6 to 9.6, split into segments between the horizontal crossings.
-// They sit directly on the flexible PCB (y 0 to 1.6).
+// They sit on top of the soft acrylic base (y 1.0 to 2.6).
 vX.forEach((vx, vi) => {
   const mat = lineMat(vColor[vi]);
   const line = { axis: 'z', pos: vx, color: vColor[vi], mat, tileIdx: [] };
@@ -971,7 +992,7 @@ vX.forEach((vx, vi) => {
     if (cz - 0.4 > start + 0.01) {
       const len = (cz - 0.4) - start;
       const m = new THREE.Mesh(new THREE.BoxGeometry(0.82, 1.6, len), mat);
-      m.position.set(vx, 0.8, start + len / 2);
+      m.position.set(vx, 1.8, start + len / 2);
       scene.add(m);
     }
     start = cz + 0.4;
@@ -979,13 +1000,13 @@ vX.forEach((vx, vi) => {
   if (9.6 > start + 0.01) {
     const len = 9.6 - start;
     const m = new THREE.Mesh(new THREE.BoxGeometry(0.82, 1.6, len), mat);
-    m.position.set(vx, 0.8, start + len / 2);
+    m.position.set(vx, 1.8, start + len / 2);
     scene.add(m);
   }
   LINES.push(line);
 });
 // Horizontal lines: interior run X -8.85 to 8.85, perimeter run X -9.25 to 9.25.
-// They sit directly on the flexible PCB (y 0 to 1.6).
+// They sit on top of the soft acrylic base (y 1.0 to 2.6).
 hZ.forEach((hz, hi) => {
   const mat = lineMat(hColor[hi]);
   const line = { axis: 'x', pos: hz, color: hColor[hi], mat, tileIdx: [] };
@@ -996,7 +1017,7 @@ hZ.forEach((hz, hi) => {
     if (cx - 0.41 > start + 0.01) {
       const len = (cx - 0.41) - start;
       const m = new THREE.Mesh(new THREE.BoxGeometry(len, 1.6, 0.8), mat);
-      m.position.set(start + len / 2, 0.8, hz);
+      m.position.set(start + len / 2, 1.8, hz);
       scene.add(m);
     }
     start = cx + 0.41;
@@ -1004,18 +1025,18 @@ hZ.forEach((hz, hi) => {
   if (x1 > start + 0.01) {
     const len = x1 - start;
     const m = new THREE.Mesh(new THREE.BoxGeometry(len, 1.6, 0.8), mat);
-    m.position.set(start + len / 2, 0.8, hz);
+    m.position.set(start + len / 2, 1.8, hz);
     scene.add(m);
   }
   LINES.push(line);
 });
 // Crossing tiles: one per vertical/horizontal intersection, light mix of both colors.
-// They sit directly on the flexible PCB (y 0 to 1.6).
+// They sit on top of the soft acrylic base (y 1.0 to 2.6).
 vX.forEach((vx, vi) => {
   hZ.forEach((hz, hi) => {
     const mat = lineMat(mixColor(vColor[vi], hColor[hi]));
     const t = new THREE.Mesh(new THREE.BoxGeometry(0.82, 1.6, 0.8), mat);
-    t.position.set(vx, 0.8, hz);
+    t.position.set(vx, 1.8, hz);
     scene.add(t);
     const ti = TILES.length;
     TILES.push({ mat, vLine: vi, hLine: 5 + hi });
@@ -1063,11 +1084,11 @@ filmGeo.rotateX(-Math.PI / 2);
   const pz = [-7.2, -2.4, 2.4, 7.2];
   function surfH(x, z) {
     for (const cx of px) for (const cz of pz) {
-      if (Math.abs(x - cx) <= 1.8 && Math.abs(z - cz) <= 2.0) return 2.0;
+      if (Math.abs(x - cx) <= 1.8 && Math.abs(z - cz) <= 2.0) return 3.0;
     }
-    for (const vx of vX) if (Math.abs(x - vx) <= 0.41 && Math.abs(z) <= 9.6) return 1.6;
-    for (const hz of hZ) if (Math.abs(z - hz) <= 0.4 && Math.abs(x) <= 9.25) return 1.6;
-    return 1.0;
+    for (const vx of vX) if (Math.abs(x - vx) <= 0.41 && Math.abs(z) <= 9.6) return 2.6;
+    for (const hz of hZ) if (Math.abs(z - hz) <= 0.4 && Math.abs(x) <= 9.25) return 2.6;
+    return 2.0;
   }
   const R = 0.2;
   for (let i = 0; i < pos.count; i++) {
@@ -1077,7 +1098,7 @@ filmGeo.rotateX(-Math.PI / 2);
       surfH(x + R, z + R), surfH(x + R, z - R), surfH(x - R, z + R), surfH(x - R, z - R));
     let y = s + 0.1;
     const dOut = Math.max(0, Math.abs(x) - 9.26, Math.abs(z) - 10.0);
-    if (dOut > 0) y = Math.max(0, y - dOut * 2.5);
+    if (dOut > 0) y = Math.max(1.0, y - dOut * 2.5);
     pos.setY(i, y);
   }
   filmGeo.computeVertexNormals();
@@ -1145,12 +1166,17 @@ screwGroup.visible = false;
 scene.add(screwGroup);
 
 // Step targets: moldY, moldOn, wallY, wallOn, filmY, filmOp, pcbY, pcbOn, screwY, screwOn.
+// The mold casing is placed twice: at y=0 for the soft acrylic base (steps 1-2),
+// then at y=1.0 on top of the acrylic for the silicone stack (steps 3-5).
+// The walls sit on top of the acrylic, so their in-position is y=1.0.
 // The flexible PCB and the screws only come in at the last step, to fasten the
 // finished stack from below. The mold casing and the walls are both out before painting.
 const TARGETS = [
   { moldBY: 0, moldBOn: 1, wallY: 18, wallOn: 0, filmY: 14, filmOp: 0, pcbY: -20, pcbOn: 0, screwY: 18, screwOn: 0 },
-  { moldBY: 0, moldBOn: 1, wallY: 0, wallOn: 1, filmY: 14, filmOp: 0, pcbY: -20, pcbOn: 0, screwY: 18, screwOn: 0 },
-  { moldBY: 0, moldBOn: 1, wallY: 0, wallOn: 1, filmY: 14, filmOp: 0, pcbY: -20, pcbOn: 0, screwY: 18, screwOn: 0 },
+  { moldBY: 0, moldBOn: 1, wallY: 18, wallOn: 0, filmY: 14, filmOp: 0, pcbY: -20, pcbOn: 0, screwY: 18, screwOn: 0 },
+  { moldBY: 1, moldBOn: 1, wallY: 18, wallOn: 0, filmY: 14, filmOp: 0, pcbY: -20, pcbOn: 0, screwY: 18, screwOn: 0 },
+  { moldBY: 1, moldBOn: 1, wallY: 1, wallOn: 1, filmY: 14, filmOp: 0, pcbY: -20, pcbOn: 0, screwY: 18, screwOn: 0 },
+  { moldBY: 1, moldBOn: 1, wallY: 1, wallOn: 1, filmY: 14, filmOp: 0, pcbY: -20, pcbOn: 0, screwY: 18, screwOn: 0 },
   { moldBY: 22, moldBOn: 0, wallY: 18, wallOn: 0, filmY: 14, filmOp: 0, pcbY: -20, pcbOn: 0, screwY: 18, screwOn: 0 },
   { moldBY: 22, moldBOn: 0, wallY: 18, wallOn: 0, filmY: 0, filmOp: 1, pcbY: -20, pcbOn: 0, screwY: 18, screwOn: 0 },
   { moldBY: 22, moldBOn: 0, wallY: 18, wallOn: 0, filmY: 0, filmOp: 1, pcbY: 0, pcbOn: 1, screwY: 0, screwOn: 1 }
@@ -1209,24 +1235,42 @@ function animate() {
   screwGroup.position.y = state.screwY;
   screwGroup.visible = state.screwOn > 0.01;
 
-  // Pour step (2 = silicone grid): the cup appears, tilts, and a thin stream
-  // falls while the pillars fill over ~1.5 s. Then the cup and stream disappear.
-  const isPour = current === 2;
+  // Pour steps: step 2 (index 1) pours the soft acrylic base, step 5 (index 4)
+  // pours the silicone grid on top of it. The same cup and stream are reused;
+  // the resin and stream run grey for the acrylic and white for the silicone.
+  // Each pour fills its own layer over ~1.5 s, then the cup and stream disappear.
+  const isAcrylicPour = current === 1;
+  const isSiliconePour = current === 4;
+  const isPour = isAcrylicPour || isSiliconePour;
   if (isPour) {
     if (lastStep !== current) pourClock = 0;
     pourClock += dt;
     const fill = Math.max(0, Math.min(1, (pourClock - 0.3) / 1.5));
     const cupOp = pourClock < 0.3 ? pourClock / 0.3 : pourClock < 1.6 ? 1 : Math.max(0, 1 - (pourClock - 1.6) / 0.4);
+    if (isAcrylicPour) { resinMat.color.set(0x9aa0a6); streamMat.color.set(0x9aa0a6); }
+    else { resinMat.color.set(0xffffff); streamMat.color.set(0xffffff); }
     cupMat.opacity = cupOp;
     resinMat.opacity = cupOp * 0.4;
     cupGroup.visible = cupOp > 0.01;
     cupGroup.rotation.z = pourClock < 0.3 ? 0 : Math.min(0.55, (pourClock - 0.3) * 1.2);
     streamMat.opacity = pourClock < 0.3 ? 0 : pourClock < 1.6 ? 0.35 : Math.max(0, 0.35 * (1 - (pourClock - 1.6) / 0.4));
     stream.visible = streamMat.opacity > 0.01;
-    pillarGroup.visible = fill > 0.01;
-    pillarGroup.scale.y = Math.max(fill, 0.001);
+    if (isAcrylicPour) {
+      acrylicGroup.visible = fill > 0.01;
+      acrylicGroup.scale.y = Math.max(fill, 0.001);
+      pillarGroup.visible = false;
+      pillarGroup.scale.y = 0.001;
+    } else {
+      acrylicGroup.visible = true;
+      acrylicGroup.scale.y = 1;
+      pillarGroup.visible = fill > 0.01;
+      pillarGroup.scale.y = Math.max(fill, 0.001);
+    }
   } else {
-    const pillarFull = current > 2;
+    const acrylicFull = current > 1;
+    const pillarFull = current > 4;
+    acrylicGroup.visible = acrylicFull;
+    acrylicGroup.scale.y = acrylicFull ? 1 : 0.001;
     pillarGroup.visible = pillarFull;
     pillarGroup.scale.y = pillarFull ? 1 : 0.001;
     cupGroup.visible = false;
@@ -1242,8 +1286,8 @@ function animate() {
       Tl.mat.opacity = (Tl.vLine < paintedCount || Tl.hLine < paintedCount) ? 1 : 0;
     });
   }
-  if (current === 3) {
-    if (lastStep !== 3) paintClock = 0;
+  if (current === 5) {
+    if (lastStep !== 5) paintClock = 0;
     paintClock += dt;
     const per = 0.35;
     const total = LINES.length * per;
@@ -1252,8 +1296,8 @@ function animate() {
       const frac = (paintClock - idx * per) / per;
       const L = LINES[idx];
       tipMat.color.set(L.color);
-      if (L.axis === 'z') brush.position.set(L.pos, 2.8, -9.5 + frac * 19);
-      else brush.position.set(-9.5 + frac * 19, 2.8, L.pos);
+      if (L.axis === 'z') brush.position.set(L.pos, 3.8, -9.5 + frac * 19);
+      else brush.position.set(-9.5 + frac * 19, 3.8, L.pos);
       brush.visible = true;
       setPaint(idx + 1);
     } else {
@@ -1262,7 +1306,7 @@ function animate() {
     }
   } else {
     brush.visible = false;
-    setPaint(current > 3 ? LINES.length : 0);
+    setPaint(current > 5 ? LINES.length : 0);
   }
   lastStep = current;
 
