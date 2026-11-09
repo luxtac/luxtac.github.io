@@ -451,7 +451,7 @@
   /* paired demo videos: 2 rows x 6 columns, portrait cells, dark panel, no hover move */
   .demo-pairs { background: #161618; border-radius: 16px; padding: 20px; }
   .demo-pairs-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
-  .demo-pairs-grid video { width: 100%; aspect-ratio: 3/4; object-fit: cover; border-radius: 8px; display: block; background: #000; }
+  .demo-pairs-grid video { width: 100%; height: auto; border-radius: 8px; display: block; background: #000; }
   .demo-label { display: block; text-align: center; font-size: 13px; color: #a8a8ad; margin-top: 6px; }
   .demo-pairs.corona:hover { scale: 1; }
   .demo-pairs.corona:hover::before, .demo-pairs.corona:hover::after { animation-play-state: paused; }
@@ -494,7 +494,7 @@
     <div class="hero-grid reveal reveal-up">
       <div class="corona">
         <div class="hero-photo">
-          <img src="assets/hero-title-dark.png" alt="Render of the LuxTac sensing head, two stacks on a dark background.">
+          <img src="assets/hero-white.png" alt="Render of the LuxTac sensing head, two stacks on a white background.">
         </div>
       </div>
       <div class="hero-stats">
@@ -605,11 +605,11 @@
     <p class="reveal reveal-up" style="margin-top: 28px;">Each converter integrates an IR-blocking filter, a photodiode array, and a 16-bit integrating ADC per channel, so the analog signal never leaves the package. All 16 converters share one fixed I&sup2;C address, so two TCA9548A switches give each sensor its own bus segment. A Teensy 4.1 polls the 16 sensors and streams a frame over USB serial at a nominal 100 Hz.</p>
     <div class="video-duo">
     <figure class="reveal reveal-up">
-      <div class="corona"><video class="wide-video" src="assets/animation.mp4" controls autoplay muted loop playsinline></video></div>
+      <div class="corona"><video class="wide-video" src="assets/animation.mp4#t=3" controls autoplay muted loop playsinline></video></div>
       <figcaption class="caption">Sensing principle, mode one. The stack peels apart to show the photodiodes and LEDs, then a press dims the light.</figcaption>
     </figure>
     <figure class="reveal reveal-up">
-      <div class="corona"><video class="wide-video" src="assets/shear-animation.mp4" controls autoplay muted loop playsinline></video></div>
+      <div class="corona"><video class="wide-video" src="assets/shear-animation.mp4#t=3" controls autoplay muted loop playsinline></video></div>
       <figcaption class="caption">Shear sensing, mode two. A single taxel under normal force, shear, and rotation, then a roller press with the taxel grid lighting up (8&times;4 board).</figcaption>
     </figure>
     </div>
@@ -927,20 +927,12 @@ moldA.position.y = 22;
 moldA.visible = false;
 scene.add(moldA);
 
-// Soft acrylic base: rebuilt from scratch. A square prism, the EXACT same
-// square as the inside of the step 1 mold casing (moldA hole, 17 x 17),
-// literally just a square. Height 0.5, the thickness from the paper
-// (the 0.5mm acrylic mold). Mostly transparent, slightly grey. It sits on
-// the PCB (y 0 to 0.5) and the silicone stack (pillars, walls, lines) is
-// built on top of it. The group is lifted 0.02 so the acrylic bottom does
-// not z-fight with the PCB top.
+// Soft acrylic base: the CAD for the acrylic is removed (Benjamin 2026-11-09).
+// The group is kept, empty, so the pour animation code that references it
+// still runs and nothing else changes. The pour cup, resin, and stream still
+// play on step 2, the step captions are unchanged, and the silicone stack
+// keeps its Y positions.
 const acrylicGroup = new THREE.Group();
-const acrylicMat = new THREE.MeshStandardMaterial({ color: 0x9aa0a6, roughness: 0.3, metalness: 0, transparent: true, opacity: 0.3, depthWrite: false });
-const acrylicGeo = new THREE.BoxGeometry(17, 0.5, 17);
-acrylicGeo.translate(0, 0.25, 0);
-const acrylic = new THREE.Mesh(acrylicGeo, acrylicMat);
-acrylic.renderOrder = 5;
-acrylicGroup.add(acrylic);
 acrylicGroup.position.y = 0.02;
 acrylicGroup.scale.y = 0.001;
 acrylicGroup.visible = false;
