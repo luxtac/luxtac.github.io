@@ -665,8 +665,9 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 const STEPS = [
   { title: 'Base wired chip', caption: 'The sensing head is a 21.8 x 23.8 mm region of a flexible PCB, wired to the Teensy readout.' },
-  { title: 'Put the mold casing on', caption: 'The mold casing is placed over the base, before the first pour. One solid ring hugging the white silicone square edges, with little slots for the walls.' },
+  { title: 'Put the first mold casing on', caption: 'The first mold casing is placed over the base, before the first pour. Its smooth square opening matches the soft acrylic layer, with no slots for the walls.' },
   { title: 'Pour the soft acrylic layer', caption: 'A thin light blue soft acrylic layer is poured over the photodiodes and LEDs, just barely covering them.' },
+  { title: 'Put the second mold casing on', caption: 'The first casing comes off and a second mold casing comes down, with slots cut in the inner edge where the wall grid will nestle.' },
   { title: 'Put in the wall grid', caption: 'Row and column walls nestle into the slots in the casing, forming the gridded channels.' },
   { title: 'Pour the silicone grid', caption: 'White silicone (XP-565, 15:1) is poured in, degassed, and oven-cured about 20 minutes. The grid leaves white silicone pillars.' },
   { title: 'Paint the colors', caption: 'The full mold casing and the walls are taken out first. Then a brush paints colored rows and columns between the channels, the vibrant grid under the film.' },
@@ -791,11 +792,35 @@ function buildMoldGeometry() {
   geo.rotateX(-Math.PI / 2);
   return geo;
 }
+// First mold casing: same outer ring, but a plain smooth square opening that
+// matches the soft acrylic layer (17.7 x 19.2). No slots for the walls.
+function buildMoldGeometrySmooth() {
+  const outer = new THREE.Shape();
+  outer.moveTo(-10.5, -11.25);
+  outer.lineTo(10.5, -11.25);
+  outer.lineTo(10.5, 11.25);
+  outer.lineTo(-10.5, 11.25);
+  outer.closePath();
+  const hole = new THREE.Path();
+  hole.moveTo(-8.85, -9.6);
+  hole.lineTo(8.85, -9.6);
+  hole.lineTo(8.85, 9.6);
+  hole.lineTo(-8.85, 9.6);
+  hole.closePath();
+  outer.holes.push(hole);
+  const geo = new THREE.ExtrudeGeometry(outer, { depth: 2, bevelEnabled: false });
+  geo.rotateX(-Math.PI / 2);
+  return geo;
+}
 const moldMat = new THREE.MeshStandardMaterial({ color: 0xdfe8ee, roughness: 0.5, metalness: 0 });
-const mold = new THREE.Mesh(buildMoldGeometry(), moldMat);
-mold.position.y = 22;
-mold.visible = false;
-scene.add(mold);
+const moldA = new THREE.Mesh(buildMoldGeometrySmooth(), moldMat);
+moldA.position.y = 22;
+moldA.visible = false;
+scene.add(moldA);
+const moldB = new THREE.Mesh(buildMoldGeometry(), moldMat);
+moldB.position.y = 22;
+moldB.visible = false;
+scene.add(moldB);
 
 // Wall grid: opaque solid light blue so they never flicker while orbiting.
 // Slightly shorter than the full span so their ends nestle into the casing slots.
@@ -862,16 +887,15 @@ stream.visible = false;
 scene.add(stream);
 
 // Colored lines. Pattern rule: no color next to or crossing itself. All lines of one
-// color are parallel, and a different color always sits between two lines of the same
-// color. Vertical lines use green, pink, blue only; horizontal lines use yellow,
-// purple, orange only. Where a vertical and a horizontal line cross, both lines stop
-// and a small tile takes their place, a light mix of the two crossing colors.
-const GREEN = 0x30d158, PINK = 0xff2d78, BLUE = 0x0aa5ff;
-const YELLOW = 0xffd60a, PURPLE = 0xbf5af2, ORANGE = 0xff7a18;
+// Color pattern, corrected by Prince (2026-11-09): rows reciprocate between two
+// colors (red, green) and columns reciprocate between two other colors (blue,
+// yellow). Where a vertical and a horizontal line cross, both lines stop and a
+// small tile takes their place, a light mix of the two crossing colors.
+const RED = 0xff3b30, GREEN = 0x30d158, BLUE = 0x0aa5ff, YELLOW = 0xffd60a;
 const vX = [-8.85, -4.42, 0, 4.42, 8.85];
-const vColor = [GREEN, PINK, BLUE, GREEN, PINK];
+const vColor = [BLUE, YELLOW, BLUE, YELLOW, BLUE];
 const hZ = [-9.6, -4.8, 0, 4.8, 9.6];
-const hColor = [YELLOW, PURPLE, ORANGE, YELLOW, PURPLE];
+const hColor = [RED, GREEN, RED, GREEN, RED];
 function mixColor(c1, c2) {
   const r1 = (c1 >> 16) & 255, g1 = (c1 >> 8) & 255, b1 = c1 & 255;
   const r2 = (c2 >> 16) & 255, g2 = (c2 >> 8) & 255, b2 = c2 & 255;
@@ -884,7 +908,7 @@ function mixColor(c1, c2) {
 const LINES = [];
 const TILES = [];
 function lineMat(color) {
-  return new THREE.MeshStandardMaterial({ color, roughness: 0.5, metalness: 0, transparent: true, opacity: 0, depthWrite: true });
+  return new THREE.MeshStandardMaterial({ color, roughness: 0.5, metalness: 0, transparent: true, opacity: 0, depthWrite: true, emissive: color, emissiveIntensity: 1.0 });
 }
 // Vertical lines: run Z -9.6 to 9.6, split into segments between the horizontal crossings.
 vX.forEach((vx, vi) => {
@@ -1044,19 +1068,20 @@ scene.add(film);
 // Step targets: moldY, moldOn, wallY, wallOn, filmY, filmOp.
 // The full mold casing and the walls are both out before painting (step 5).
 const TARGETS = [
-  { moldY: 22, moldOn: 0, wallY: 18, wallOn: 0, filmY: 14, filmOp: 0 },
-  { moldY: 0.4, moldOn: 1, wallY: 18, wallOn: 0, filmY: 14, filmOp: 0 },
-  { moldY: 0.4, moldOn: 1, wallY: 18, wallOn: 0, filmY: 14, filmOp: 0 },
-  { moldY: 0.4, moldOn: 1, wallY: 0, wallOn: 1, filmY: 14, filmOp: 0 },
-  { moldY: 0.4, moldOn: 1, wallY: 0, wallOn: 1, filmY: 14, filmOp: 0 },
-  { moldY: 22, moldOn: 0, wallY: 18, wallOn: 0, filmY: 14, filmOp: 0 },
-  { moldY: 22, moldOn: 0, wallY: 18, wallOn: 0, filmY: 0, filmOp: 1 }
+  { moldAY: 22, moldAOn: 0, moldBY: 22, moldBOn: 0, wallY: 18, wallOn: 0, filmY: 14, filmOp: 0 },
+  { moldAY: 0.4, moldAOn: 1, moldBY: 22, moldBOn: 0, wallY: 18, wallOn: 0, filmY: 14, filmOp: 0 },
+  { moldAY: 0.4, moldAOn: 1, moldBY: 22, moldBOn: 0, wallY: 18, wallOn: 0, filmY: 14, filmOp: 0 },
+  { moldAY: 22, moldAOn: 0, moldBY: 0.4, moldBOn: 1, wallY: 18, wallOn: 0, filmY: 14, filmOp: 0 },
+  { moldAY: 22, moldAOn: 0, moldBY: 0.4, moldBOn: 1, wallY: 0, wallOn: 1, filmY: 14, filmOp: 0 },
+  { moldAY: 22, moldAOn: 0, moldBY: 0.4, moldBOn: 1, wallY: 0, wallOn: 1, filmY: 14, filmOp: 0 },
+  { moldAY: 22, moldAOn: 0, moldBY: 22, moldBOn: 0, wallY: 18, wallOn: 0, filmY: 14, filmOp: 0 },
+  { moldAY: 22, moldAOn: 0, moldBY: 22, moldBOn: 0, wallY: 18, wallOn: 0, filmY: 0, filmOp: 1 }
 ];
 let current = 0;
 let pourClock = 0;
 let paintClock = 0;
 let lastStep = -1;
-const state = { moldY: 22, moldOn: 0, wallY: 18, wallOn: 0, filmY: 14, filmOp: 0 };
+const state = { moldAY: 22, moldAOn: 0, moldBY: 22, moldBOn: 0, wallY: 18, wallOn: 0, filmY: 14, filmOp: 0 };
 
 function showStep(i) {
   current = Math.max(0, Math.min(STEPS.length - 1, i));
@@ -1083,25 +1108,29 @@ function animate() {
   const dt = Math.min(clock.getDelta(), 0.05);
   const t = TARGETS[current];
   const k = 0.09;
-  state.moldY += (t.moldY - state.moldY) * k;
-  state.moldOn += (t.moldOn - state.moldOn) * k;
+  state.moldAY += (t.moldAY - state.moldAY) * k;
+  state.moldAOn += (t.moldAOn - state.moldAOn) * k;
+  state.moldBY += (t.moldBY - state.moldBY) * k;
+  state.moldBOn += (t.moldBOn - state.moldBOn) * k;
   state.wallY += (t.wallY - state.wallY) * k;
   state.wallOn += (t.wallOn - state.wallOn) * k;
   state.filmY += (t.filmY - state.filmY) * k;
   state.filmOp += (t.filmOp - state.filmOp) * k;
 
-  mold.position.y = state.moldY;
-  mold.visible = state.moldOn > 0.01;
+  moldA.position.y = state.moldAY;
+  moldA.visible = state.moldAOn > 0.01;
+  moldB.position.y = state.moldBY;
+  moldB.visible = state.moldBOn > 0.01;
   walls.position.y = state.wallY;
   walls.visible = state.wallOn > 0.01;
   film.position.y = state.filmY;
   filmMat.opacity = state.filmOp * 0.95;
   film.visible = state.filmOp > 0.01;
 
-  // Pour steps (2 = soft acrylic, 4 = silicone grid): the cup appears, tilts,
+  // Pour steps (2 = soft acrylic, 5 = silicone grid): the cup appears, tilts,
   // and a thin stream falls while the layer fills over ~1.5 s. Then the cup and
   // stream disappear. The acrylic blanket keeps its exact shape and size.
-  const isPour = current === 2 || current === 4;
+  const isPour = current === 2 || current === 5;
   if (isPour) {
     if (lastStep !== current) pourClock = 0;
     pourClock += dt;
@@ -1128,7 +1157,7 @@ function animate() {
     const acrylicFull = current > 2;
     acrylic.visible = acrylicFull;
     acrylic.scale.y = acrylicFull ? 1 : 0.001;
-    const pillarFull = current > 4;
+    const pillarFull = current > 5;
     pillarGroup.visible = pillarFull;
     pillarGroup.scale.y = pillarFull ? 1 : 0.001;
     cupGroup.visible = false;
@@ -1144,8 +1173,8 @@ function animate() {
       Tl.mat.opacity = (Tl.vLine < paintedCount || Tl.hLine < paintedCount) ? 1 : 0;
     });
   }
-  if (current === 5) {
-    if (lastStep !== 5) paintClock = 0;
+  if (current === 6) {
+    if (lastStep !== 6) paintClock = 0;
     paintClock += dt;
     const per = 0.35;
     const total = LINES.length * per;
@@ -1164,7 +1193,7 @@ function animate() {
     }
   } else {
     brush.visible = false;
-    setPaint(current > 5 ? LINES.length : 0);
+    setPaint(current > 6 ? LINES.length : 0);
   }
   lastStep = current;
 
