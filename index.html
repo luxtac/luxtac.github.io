@@ -468,7 +468,7 @@
     <div class="hero-grid reveal reveal-up">
       <div class="corona">
         <div class="hero-photo">
-          <img src="assets/sensor-photos.png" alt="Photos of the LuxTac sensing head, the plain black film and the colored taxel grid under the film">
+          <img src="assets/sensor-render.png" alt="Render of the LuxTac sensing head, the colored taxel grid under the black film, and the plain black film on top.">
         </div>
       </div>
       <div class="hero-stats">
@@ -478,7 +478,7 @@
         <div class="stat"><b>63% vs 39%</b><span>average robot success, with vs without touch</span></div>
       </div>
     </div>
-    <p class="caption">The LuxTac sensing head. The colored taxel grid under the black film, and the plain black film on top.</p>
+    <p class="caption">Render of the LuxTac sensing head. The colored taxel grid under the black film, and the plain black film on top.</p>
   </div>
 </header>
 
@@ -608,7 +608,7 @@
     <div class="video-duo">
     <figure class="reveal reveal-up corona">
       <video class="wide-video" src="assets/animation.mp4" controls autoplay muted loop playsinline></video>
-      <figcaption class="caption">Sensing principle, mode one. The stack peels apart to show the photodiodes and LEDs, then a press dims the light and the taxel grid lights up.</figcaption>
+      <figcaption class="caption">Sensing principle, mode one. The stack peels apart to show the photodiodes and LEDs, then a press dims the light.</figcaption>
     </figure>
     <figure class="reveal reveal-up corona">
       <video class="wide-video" src="assets/shear-animation.mp4" controls autoplay muted loop playsinline></video>
@@ -830,7 +830,7 @@ scene.add(pcbGroup);
 
 // Soft acrylic layer: one thin light blue blanket. It is the BASE the rest are
 // molded on. NOT segmented, a single blanket in both versions. Spans y 0 to 0.6.
-const acrylicMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.15, metalness: 0, transparent: true, opacity: 0.3 });
+const acrylicMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.15, metalness: 0, transparent: true, opacity: 0.3, depthWrite: false });
 const acrylicGeo = new THREE.BoxGeometry(17.7, 0.6, 19.2);
 acrylicGeo.translate(0, 0.3, 0);
 const acrylic = new THREE.Mesh(acrylicGeo, acrylicMat);
@@ -958,7 +958,7 @@ scene.add(pillarGroup);
 // a rim, a bottom, and white resin visible inside. Appears, tilts, pours a thin
 // stream until the resin fills, then disappears. Plus the thin pour stream.
 const cupGroup = new THREE.Group();
-const cupMat = new THREE.MeshStandardMaterial({ color: 0xe8e8e8, roughness: 0.4, metalness: 0.2, transparent: true, opacity: 0, side: THREE.DoubleSide });
+const cupMat = new THREE.MeshStandardMaterial({ color: 0xe8e8e8, roughness: 0.4, metalness: 0.2, transparent: true, opacity: 0, side: THREE.DoubleSide, depthWrite: false });
 const cupBody = new THREE.Mesh(new THREE.CylinderGeometry(2.6, 2.0, 4, 24, 1, true), cupMat);
 cupGroup.add(cupBody);
 const cupBottom = new THREE.Mesh(new THREE.CircleGeometry(2.0, 24), cupMat);
@@ -969,7 +969,7 @@ const cupRim = new THREE.Mesh(new THREE.TorusGeometry(2.6, 0.18, 10, 24), cupMat
 cupRim.rotation.x = Math.PI / 2;
 cupRim.position.y = 2;
 cupGroup.add(cupRim);
-const resinMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.3, metalness: 0, transparent: true, opacity: 0 });
+const resinMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.3, metalness: 0, transparent: true, opacity: 0, depthWrite: false });
 const resin = new THREE.Mesh(new THREE.CircleGeometry(2.35, 24), resinMat);
 resin.rotation.x = -Math.PI / 2;
 resin.position.y = 1.4;
@@ -977,7 +977,7 @@ cupGroup.add(resin);
 cupGroup.position.set(0, 16, 0);
 cupGroup.visible = false;
 scene.add(cupGroup);
-const streamMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.35, metalness: 0, transparent: true, opacity: 0 });
+const streamMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.35, metalness: 0, transparent: true, opacity: 0, depthWrite: false });
 const stream = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.45, 13, 12), streamMat);
 stream.position.set(0, 8.5, 0);
 stream.visible = false;
@@ -1167,11 +1167,11 @@ scene.add(film);
 const screwGroup = new THREE.Group();
 const screwMat = new THREE.MeshStandardMaterial({ color: 0x888888, roughness: 0.35, metalness: 0.8 });
 [[-10, -11], [10, -11], [-10, 11], [10, 11]].forEach(([sx, sz]) => {
-  const shank = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.35, 2.6, 12), screwMat);
-  shank.position.set(sx, 0, sz);
+  const shank = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.35, 0.5, 12), screwMat);
+  shank.position.set(sx, -0.05, sz);
   screwGroup.add(shank);
   const head = new THREE.Mesh(new THREE.CylinderGeometry(0.65, 0.65, 0.5, 12), screwMat);
-  head.position.set(sx, 1.6, sz);
+  head.position.set(sx, 0.45, sz);
   screwGroup.add(head);
 });
 screwGroup.position.y = 18;
@@ -1416,38 +1416,41 @@ window.addEventListener('resize', () => {
     svg.appendChild(el('line', { x1: GX1, y1: topR, x2: GX1, y2: PCB_Y, stroke: '#30d158', 'stroke-width': 6, 'stroke-linecap': 'round' }));
     function dist(x1, y1, x2, y2){ return Math.hypot(x2 - x1, y2 - y1); }
     var maxPath = dist(LED_X, DEV_Y, GX1, top) + dist(GX1, top, DET_X, DEV_Y);
+    var minPath = dist(LED_X, DEV_Y, GX0, top) + dist(GX0, top, DET_X, DEV_Y);
     // A beam goes out white from the LED, bounces, and comes back to the sensor
-    // in the color of what it bounced off of. The return dims with more travel.
+    // in the color of what it bounced off of. The ceiling is the black film, so
+    // a ceiling bounce comes back black. Only the side walls return color.
+    // Light fades with distance traveled: the return is bright up close and
+    // clearly dimmer the further it has to travel.
     function ray(bx, by, surf){
       var outLen = dist(LED_X, DEV_Y, bx, by);
       var retLen = dist(bx, by, DET_X, DEV_Y);
-      var dim = Math.max(0.15, 1 - 0.7 * ((outLen + retLen) / maxPath));
+      var total = outLen + retLen;
+      var f = Math.max(0, Math.min(1, (total - minPath) / Math.max(1, maxPath - minPath)));
+      var dim = 1 - 0.92 * f;
       var glowF = S.glow / 100;
-      var outOp = 0.85 * glowF;
+      var outOp = (0.9 - 0.45 * f) * glowF;
       var retCol, retBase;
-      if (surf === 'left'){ retCol = 'rgb(255,59,48)'; retBase = 0.9; }
-      else if (surf === 'right'){ retCol = 'rgb(48,209,88)'; retBase = 0.9; }
-      else { retCol = 'rgb(90,90,90)'; retBase = 0.25; }
+      if (surf === 'left'){ retCol = 'rgb(255,59,48)'; retBase = 0.95; }
+      else if (surf === 'right'){ retCol = 'rgb(48,209,88)'; retBase = 0.95; }
+      else { retCol = 'rgb(20,20,20)'; retBase = 0.35; }
       var retOp = retBase * dim * glowF;
       svg.appendChild(el('path', { d: 'M' + LED_X + ',' + DEV_Y + ' L' + bx.toFixed(1) + ',' + by.toFixed(1), stroke: '#ffffff', 'stroke-width': 2.2, opacity: outOp, fill: 'none', 'stroke-linecap': 'round' }));
       svg.appendChild(el('path', { d: 'M' + bx.toFixed(1) + ',' + by.toFixed(1) + ' L' + DET_X + ',' + DEV_Y, stroke: retCol, 'stroke-width': 2.2, opacity: retOp, fill: 'none', 'stroke-linecap': 'round' }));
-    }
-    function surfFor(bx){
-      var f = (bx - GX0) / (GX1 - GX0);
-      if (f < 0.35) return 'left';
-      if (f > 0.65) return 'right';
-      return 'top';
     }
     var n = Math.round(S.rays), j, bx, by;
     for (j = 0; j < n; j++){
       bx = GX0 + (GX1 - GX0) * (0.08 + 0.84 * (n === 1 ? 0.5 : j / (n - 1)));
       by = deformed ? roofY(bx) : top;
-      ray(bx, by, surfFor(bx));
+      ray(bx, by, 'top');
     }
     if (S.walls){
-      var midY = (top + PCB_Y) / 2;
-      ray(GX0, midY, 'left');
-      ray(GX1, midY, 'right');
+      var k, wy;
+      for (k = 0; k < 3; k++){
+        wy = top + (PCB_Y - top) * (0.25 + 0.25 * k);
+        ray(GX0, wy, 'left');
+        ray(GX1, wy, 'right');
+      }
     }
   }
   function render(){
