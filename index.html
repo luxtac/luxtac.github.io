@@ -667,11 +667,11 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 const STEPS = [
   { title: 'Base wired chip', caption: 'The sensing head is a 21.8 x 23.8 mm region of a flexible PCB, wired to the Teensy readout.' },
-  { title: 'Put the mold casing on', caption: 'The mold casing is placed over the base. It hugs the white silicone square edges, with cut-ins for the walls.' },
-  { title: 'Put in the wall grid', caption: 'Row and column walls nestle into the cut-ins in the casing, forming the gridded channels.' },
+  { title: 'Put the mold casing on', caption: 'The mold casing is placed over the base. A solid ring hugging the white silicone square edges, with little slots for the walls.' },
+  { title: 'Put in the wall grid', caption: 'Row and column walls nestle into the slots in the casing, forming the gridded channels.' },
   { title: 'Pour the silicone grid', caption: 'White silicone (XP-565, 15:1) is poured in, degassed, and oven-cured about 20 minutes. The grid leaves white silicone pillars.' },
-  { title: 'Paint the colors', caption: 'The walls are lifted out first. Then a brush paints colored rows and columns between the channels, the vibrant grid under the film.' },
-  { title: 'Release the mold casing', caption: 'The mold casing is released, leaving the white silicone grid.' },
+  { title: 'Paint the colors', caption: 'The full mold casing and the walls are taken out first. Then a brush paints colored rows and columns between the channels, the vibrant grid under the film.' },
+  { title: 'The painted grid', caption: 'The colored rows and columns are painted. The grid is ready for the black film.' },
   { title: 'Seal it in black', caption: 'A thin black film is stretched over the white squares, following every recess and edge. It covers all the white and a little of the lines, and stays 20% opaque over the rest of the colors, so they poke through.' }
 ];
 
@@ -731,8 +731,9 @@ const ledGeo = new THREE.BoxGeometry(1.6, 0.4, 0.8);
 });
 scene.add(chipGroup);
 
-// Mold casing, built from scratch: a frame that hugs the white silicone square edges
-// (hole 17 x 18.5). Each bar is built from segments with cut-ins where the walls nestle.
+// Mold casing, built from scratch: a solid full ring hugging the white silicone square
+// edges (hole 17 x 18.5). Each bar is one continuous run with only small 1 mm slots
+// where the walls fit in, so the dividers fill the slots flush and the ring reads solid.
 const moldMat = new THREE.MeshStandardMaterial({ color: 0xdfe8ee, roughness: 0.5, metalness: 0 });
 const mold = new THREE.Group();
 function moldBarX(z, segs) {
@@ -751,8 +752,8 @@ function moldBarZ(x, segs) {
     mold.add(m);
   });
 }
-const fbSegs = [[-10.5, -4.97], [-3.87, -0.55], [0.55, 3.87], [4.97, 10.5]];
-const lrSegs = [[-9.25, -5.35], [-4.25, -0.55], [0.55, 4.25], [5.35, 9.25]];
+const fbSegs = [[-10.5, -4.92], [-3.92, -0.5], [0.5, 3.92], [4.92, 10.5]];
+const lrSegs = [[-9.25, -5.3], [-4.3, -0.5], [0.5, 4.3], [5.3, 9.25]];
 moldBarX(-10.25, fbSegs);
 moldBarX(10.25, fbSegs);
 moldBarZ(-9.5, lrSegs);
@@ -762,7 +763,7 @@ mold.visible = false;
 scene.add(mold);
 
 // Wall grid: opaque solid light blue so they never flicker while orbiting.
-// Slightly shorter than the full span so their ends nestle into the casing cut-ins.
+// Slightly shorter than the full span so their ends nestle into the casing slots.
 const wallMat = new THREE.MeshStandardMaterial({ color: 0x9ec8e8, roughness: 0.4, metalness: 0 });
 const walls = new THREE.Group();
 [-4.8, 0, 4.8].forEach((z) => {
@@ -926,8 +927,11 @@ brush.visible = false;
 scene.add(brush);
 
 // Black film: a draped sheet that follows the pillar tops, dips into every recess,
-// and wraps the side edges. 100% opaque over the white silicone and a little of each
-// line's edges; 20% opaque over the open middle of the colored lines, so they poke through.
+// and wraps the side edges. It never intersects any other part: it rides 0.25 above
+// the pillar tops where it is over or near a pillar, 0.25 above the color lines in
+// the channels, and only drapes down outside the grid. 100% opaque over the white
+// silicone and a little of each line's edges; 20% opaque over the open middle of the
+// colored lines, so they poke through.
 const filmW = 20, filmD = 21.5;
 const filmGeo = new THREE.PlaneGeometry(filmW, filmD, 40, 43);
 filmGeo.rotateX(-Math.PI / 2);
@@ -937,18 +941,21 @@ filmGeo.rotateX(-Math.PI / 2);
   const pz = [-7.2, -2.4, 2.4, 7.2];
   for (let i = 0; i < pos.count; i++) {
     const x = pos.getX(i), z = pos.getZ(i);
-    let onPillar = false;
+    let minDist = Infinity;
     for (const cx of px) {
       for (const cz of pz) {
-        if (Math.abs(x - cx) <= 1.8 && Math.abs(z - cz) <= 2.0) { onPillar = true; break; }
+        const dx = Math.max(0, Math.abs(x - cx) - 1.8);
+        const dz = Math.max(0, Math.abs(z - cz) - 2.0);
+        const d = Math.sqrt(dx * dx + dz * dz);
+        if (d < minDist) minDist = d;
       }
-      if (onPillar) break;
     }
     let y;
-    if (onPillar) y = 2.48;
+    if (minDist < 0.4) y = 2.65;
     else {
-      const d = Math.max(0, Math.abs(x) - 8.43, Math.abs(z) - 9.2);
-      y = Math.max(0.4, 2.0 - d * 1.1);
+      const dOut = Math.max(0, Math.abs(x) - 8.43, Math.abs(z) - 9.2);
+      if (dOut > 0.3) y = Math.max(0.6, 2.25 - (dOut - 0.3) * 1.2);
+      else y = 2.25;
     }
     pos.setY(i, y);
   }
@@ -981,13 +988,13 @@ film.visible = false;
 scene.add(film);
 
 // Step targets: moldY, moldOn, wallY, wallOn, filmY, filmOp.
-// The walls are lifted out before painting (step 5), so the brush paints the open channels.
+// The full mold casing and the walls are both out before painting (step 5).
 const TARGETS = [
   { moldY: 22, moldOn: 0, wallY: 18, wallOn: 0, filmY: 14, filmOp: 0 },
   { moldY: 0.4, moldOn: 1, wallY: 18, wallOn: 0, filmY: 14, filmOp: 0 },
   { moldY: 0.4, moldOn: 1, wallY: 0, wallOn: 1, filmY: 14, filmOp: 0 },
   { moldY: 0.4, moldOn: 1, wallY: 0, wallOn: 1, filmY: 14, filmOp: 0 },
-  { moldY: 0.4, moldOn: 1, wallY: 18, wallOn: 0, filmY: 14, filmOp: 0 },
+  { moldY: 22, moldOn: 0, wallY: 18, wallOn: 0, filmY: 14, filmOp: 0 },
   { moldY: 22, moldOn: 0, wallY: 18, wallOn: 0, filmY: 14, filmOp: 0 },
   { moldY: 22, moldOn: 0, wallY: 18, wallOn: 0, filmY: 0, filmOp: 1 }
 ];
