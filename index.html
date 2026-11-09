@@ -368,7 +368,7 @@
 
 <header class="hero">
   <div class="container">
-    <p class="eyebrow">Purdue MARS Lab &middot; Preprint 2026</p>
+    <p class="eyebrow">Purdue MARS Lab &middot; 2026</p>
     <h1>Lux<span>Tac</span></h1>
     <p class="tagline">An optical taxel array that reads touch as depth. Sixteen digital light sensors under a scattering silicone skin, each one reporting indentation directly. No camera, no inversion.</p>
     <div class="rainbow-bar"></div>
@@ -401,8 +401,8 @@
       <figcaption class="caption">LuxTac overview. The stack, peeled apart: black opaque film, white translucent silicone, soft acrylic layer, flexible PCB.</figcaption>
     </figure>
     <div class="lead reveal reveal-up">
-      <p>LuxTac is a 4&times;4 optical taxel array. Each taxel is a digital light-to-digital converter that observes LED light back-scattered from a translucent white silicone layer capped by an opaque black film. Pressing the surface thins the scattering layer, so the reading falls with local indentation depth rather than with force directly.</p>
-      <p>That lets calibration split into two independent maps: an optical transfer function from depth to signal, and a mechanical stiffness from force to depth, exactly what a penalty-based tactile simulator needs. Over 240 presses, LuxTac responds linearly to force (R&sup2; = 0.999) from a 104 mN threshold to at least 5.8 N, with 2.0% repeatability and 5.9% hysteresis. Adding LuxTac to a visuomotor policy raises success on peg-in-hole and cube sorting from 44% and 33% to 87% and 87%. Design files and code will be released.</p>
+      <p>LuxTac is a 4&times;4 optical taxel array. Each taxel is a light-to-digital converter that observes LED light back-scattered from a translucent white silicone layer capped by an opaque black film. Pressing the surface thins the scattering layer, so the reading falls with local indentation depth rather than with force directly.</p>
+      <p>That lets calibration split into two independent maps: an optical transfer function from depth to signal, and a mechanical stiffness from force to depth, exactly what a penalty-based tactile simulator needs. Over 240 presses, LuxTac responds linearly to force (R&sup2; = 0.999) from a 104 mN threshold to at least 5.8 N, with 2.0% repeatability and 5.9% hysteresis. Adding LuxTac to a visuomotor policy raises success on peg-in-hole and cube sorting from 44% and 33% to 87% and 87%.</p>
     </div>
   </div>
 </section>
@@ -431,7 +431,7 @@
     <div class="principle-wrap">
       <div class="reveal reveal-left">
         <p>Nine white LEDs shine up into a translucent white silicone layer. The silicone scatters the light, and some of it returns to the detectors below. An opaque black film caps the top.</p>
-        <p>When an object presses in, the absorbing black film moves closer to the detector, so less scattered light returns and the reading falls in proportion to depth. Baseline-normalized, each taxel directly reports indentation depth, and force follows from the measured stiffness.</p>
+        <p>When an object presses in, the absorbing black film moves closer to the detector, so less scattered light returns and the reading falls with depth. Baseline-normalized, each taxel directly reports indentation depth, and force follows from the measured stiffness.</p>
       </div>
       <div class="stack-diagram reveal reveal-right">
                           <svg viewBox="0 0 560 360" role="img" aria-label="LuxTac stack diagram">
@@ -538,10 +538,6 @@
       <div class="fab-step reveal reveal-up"><span class="num">3</span><h4>Paint the colour in</h4><p>Coloured rows and columns between the channels, the vibrant grid under the film.</p></div>
       <div class="fab-step reveal reveal-up"><span class="num">4</span><h4>Seal it in black</h4><p>Opaque black film, Psycho Paint with black Sil-Pig and NOVOCS, 0.1 mm, over everything.</p></div>
     </div>
-    <figure class="reveal reveal-up">
-      <img class="photo" src="assets/fab-bench.jpg" alt="Fabrication bench with silicone, pigments, and the precision balance">
-      <figcaption class="caption">The fabrication bench. Smooth-On silicone and Psycho Paint, pigments, and the precision balance for the 15:1 mix.</figcaption>
-    </figure>
   </div>
 </section>
 
@@ -588,7 +584,7 @@
       <div class="fig-card">
         <img src="assets/policy-timeline.jpg" alt="Temporal tactile observations during peg insertion and cube sorting">
       </div>
-      <figcaption class="caption">Temporal tactile observations during manipulation. Top: peg insertion. Middle and bottom: cube sorting (smooth and dotted cubes). Each row pairs video frames with LuxTac heatmaps during grasping.</figcaption>
+      <figcaption class="caption">Temporal tactile observations during manipulation. Top: peg-in-hole. Middle and bottom: cube sorting (smooth and dotted cubes). Each row pairs video frames with LuxTac heatmaps during grasping.</figcaption>
     </figure>
     <table class="reveal reveal-up">
       <caption>Real-world success rates (95% Wilson confidence intervals)</caption>
@@ -613,10 +609,8 @@
     Optical-Mechanical Calibration for Tactile Robot Learning},
   author={Prince, Md Rakibul Islam and Pelan, John and
     Khera, Adyaa and Pesetski, Katherine and She, Yu},
-  year={2026},
-  note={Preprint}
+  year={2026}
 }</pre>
-      <p style="color: var(--muted); font-size: 15px; margin-top: 16px;">Preprint, 2026. Design files and code will be released.</p>
     </div>
   </div>
 </section>
