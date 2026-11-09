@@ -226,6 +226,19 @@
   .spec-list li:last-child { border-bottom: 0; }
   .spec-list b { color: #fff; }
 
+  /* fabrication animation */
+  .fab-anim { margin: 0 auto 36px; max-width: 880px; }
+  .fab-stage { position: relative; height: 460px; border-radius: 16px; background: #161618; border: 1px solid #2a2a2e; overflow: hidden; }
+  .fab-stage canvas { display: block; width: 100%; height: 100%; }
+  .fab-caption { margin: 14px 0 0; color: var(--muted); font-size: 16px; text-align: center; min-height: 24px; }
+  .fab-caption b { color: var(--text); }
+  .fab-controls { display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: 10px; }
+  .fab-controls button { background: #2a2a2e; color: #f2f2f2; border: 1px solid #3a3a3e; border-radius: 999px; padding: 8px 18px; font: inherit; font-size: 15px; cursor: pointer; }
+  .fab-controls button:hover { background: #3a3a3e; }
+  .fab-dots { display: flex; gap: 8px; }
+  .fab-dots button { width: 10px; height: 10px; border-radius: 50%; padding: 0; border: none; background: #3a3a3e; cursor: pointer; }
+  .fab-dots button.active { background: #f2f2f2; }
+
   /* fabrication */
   .fab-steps {
     display: grid;
@@ -531,6 +544,15 @@
   <div class="container">
     <h2 class="reveal reveal-up">Fabrication</h2>
     <div class="rainbow-bar"></div>
+    <div class="fab-anim reveal reveal-up">
+      <div class="fab-stage" id="fabStage"></div>
+      <p class="fab-caption" id="fabCaption"></p>
+      <div class="fab-controls">
+        <button id="fabPrev" type="button">Previous</button>
+        <div class="fab-dots" id="fabDots"></div>
+        <button id="fabNext" type="button">Next</button>
+      </div>
+    </div>
     <div class="fab-steps">
       <div class="fab-step reveal reveal-up"><span class="num">1</span><h4>Laser-cut the molds</h4><p>Two acrylic molds, 2 mm and 0.5 mm thick, laser cut and secured with M2 screws to contain the silicone during casting.</p></div>
       <div class="fab-step reveal reveal-up"><span class="num">2</span><h4>Cast the white silicone</h4><p>XP-565 at a 15:1 ratio by weight, pigmented with 0.04% white Silk Pig. Degassed, poured slowly to minimize air entrapment, then oven-cured about 20 minutes.</p></div>
@@ -630,6 +652,167 @@
     }, { threshold: 0.15 });
     document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
   })();
+</script>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+const STEPS = [
+  { title: 'Laser-cut the molds', caption: 'Two acrylic molds, 2 mm and 0.5 mm, secured with M2 screws to contain the silicone during casting.' },
+  { title: 'Cast the white silicone', caption: 'XP-565 is poured into the molds, degassed, and oven-cured. The molds leave gridded channels between white silicone pillars.' },
+  { title: 'Paint the color in', caption: 'Colored rows and columns are painted between the channels, the vibrant grid under the film.' },
+  { title: 'Seal it in black', caption: 'The opaque black film goes over everything. The finished sensing head.' }
+];
+
+const stage = document.getElementById('fabStage');
+const captionEl = document.getElementById('fabCaption');
+const prevBtn = document.getElementById('fabPrev');
+const nextBtn = document.getElementById('fabNext');
+const dotsEl = document.getElementById('fabDots');
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(stage.clientWidth, stage.clientHeight);
+renderer.setClearColor(0x161618);
+stage.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(40, stage.clientWidth / stage.clientHeight, 0.1, 1000);
+camera.position.set(30, 26, 34);
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.target.set(0, 1.5, 0);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+
+scene.add(new THREE.AmbientLight(0xffffff, 0.75));
+const dir = new THREE.DirectionalLight(0xffffff, 1.4);
+dir.position.set(20, 32, 18);
+scene.add(dir);
+
+// PCB base: 21.8 x 23.8 mm flex PCB, copper orange.
+const pcb = new THREE.Mesh(
+  new THREE.BoxGeometry(21.8, 0.4, 23.8),
+  new THREE.MeshStandardMaterial({ color: 0xd98a4a, roughness: 0.6, metalness: 0.1 })
+);
+pcb.position.y = 0.2;
+scene.add(pcb);
+
+// Mold frame: four translucent acrylic bars around the silicone area.
+const moldMat = new THREE.MeshStandardMaterial({ color: 0xbcdcf0, roughness: 0.25, metalness: 0, transparent: true, opacity: 1 });
+const mold = new THREE.Group();
+const barLong = new THREE.BoxGeometry(24, 2, 1.6);
+const barShort = new THREE.BoxGeometry(1.6, 2, 20.8);
+[[0, -11.2, barLong], [0, 11.2, barLong], [-11.2, 0, barShort], [11.2, 0, barShort]].forEach(([x, z, g]) => {
+  const m = new THREE.Mesh(g, moldMat);
+  m.position.set(x, 1.4, z);
+  mold.add(m);
+});
+scene.add(mold);
+
+// White silicone pillars: 4x4 grid, pitch 4.42 x 4.80 mm, grown from the PCB.
+const pillarGroup = new THREE.Group();
+pillarGroup.position.y = 0.4;
+const pillarMat = new THREE.MeshStandardMaterial({ color: 0xf2ede4, roughness: 0.85, metalness: 0 });
+const pillarGeo = new THREE.BoxGeometry(3.6, 2, 4.0);
+pillarGeo.translate(0, 1, 0);
+for (let i = 0; i < 4; i++) {
+  for (let j = 0; j < 4; j++) {
+    const p = new THREE.Mesh(pillarGeo, pillarMat);
+    p.position.set(-6.63 + i * 4.42, 0, -7.2 + j * 4.8);
+    pillarGroup.add(p);
+  }
+}
+pillarGroup.scale.y = 0.001;
+scene.add(pillarGroup);
+
+// Colored rows and columns painted in the channels between pillars.
+const colorGroup = new THREE.Group();
+const stripeColors = [0x30d158, 0xff2d78, 0x0aa5ff, 0xffd60a, 0xbf5af2, 0xff7a18];
+const stripeMat = (c) => new THREE.MeshStandardMaterial({ color: c, roughness: 0.5, metalness: 0, transparent: true, opacity: 0 });
+// vertical strips (along z) in the gaps between pillar columns
+[-4.42, 0, 4.42].forEach((x, k) => {
+  const s = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.35, 19.2), stripeMat(stripeColors[k]));
+  s.position.set(x, 2.55, 0);
+  colorGroup.add(s);
+});
+// horizontal strips (along x) in the gaps between pillar rows
+[-4.8, 0, 4.8].forEach((z, k) => {
+  const s = new THREE.Mesh(new THREE.BoxGeometry(17.7, 0.35, 0.9), stripeMat(stripeColors[k + 3]));
+  s.position.set(0, 2.55, z);
+  colorGroup.add(s);
+});
+scene.add(colorGroup);
+
+// Black film: thin sheet that lowers onto the stack in the last step.
+const film = new THREE.Mesh(
+  new THREE.BoxGeometry(21.8, 0.15, 23.8),
+  new THREE.MeshStandardMaterial({ color: 0x141414, roughness: 0.35, metalness: 0.1 })
+);
+film.position.y = 14;
+scene.add(film);
+
+// Step targets: [pillar scaleY, color opacity, film y, mold opacity, mold lift y]
+const TARGETS = [
+  { pillar: 0.001, color: 0, film: 14, mold: 1, lift: 0 },
+  { pillar: 1,     color: 0, film: 14, mold: 1, lift: 0 },
+  { pillar: 1,     color: 1, film: 14, mold: 1, lift: 0 },
+  { pillar: 1,     color: 1, film: 2.55, mold: 0, lift: 7 }
+];
+let current = 0;
+const state = { pillar: 0.001, color: 0, film: 14, mold: 1, lift: 0 };
+
+function showStep(i) {
+  current = Math.max(0, Math.min(STEPS.length - 1, i));
+  const s = STEPS[current];
+  captionEl.innerHTML = '<b>Step ' + (current + 1) + ' of ' + STEPS.length + ': ' + s.title + '.</b> ' + s.caption;
+  prevBtn.textContent = current === 0 ? 'Previous' : 'Previous';
+  nextBtn.textContent = current === STEPS.length - 1 ? 'Restart' : 'Next';
+  [...dotsEl.children].forEach((d, k) => d.classList.toggle('active', k === current));
+}
+STEPS.forEach((_, k) => {
+  const d = document.createElement('button');
+  d.type = 'button';
+  d.setAttribute('aria-label', 'Step ' + (k + 1));
+  d.addEventListener('click', () => showStep(k));
+  dotsEl.appendChild(d);
+});
+prevBtn.addEventListener('click', () => showStep(current - 1));
+nextBtn.addEventListener('click', () => showStep(current === STEPS.length - 1 ? 0 : current + 1));
+showStep(0);
+
+function animate() {
+  requestAnimationFrame(animate);
+  const t = TARGETS[current];
+  const k = 0.1;
+  state.pillar += (t.pillar - state.pillar) * k;
+  state.color += (t.color - state.color) * k;
+  state.film += (t.film - state.film) * k;
+  state.mold += (t.mold - state.mold) * k;
+  state.lift += (t.lift - state.lift) * k;
+  pillarGroup.scale.y = Math.max(state.pillar, 0.001);
+  colorGroup.children.forEach((m) => { m.material.opacity = state.color; });
+  film.position.y = state.film;
+  moldMat.opacity = state.mold;
+  mold.position.y = state.lift;
+  mold.visible = state.mold > 0.01;
+  controls.update();
+  renderer.render(scene, camera);
+}
+animate();
+
+window.addEventListener('resize', () => {
+  camera.aspect = stage.clientWidth / stage.clientHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(stage.clientWidth, stage.clientHeight);
+});
 </script>
 </body>
 </html>
