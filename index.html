@@ -667,11 +667,10 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 const STEPS = [
   { title: 'Base wired chip', caption: 'The sensing head is a 21.8 x 23.8 mm region of a flexible PCB, wired to the Teensy readout.' },
-  { title: 'Put the mold casing on', caption: 'The mold casing is placed over the base. A solid ring hugging the white silicone square edges, with little slots for the walls.' },
+  { title: 'Put the mold casing on', caption: 'The mold casing is placed over the base. One solid ring hugging the white silicone square edges, with little slots for the walls.' },
   { title: 'Put in the wall grid', caption: 'Row and column walls nestle into the slots in the casing, forming the gridded channels.' },
   { title: 'Pour the silicone grid', caption: 'White silicone (XP-565, 15:1) is poured in, degassed, and oven-cured about 20 minutes. The grid leaves white silicone pillars.' },
   { title: 'Paint the colors', caption: 'The full mold casing and the walls are taken out first. Then a brush paints colored rows and columns between the channels, the vibrant grid under the film.' },
-  { title: 'The painted grid', caption: 'The colored rows and columns are painted. The grid is ready for the black film.' },
   { title: 'Seal it in black', caption: 'A thin black film is stretched over the white squares, following every recess and edge. It covers all the white and a little of the lines, and stays 20% opaque over the rest of the colors, so they poke through.' }
 ];
 
@@ -731,33 +730,58 @@ const ledGeo = new THREE.BoxGeometry(1.6, 0.4, 0.8);
 });
 scene.add(chipGroup);
 
-// Mold casing, built from scratch: a solid full ring hugging the white silicone square
-// edges (hole 17 x 18.5). Each bar is one continuous run with only small 1 mm slots
-// where the walls fit in, so the dividers fill the slots flush and the ring reads solid.
+// Mold casing: ONE solid connected ring, extruded from a single shape with a notched
+// hole. No segments, no gaps. The little slots are notches in the inner edge where the
+// walls fit in. Outer 21 x 22.5, hole 17 x 18.5, 2 tall.
+function buildMoldGeometry() {
+  const outer = new THREE.Shape();
+  outer.moveTo(-10.5, -11.25);
+  outer.lineTo(10.5, -11.25);
+  outer.lineTo(10.5, 11.25);
+  outer.lineTo(-10.5, 11.25);
+  outer.closePath();
+  const hole = new THREE.Path();
+  const ix0 = -8.5, ix1 = 8.5, iz0 = -9.25, iz1 = 9.25;
+  const nw = 1.0, nd = 0.8;
+  const colX = [-4.42, 0, 4.42];
+  const rowZ = [-4.8, 0, 4.8];
+  hole.moveTo(ix0, iz0);
+  colX.forEach((cx) => {
+    hole.lineTo(cx - nw / 2, iz0);
+    hole.lineTo(cx - nw / 2, iz0 - nd);
+    hole.lineTo(cx + nw / 2, iz0 - nd);
+    hole.lineTo(cx + nw / 2, iz0);
+  });
+  hole.lineTo(ix1, iz0);
+  rowZ.forEach((cz) => {
+    hole.lineTo(ix1, cz - nw / 2);
+    hole.lineTo(ix1 + nd, cz - nw / 2);
+    hole.lineTo(ix1 + nd, cz + nw / 2);
+    hole.lineTo(ix1, cz + nw / 2);
+  });
+  hole.lineTo(ix1, iz1);
+  [...colX].reverse().forEach((cx) => {
+    hole.lineTo(cx + nw / 2, iz1);
+    hole.lineTo(cx + nw / 2, iz1 + nd);
+    hole.lineTo(cx - nw / 2, iz1 + nd);
+    hole.lineTo(cx - nw / 2, iz1);
+  });
+  hole.lineTo(ix0, iz1);
+  [...rowZ].reverse().forEach((cz) => {
+    hole.lineTo(ix0, cz + nw / 2);
+    hole.lineTo(ix0 - nd, cz + nw / 2);
+    hole.lineTo(ix0 - nd, cz - nw / 2);
+    hole.lineTo(ix0, cz - nw / 2);
+  });
+  hole.lineTo(ix0, iz0);
+  hole.closePath();
+  outer.holes.push(hole);
+  const geo = new THREE.ExtrudeGeometry(outer, { depth: 2, bevelEnabled: false });
+  geo.rotateX(-Math.PI / 2);
+  return geo;
+}
 const moldMat = new THREE.MeshStandardMaterial({ color: 0xdfe8ee, roughness: 0.5, metalness: 0 });
-const mold = new THREE.Group();
-function moldBarX(z, segs) {
-  segs.forEach(([a, b]) => {
-    const len = b - a;
-    const m = new THREE.Mesh(new THREE.BoxGeometry(len, 2, 2), moldMat);
-    m.position.set((a + b) / 2, 1.4, z);
-    mold.add(m);
-  });
-}
-function moldBarZ(x, segs) {
-  segs.forEach(([a, b]) => {
-    const len = b - a;
-    const m = new THREE.Mesh(new THREE.BoxGeometry(2, 2, len), moldMat);
-    m.position.set(x, 1.4, (a + b) / 2);
-    mold.add(m);
-  });
-}
-const fbSegs = [[-10.5, -4.92], [-3.92, -0.5], [0.5, 3.92], [4.92, 10.5]];
-const lrSegs = [[-9.25, -5.3], [-4.3, -0.5], [0.5, 4.3], [5.3, 9.25]];
-moldBarX(-10.25, fbSegs);
-moldBarX(10.25, fbSegs);
-moldBarZ(-9.5, lrSegs);
-moldBarZ(9.5, lrSegs);
+const mold = new THREE.Mesh(buildMoldGeometry(), moldMat);
 mold.position.y = 22;
 mold.visible = false;
 scene.add(mold);
@@ -926,66 +950,42 @@ brush.position.set(0, 9, 0);
 brush.visible = false;
 scene.add(brush);
 
-// Black film: a draped sheet that follows the pillar tops, dips into every recess,
-// and wraps the side edges. It never intersects any other part: it rides 0.25 above
-// the pillar tops where it is over or near a pillar, 0.25 above the color lines in
-// the channels, and only drapes down outside the grid. 100% opaque over the white
-// silicone and a little of each line's edges; 20% opaque over the open middle of the
-// colored lines, so they poke through.
-const filmW = 20, filmD = 21.5;
-const filmGeo = new THREE.PlaneGeometry(filmW, filmD, 40, 43);
-filmGeo.rotateX(-Math.PI / 2);
-{
-  const pos = filmGeo.attributes.position;
-  const px = [-6.63, -2.21, 2.21, 6.63];
-  const pz = [-7.2, -2.4, 2.4, 7.2];
-  for (let i = 0; i < pos.count; i++) {
-    const x = pos.getX(i), z = pos.getZ(i);
-    let minDist = Infinity;
-    for (const cx of px) {
-      for (const cz of pz) {
-        const dx = Math.max(0, Math.abs(x - cx) - 1.8);
-        const dz = Math.max(0, Math.abs(z - cz) - 2.0);
-        const d = Math.sqrt(dx * dx + dz * dz);
-        if (d < minDist) minDist = d;
-      }
-    }
-    let y;
-    if (minDist < 0.4) y = 2.65;
-    else {
-      const dOut = Math.max(0, Math.abs(x) - 8.43, Math.abs(z) - 9.2);
-      if (dOut > 0.3) y = Math.max(0.6, 2.25 - (dOut - 0.3) * 1.2);
-      else y = 2.25;
-    }
-    pos.setY(i, y);
+// Black film, built from simple boxes that sit cleanly above the surface, so nothing
+// intersects or clips. Black caps over each white pillar (100% opaque, slightly
+// oversized so they cover a little of each line's edges), thin 20% opaque strips over
+// the open middle of each colored line, and skirts wrapping the side edges.
+const filmGroup = new THREE.Group();
+const filmCapMat = new THREE.MeshStandardMaterial({ color: 0x141414, roughness: 0.35, metalness: 0.1, transparent: true, opacity: 0 });
+const filmStripMat = new THREE.MeshStandardMaterial({ color: 0x141414, roughness: 0.35, metalness: 0.1, transparent: true, opacity: 0 });
+const capGeo = new THREE.BoxGeometry(3.9, 0.1, 4.3);
+for (let i = 0; i < 4; i++) {
+  for (let j = 0; j < 4; j++) {
+    const cap = new THREE.Mesh(capGeo, filmCapMat);
+    cap.position.set(-6.63 + i * 4.42, 2.47, -7.2 + j * 4.8);
+    filmGroup.add(cap);
   }
-  filmGeo.computeVertexNormals();
 }
-const alphaCanvas = document.createElement('canvas');
-alphaCanvas.width = 400; alphaCanvas.height = 430;
-{
-  const ctx = alphaCanvas.getContext('2d');
-  ctx.fillStyle = '#ffffff';
-  ctx.fillRect(0, 0, 400, 430);
-  // 20% opaque over the open middle of each colored line (0.5 mm strip in the center).
-  ctx.fillStyle = 'rgb(51,51,51)';
-  vX.forEach((wx) => {
-    const cx = (wx + 10) * 20;
-    ctx.fillRect(cx - 5, 0, 10, 430);
-  });
-  hZ.forEach((wz) => {
-    const cy = (wz + 10.75) * 20;
-    ctx.fillRect(0, cy - 5, 400, 10);
-  });
-}
-const filmMat = new THREE.MeshStandardMaterial({
-  color: 0x141414, roughness: 0.35, metalness: 0.1,
-  transparent: true, opacity: 0, alphaMap: new THREE.CanvasTexture(alphaCanvas)
+vX.forEach((vx) => {
+  const s = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.05, 19.2), filmStripMat);
+  s.position.set(vx, 2.05, 0);
+  filmGroup.add(s);
 });
-const film = new THREE.Mesh(filmGeo, filmMat);
-film.position.y = 14;
-film.visible = false;
-scene.add(film);
+hZ.forEach((hz, hi) => {
+  const len = (hi === 0 || hi === 4) ? 18.5 : 17.7;
+  const s = new THREE.Mesh(new THREE.BoxGeometry(len, 0.05, 0.5), filmStripMat);
+  s.position.set(0, 2.08, hz);
+  filmGroup.add(s);
+});
+const skirtFB = new THREE.BoxGeometry(17.5, 2.0, 0.1);
+const skirtLR = new THREE.BoxGeometry(0.1, 2.0, 18.5);
+[[0, -9.3, skirtFB], [0, 9.3, skirtFB], [-8.55, 0, skirtLR], [8.55, 0, skirtLR]].forEach(([x, z, g]) => {
+  const sk = new THREE.Mesh(g, filmCapMat);
+  sk.position.set(x, 1.5, z);
+  filmGroup.add(sk);
+});
+filmGroup.position.y = 14;
+filmGroup.visible = false;
+scene.add(filmGroup);
 
 // Step targets: moldY, moldOn, wallY, wallOn, filmY, filmOp.
 // The full mold casing and the walls are both out before painting (step 5).
@@ -994,7 +994,6 @@ const TARGETS = [
   { moldY: 0.4, moldOn: 1, wallY: 18, wallOn: 0, filmY: 14, filmOp: 0 },
   { moldY: 0.4, moldOn: 1, wallY: 0, wallOn: 1, filmY: 14, filmOp: 0 },
   { moldY: 0.4, moldOn: 1, wallY: 0, wallOn: 1, filmY: 14, filmOp: 0 },
-  { moldY: 22, moldOn: 0, wallY: 18, wallOn: 0, filmY: 14, filmOp: 0 },
   { moldY: 22, moldOn: 0, wallY: 18, wallOn: 0, filmY: 14, filmOp: 0 },
   { moldY: 22, moldOn: 0, wallY: 18, wallOn: 0, filmY: 0, filmOp: 1 }
 ];
@@ -1040,9 +1039,10 @@ function animate() {
   mold.visible = state.moldOn > 0.01;
   walls.position.y = state.wallY;
   walls.visible = state.wallOn > 0.01;
-  film.position.y = state.filmY;
-  filmMat.opacity = state.filmOp;
-  film.visible = state.filmOp > 0.01;
+  filmGroup.position.y = state.filmY;
+  filmCapMat.opacity = state.filmOp;
+  filmStripMat.opacity = state.filmOp * 0.2;
+  filmGroup.visible = state.filmOp > 0.01;
 
   // Pour step: the cup appears, tilts, and a thin stream falls while the pillars
   // fill to height over ~1.5 s. Then the cup and stream disappear.
@@ -1066,8 +1066,8 @@ function animate() {
     stream.visible = false;
   }
 
-  // Paint step: each line appears individually on the brush's first pass for that
-  // color. The brush tip matches the line it paints, looping until the user moves on.
+  // Paint step: each line appears once on the brush's first pass for that color,
+  // at 0.35 s per line (50% faster), then the brush stops. No looping.
   // A crossing tile appears when either of the two lines crossing there is painted.
   function setPaint(paintedCount) {
     LINES.forEach((Ln, i) => { Ln.mat.opacity = i < paintedCount ? 1 : 0; });
@@ -1078,18 +1078,21 @@ function animate() {
   if (current === 4) {
     if (lastStep !== 4) paintClock = 0;
     paintClock += dt;
-    const per = 0.7;
-    const cycle = LINES.length * per;
-    const ct = paintClock % cycle;
-    const idx = Math.min(LINES.length - 1, Math.floor(ct / per));
-    const frac = (ct % per) / per;
-    const L = LINES[idx];
-    tipMat.color.set(L.color);
-    if (L.axis === 'z') brush.position.set(L.pos, 4.2, -9.5 + frac * 19);
-    else brush.position.set(-9.5 + frac * 19, 4.2, L.pos);
-    brush.visible = true;
-    const done = Math.min(LINES.length, Math.floor(paintClock / per));
-    setPaint(done);
+    const per = 0.35;
+    const total = LINES.length * per;
+    if (paintClock < total) {
+      const idx = Math.floor(paintClock / per);
+      const frac = (paintClock - idx * per) / per;
+      const L = LINES[idx];
+      tipMat.color.set(L.color);
+      if (L.axis === 'z') brush.position.set(L.pos, 4.2, -9.5 + frac * 19);
+      else brush.position.set(-9.5 + frac * 19, 4.2, L.pos);
+      brush.visible = true;
+      setPaint(idx + 1);
+    } else {
+      brush.visible = false;
+      setPaint(LINES.length);
+    }
   } else {
     brush.visible = false;
     setPaint(current > 4 ? LINES.length : 0);
