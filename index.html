@@ -833,7 +833,7 @@ scene.add(pcbGroup);
 
 // Soft acrylic layer: one thin light blue blanket. It is the BASE the rest are
 // molded on. NOT segmented, a single blanket in both versions. Spans y 0 to 0.6.
-const acrylicMat = new THREE.MeshStandardMaterial({ color: 0x8ec8f0, roughness: 0.5, metalness: 0 });
+const acrylicMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.15, metalness: 0, transparent: true, opacity: 0.3 });
 const acrylicGeo = new THREE.BoxGeometry(17.7, 0.6, 19.2);
 acrylicGeo.translate(0, 0.3, 0);
 const acrylic = new THREE.Mesh(acrylicGeo, acrylicMat);
@@ -1169,11 +1169,11 @@ scene.add(film);
 // the finished stack onto the flexible PCB below it.
 const screwGroup = new THREE.Group();
 const screwMat = new THREE.MeshStandardMaterial({ color: 0x888888, roughness: 0.35, metalness: 0.8 });
-[[-9, -10], [9, -10], [-9, 10], [9, 10]].forEach(([sx, sz]) => {
-  const shank = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.55, 2.6, 12), screwMat);
+[[-10, -11], [10, -11], [-10, 11], [10, 11]].forEach(([sx, sz]) => {
+  const shank = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.35, 2.6, 12), screwMat);
   shank.position.set(sx, 0, sz);
   screwGroup.add(shank);
-  const head = new THREE.Mesh(new THREE.CylinderGeometry(1.0, 1.0, 0.7, 12), screwMat);
+  const head = new THREE.Mesh(new THREE.CylinderGeometry(0.65, 0.65, 0.5, 12), screwMat);
   head.position.set(sx, 1.6, sz);
   screwGroup.add(head);
 });
@@ -1262,10 +1262,10 @@ function animate() {
     const fill = Math.max(0, Math.min(1, (pourClock - 0.3) / 1.5));
     const cupOp = pourClock < 0.3 ? pourClock / 0.3 : pourClock < 1.6 ? 1 : Math.max(0, 1 - (pourClock - 1.6) / 0.4);
     cupMat.opacity = cupOp;
-    resinMat.opacity = cupOp;
+    resinMat.opacity = cupOp * 0.4;
     cupGroup.visible = cupOp > 0.01;
     cupGroup.rotation.z = pourClock < 0.3 ? 0 : Math.min(0.55, (pourClock - 0.3) * 1.2);
-    streamMat.opacity = pourClock < 0.3 ? 0 : pourClock < 1.6 ? 0.9 : Math.max(0, 0.9 * (1 - (pourClock - 1.6) / 0.4));
+    streamMat.opacity = pourClock < 0.3 ? 0 : pourClock < 1.6 ? 0.35 : Math.max(0, 0.35 * (1 - (pourClock - 1.6) / 0.4));
     stream.visible = streamMat.opacity > 0.01;
     if (current === 1) {
       acrylic.visible = fill > 0.01;
