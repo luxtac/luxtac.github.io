@@ -128,8 +128,8 @@
   .hero-photo {
     border-radius: 16px;
     overflow: hidden;
-    border: 1px solid var(--card-border);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    border: none;
+    box-shadow: none;
   }
   .hero-photo img { display: block; width: 100%; height: auto; }
   .hero-stats {
@@ -176,10 +176,10 @@
   /* figures on white cards (paper figures preserved exactly) */
   figure { margin: 28px 0; text-align: center; }
   .fig-card {
-    background: #1a1a1d;
-    border-radius: 16px;
-    padding: 22px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    background: transparent;
+    border-radius: 0;
+    padding: 0;
+    box-shadow: none;
     display: inline-block;
     max-width: 100%;
   }
@@ -189,10 +189,10 @@
     border-radius: 16px;
     max-width: 100%;
     height: auto;
-    border: 1px solid var(--card-border);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    border: none;
+    box-shadow: none;
   }
-  figure img.wide { width: 100%; height: auto; border-radius: 16px; border: 1px solid var(--card-border); }
+  figure img.wide { width: 100%; height: auto; border-radius: 16px; border: none; }
 
   /* principle */
   .principle-wrap {
@@ -392,9 +392,10 @@
   /* narrow figure for the cropped pcb render */
   figure.narrow { max-width: 760px; margin-left: auto; margin-right: auto; }
 
-  /* rainbow corona: a steady bright rainbow glow around every visual.
+  /* rainbow corona: a tight, sharp, fully visible rainbow border around the
+     visual only (never its caption text). No blur, no fading on the edges.
      Hover zooms the visual 5% and the rainbow colors flow clockwise around it.
-     The box stays fixed, only the gradient angle turns. No fading in and out. */
+     The box stays fixed, only the gradient angle turns. */
   @property --corona-angle {
     syntax: '<angle>';
     inherits: false;
@@ -404,11 +405,11 @@
   .corona::before {
     content: "";
     position: absolute;
-    inset: -7px;
-    border-radius: 22px;
+    inset: -3px;
+    border-radius: 8px;
     background: conic-gradient(from var(--corona-angle), #ff2d78, #ff7a18, #ffd60a, #30d158, #0aa5ff, #bf5af2, #ff2d78);
-    filter: blur(13px);
-    opacity: 0.48;
+    filter: none;
+    opacity: 1;
     z-index: -1;
     pointer-events: none;
     animation: corona-spin 8s linear infinite;
@@ -488,8 +489,8 @@
   <div class="container">
     <h2 class="reveal reveal-up">Abstract</h2>
     <div class="rainbow-bar"></div>
-    <figure class="reveal reveal-up corona">
-      <div class="fig-card">
+    <figure class="reveal reveal-up">
+      <div class="fig-card corona">
         <img src="assets/exploded-layers.png" alt="Exploded view of the LuxTac stack">
       </div>
       <figcaption class="caption">LuxTac overview. The stack, peeled apart: black opaque film, white translucent silicone, soft acrylic layer, flexible PCB.</figcaption>
@@ -528,13 +529,13 @@
     </div>
     <div class="principle-demo reveal reveal-up">
       <div class="principle-panels">
-        <div class="principle-panel corona">
+        <div class="principle-panel">
           <h3>(a) No force</h3>
-          <svg id="panelA" viewBox="0 0 600 340" role="img" aria-label="Sensor segment under no force"></svg>
+          <div class="corona"><svg id="panelA" viewBox="0 0 600 340" role="img" aria-label="Sensor segment under no force"></svg></div>
         </div>
-        <div class="principle-panel corona">
+        <div class="principle-panel">
           <h3>(b) Under force</h3>
-          <svg id="panelB" viewBox="0 0 600 340" role="img" aria-label="Sensor segment under force"></svg>
+          <div class="corona"><svg id="panelB" viewBox="0 0 600 340" role="img" aria-label="Sensor segment under force"></svg></div>
         </div>
       </div>
       <p class="principle-readout" id="pd-read">Peak indentation 1.00 mm &middot; about 3.3 N</p>
@@ -596,8 +597,8 @@
         </ul>
       </div>
       <div class="reveal reveal-right">
-        <figure class="corona">
-          <div class="fig-card">
+        <figure>
+          <div class="fig-card corona">
             <img src="assets/pcb-render.png" alt="3D CAD render of the 4 by 4 sensing head, photodiodes and LEDs on the flexible PCB">
           </div>
           <figcaption class="caption">The 4&times;4 sensing head in 3D. Sixteen TCS34725 photodiodes and nine white LEDs on the flexible PCB.</figcaption>
@@ -606,12 +607,12 @@
     </div>
     <p class="reveal reveal-up" style="margin-top: 28px;">Each converter integrates an IR-blocking filter, a photodiode array, and a 16-bit integrating ADC per channel, so the analog signal never leaves the package. All 16 converters share one fixed I&sup2;C address, so two TCA9548A switches give each sensor its own bus segment. A Teensy 4.1 polls the 16 sensors and streams a frame over USB serial at a nominal 100 Hz.</p>
     <div class="video-duo">
-    <figure class="reveal reveal-up corona">
-      <video class="wide-video" src="assets/animation.mp4" controls autoplay muted loop playsinline></video>
+    <figure class="reveal reveal-up">
+      <div class="corona"><video class="wide-video" src="assets/animation.mp4" controls autoplay muted loop playsinline></video></div>
       <figcaption class="caption">Sensing principle, mode one. The stack peels apart to show the photodiodes and LEDs, then a press dims the light.</figcaption>
     </figure>
-    <figure class="reveal reveal-up corona">
-      <video class="wide-video" src="assets/shear-animation.mp4" controls autoplay muted loop playsinline></video>
+    <figure class="reveal reveal-up">
+      <div class="corona"><video class="wide-video" src="assets/shear-animation.mp4" controls autoplay muted loop playsinline></video></div>
       <figcaption class="caption">Shear sensing, mode two. A single taxel under normal force, shear, and rotation, then a roller press with the taxel grid lighting up (8&times;4 board).</figcaption>
     </figure>
     </div>
@@ -660,14 +661,14 @@
     <div class="lead reveal reveal-up">
       <p>Raw readings differ strongly across the array: center taxels have baselines of 2364 &plusmn; 284 counts, edge taxels 1322 &plusmn; 203, and corner taxels 673 &plusmn; 100, consistent with edge and corner detectors collecting scattered light from fewer LEDs. After normalization the response is linear in force. The mean over taxels follows s = 0.02 + 0.170F with R&sup2; = 0.999 from 0.1 N to the 5.8 N limit of the test, and neither a dead zone nor saturation is reached.</p>
     </div>
-    <figure class="reveal reveal-up corona">
-      <div class="fig-card">
+    <figure class="reveal reveal-up">
+      <div class="fig-card corona">
         <img src="assets/fig5-response.png" alt="Individual-taxel response over 15 passes, 240 presses">
       </div>
       <figcaption class="caption">Individual-taxel response over 15 passes (240 presses). (a) Raw reading vs. force during loading; center taxels have the highest baselines and corner taxels the lowest. (b) Normalized signal vs. force. The response is linear in force, s = 0.02 + 0.170F (R&sup2; = 0.999), with no dead zone or saturation up to 5.8 N. (c) Optical map g(&delta;). (d) Force vs. depth, loading and unloading; k<sub>n</sub> = 3.86 &plusmn; 0.09 N/mm.</figcaption>
     </figure>
-    <figure class="reveal reveal-up corona">
-      <div class="fig-card">
+    <figure class="reveal reveal-up">
+      <div class="fig-card corona">
         <img src="assets/fig6-uniformity.png" alt="Array uniformity at 0.5, 1.5, 3, and 5.5 N">
       </div>
       <figcaption class="caption">Array uniformity from the individual-taxel presses at 0.5, 1.5, 3, and 5.5 N. Top: baseline-subtracted drop of the pressed taxel; bottom: normalized signal; each row shares one color scale. Right: distribution over all taxels and passes with the coefficient of variation, about 38% before and 6% after normalization.</figcaption>
@@ -694,8 +695,8 @@
     <div class="lead reveal reveal-up">
       <p>The trained policies were evaluated on two real-world manipulation tasks: peg-in-hole insertion and cube sorting. For cube sorting, the vision-only policy successfully completed 5 out of 15 trials (33.3%), while the visuotactile policy achieved 6 out of 15 successful trials (40.0%). For peg-in-hole insertion, the vision-only policy successfully completed 7 out of 16 trials (43.8%), while the LuxTac-based policy achieved 13 out of 15 successful trials (86.7%).</p>
     </div>
-    <figure class="reveal reveal-up corona">
-      <div class="fig-card">
+    <figure class="reveal reveal-up">
+      <div class="fig-card corona">
         <img src="assets/policy-timeline.jpg" alt="Temporal tactile observations during peg insertion and cube sorting">
       </div>
       <figcaption class="caption">Temporal tactile observations during end-to-end manipulation using LuxTac. Representative execution sequences for (Task 1) peg-in-hole insertion and (Task 2) cube sorting with smooth and dotted surfaces. Each row illustrates successive manipulation stages, including positioning, grasping, object transport, lowering, and release. The LuxTac heatmaps reveal contact-dependent responses during manipulation.</figcaption>
@@ -762,7 +763,7 @@ const STEPS = [
   { title: 'Pour the silicone grid', caption: 'White silicone (XP-565, 15:1) is poured in, degassed, and oven-cured about 20 minutes. The grid leaves white silicone pillars.' },
   { title: 'Paint the colors', caption: 'The full mold casing and the walls are taken out first. Then a brush paints colored rows and columns between the channels, the vibrant grid under the film.' },
   { title: 'Seal it in black', caption: 'A thin black film is stretched over the white squares, following every recess and edge. It is 95% opaque, but only 50% opaque over the colored lines, so the colors poke through along their full length.' },
-  { title: 'Screw onto the flexible PCB', caption: 'The finished stack is screwed onto the flexible PCB below it, so the photodiodes and LEDs sit under the soft acrylic layer.' }
+  { title: 'Secure onto the flexible PCB', caption: 'The finished stack is secured onto the flexible PCB below it, so the photodiodes and LEDs sit under the soft acrylic layer.' }
 ];
 
 const stage = document.getElementById('fabStage');
@@ -792,7 +793,7 @@ scene.add(dir);
 
 // Flexible PCB: 21.8 x 23.8 mm flex PCB, copper orange. The flex tail is the same copper.
 // The whole PCB (with photodiodes and LEDs) stays hidden below the scene until the
-// final step, when it rises up and the finished stack is screwed onto it from below.
+// final step, when it rises up and the finished stack is secured onto it from below.
 // PCB top is at y=0, directly under the soft acrylic base.
 const pcbGroup = new THREE.Group();
 const pcbMat = new THREE.MeshStandardMaterial({ color: 0xd98a4a, roughness: 0.6, metalness: 0.1 });
@@ -1077,7 +1078,7 @@ handle.position.y = 8;
 brush.add(handle);
 const ferrule = new THREE.Mesh(
   new THREE.CylinderGeometry(0.7, 0.8, 2.2, 12),
-  new THREE.MeshStandardMaterial({ color: 0xc0c0c0, roughness: 0.3, metalness: 0.8 })
+  new THREE.MeshStandardMaterial({ color: 0xc0c0c0, roughness: 0.35, metalness: 0 })
 );
 ferrule.position.y = 2.4;
 brush.add(ferrule);
@@ -1164,15 +1165,21 @@ scene.add(film);
 
 // Screws: four M2 screws at the corners that descend at the final step to fasten
 // the finished stack onto the flexible PCB below it.
+// Material is matte (metalness 0): a metal material with no environment map
+// renders BLACK, which is the glitch that made the screws show as black squares.
 const screwGroup = new THREE.Group();
-const screwMat = new THREE.MeshStandardMaterial({ color: 0x888888, roughness: 0.35, metalness: 0.8 });
+const screwMat = new THREE.MeshStandardMaterial({ color: 0x9a9a9a, roughness: 0.45, metalness: 0 });
+const slotMat = new THREE.MeshStandardMaterial({ color: 0x3a3a3a, roughness: 0.6, metalness: 0 });
 [[-10, -11], [10, -11], [-10, 11], [10, 11]].forEach(([sx, sz]) => {
-  const shank = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.35, 0.5, 12), screwMat);
+  const shank = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.35, 0.5, 24), screwMat);
   shank.position.set(sx, -0.05, sz);
   screwGroup.add(shank);
-  const head = new THREE.Mesh(new THREE.CylinderGeometry(0.65, 0.65, 0.5, 12), screwMat);
+  const head = new THREE.Mesh(new THREE.CylinderGeometry(0.65, 0.65, 0.5, 24), screwMat);
   head.position.set(sx, 0.45, sz);
   screwGroup.add(head);
+  const slot = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.08, 0.18), slotMat);
+  slot.position.set(sx, 0.72, sz);
+  screwGroup.add(slot);
 });
 screwGroup.position.y = 18;
 screwGroup.visible = false;
@@ -1361,8 +1368,8 @@ window.addEventListener('resize', () => {
   }
   function buildPanel(svg, deformed){
     while (svg.firstChild) svg.removeChild(svg.firstChild);
+    var defs = document.createElementNS(NS, 'defs');
     if (deformed){
-      var defs = document.createElementNS(NS, 'defs');
       var marker = document.createElementNS(NS, 'marker');
       marker.setAttribute('id', 'pdArr');
       marker.setAttribute('viewBox', '0 0 10 10');
@@ -1376,8 +1383,8 @@ window.addEventListener('resize', () => {
       mp.setAttribute('fill', '#ff2d78');
       marker.appendChild(mp);
       defs.appendChild(marker);
-      svg.appendChild(defs);
     }
+    svg.appendChild(defs);
     var top = gelTop();
     var NPTS = 60, pts = [], i, x;
     for (i = 0; i <= NPTS; i++){
@@ -1415,42 +1422,80 @@ window.addEventListener('resize', () => {
     svg.appendChild(el('line', { x1: GX0, y1: topL, x2: GX0, y2: PCB_Y, stroke: '#ff3b30', 'stroke-width': 6, 'stroke-linecap': 'round' }));
     svg.appendChild(el('line', { x1: GX1, y1: topR, x2: GX1, y2: PCB_Y, stroke: '#30d158', 'stroke-width': 6, 'stroke-linecap': 'round' }));
     function dist(x1, y1, x2, y2){ return Math.hypot(x2 - x1, y2 - y1); }
-    var maxPath = dist(LED_X, DEV_Y, GX1, top) + dist(GX1, top, DET_X, DEV_Y);
-    var minPath = dist(LED_X, DEV_Y, GX0, top) + dist(GX0, top, DET_X, DEV_Y);
-    // A beam goes out white from the LED, bounces, and comes back to the sensor
-    // in the color of what it bounced off of. The ceiling is the black film, so
-    // a ceiling bounce comes back black. Only the side walls return color.
-    // Light fades with distance traveled: the return is bright up close and
-    // clearly dimmer the further it has to travel.
+    // Desaturate an [r,g,b] color toward mid gray by amt (0..1): the far end
+    // of a return is a less vibrant version of the color at the bounce.
+    function desat(c, amt){
+      return 'rgb(' + Math.round(c[0] + (128 - c[0]) * amt) + ',' +
+                      Math.round(c[1] + (128 - c[1]) * amt) + ',' +
+                      Math.round(c[2] + (128 - c[2]) * amt) + ')';
+    }
+    var gradN = 0;
+    // Cast one ray from the LED at angleDeg from straight up (negative is to
+    // the left). March along it in small steps; the first surface it meets
+    // is the bounce point. The dented roof is the black film, so a ray the
+    // dent pushes into the ceiling returns black, not a wall color. The
+    // reflected lines therefore move with the shape of the indentation.
+    function castRay(angleDeg){
+      var a = angleDeg * Math.PI / 180;
+      var dx = Math.sin(a), dy = -Math.cos(a);
+      var step = 1.5, t, x, y;
+      for (t = step; t < 800; t += step){
+        x = LED_X + dx * t;
+        y = DEV_Y + dy * t;
+        if (x >= GX0 && x <= GX1 && y <= roofY(x)) return { x: x, y: y, surf: 'top' };
+        if (x <= GX0 && y >= roofY(GX0) && y <= PCB_Y) return { x: GX0, y: y, surf: 'left' };
+        if (x >= GX1 && y >= roofY(GX1) && y <= PCB_Y) return { x: GX1, y: y, surf: 'right' };
+        if (x < GX0 - 5 || x > GX1 + 5) return null;
+      }
+      return null;
+    }
+    // A beam goes out white from the LED, bounces, and comes back to the
+    // sensor in the color of what it bounced off of. The return is drawn
+    // with a gradient along its length: pure vibrant color right at the
+    // bounce point, fading a slight amount per pixel to a less vibrant
+    // version of that color by the time it reaches the sensor.
     function ray(bx, by, surf){
       var outLen = dist(LED_X, DEV_Y, bx, by);
       var retLen = dist(bx, by, DET_X, DEV_Y);
       var total = outLen + retLen;
+      var maxPath = dist(LED_X, DEV_Y, GX1, top) + dist(GX1, top, DET_X, DEV_Y);
+      var minPath = dist(LED_X, DEV_Y, GX0, top) + dist(GX0, top, DET_X, DEV_Y);
       var f = Math.max(0, Math.min(1, (total - minPath) / Math.max(1, maxPath - minPath)));
-      var dim = 1 - 0.92 * f;
       var glowF = S.glow / 100;
       var outOp = (0.9 - 0.45 * f) * glowF;
-      var retCol, retBase;
-      if (surf === 'left'){ retCol = 'rgb(255,59,48)'; retBase = 0.95; }
-      else if (surf === 'right'){ retCol = 'rgb(48,209,88)'; retBase = 0.95; }
-      else { retCol = 'rgb(20,20,20)'; retBase = 0.35; }
-      var retOp = retBase * dim * glowF;
       svg.appendChild(el('path', { d: 'M' + LED_X + ',' + DEV_Y + ' L' + bx.toFixed(1) + ',' + by.toFixed(1), stroke: '#ffffff', 'stroke-width': 2.2, opacity: outOp, fill: 'none', 'stroke-linecap': 'round' }));
-      svg.appendChild(el('path', { d: 'M' + bx.toFixed(1) + ',' + by.toFixed(1) + ' L' + DET_X + ',' + DEV_Y, stroke: retCol, 'stroke-width': 2.2, opacity: retOp, fill: 'none', 'stroke-linecap': 'round' }));
+      var col, base;
+      if (surf === 'left'){ col = [255, 59, 48]; base = 0.95; }
+      else if (surf === 'right'){ col = [48, 209, 88]; base = 0.95; }
+      else { col = [20, 20, 20]; base = 0.35; }
+      var retOp = base * (1 - 0.5 * f) * glowF;
+      var gid = 'pdg' + (gradN++);
+      var g = document.createElementNS(NS, 'linearGradient');
+      g.setAttribute('id', gid);
+      g.setAttribute('gradientUnits', 'userSpaceOnUse');
+      g.setAttribute('x1', bx.toFixed(1)); g.setAttribute('y1', by.toFixed(1));
+      g.setAttribute('x2', DET_X); g.setAttribute('y2', DEV_Y);
+      var s0 = document.createElementNS(NS, 'stop');
+      s0.setAttribute('offset', '0%');
+      s0.setAttribute('stop-color', 'rgb(' + col[0] + ',' + col[1] + ',' + col[2] + ')');
+      s0.setAttribute('stop-opacity', retOp.toFixed(3));
+      var s1 = document.createElementNS(NS, 'stop');
+      s1.setAttribute('offset', '100%');
+      s1.setAttribute('stop-color', desat(col, 0.55));
+      s1.setAttribute('stop-opacity', (retOp * 0.6).toFixed(3));
+      g.appendChild(s0); g.appendChild(s1);
+      defs.appendChild(g);
+      svg.appendChild(el('path', { d: 'M' + bx.toFixed(1) + ',' + by.toFixed(1) + ' L' + DET_X + ',' + DEV_Y, stroke: 'url(#' + gid + ')', 'stroke-width': 2.2, fill: 'none', 'stroke-linecap': 'round' }));
     }
-    var n = Math.round(S.rays), j, bx, by;
+    // Cast the rays as a fan from the LED. Each ray finds the first surface
+    // it meets, so the bounce points follow the dented roof.
+    var n = Math.round(S.rays), j;
     for (j = 0; j < n; j++){
-      bx = GX0 + (GX1 - GX0) * (0.08 + 0.84 * (n === 1 ? 0.5 : j / (n - 1)));
-      by = deformed ? roofY(bx) : top;
-      ray(bx, by, 'top');
-    }
-    if (S.walls){
-      var k, wy;
-      for (k = 0; k < 3; k++){
-        wy = top + (PCB_Y - top) * (0.25 + 0.25 * k);
-        ray(GX0, wy, 'left');
-        ray(GX1, wy, 'right');
-      }
+      var ang = -70 + 140 * (n === 1 ? 0.5 : j / (n - 1));
+      var hit = castRay(ang);
+      if (!hit) continue;
+      if (!S.walls && hit.surf !== 'top') continue;
+      ray(hit.x, hit.y, hit.surf);
     }
   }
   function render(){
