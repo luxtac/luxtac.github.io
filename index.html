@@ -40,14 +40,14 @@
   <div class="container">
     <p class="eyebrow">Optical tactile array with per-taxel shear sensing</p>
     <h1><span>Lux</span>Tac</h1>
-    <p class="tagline">A 4&times;4 optical taxel array. Each taxel is a digital RGBC light-to-digital converter that observes LED light back-scattered from a white translucent silicone layer capped by a black opaque layer. Pressing thins the layer, so the reading falls with local indentation depth.</p>
+    <p class="tagline">A scalable optical taxel array. Each taxel is a digital RGBC light-to-digital converter that observes LED light back-scattered from a white translucent silicone layer capped by a black opaque layer. Pressing thins the layer, so the reading falls with local indentation depth.</p>
     <div class="rainbow-bar"></div>
     <div class="hero-grid reveal reveal-up">
       <div class="hero-photo">
         <img src="assets/hero-crop.png" alt="Render of the LuxTac sensing head, two stacks on a white background.">
       </div>
       <div class="hero-stats">
-        <div class="stat"><b>Scalable</b><span>4&times;4, 4&times;8, 8&times;8, 16&times;16, &hellip;</span></div>
+        <div class="stat"><b>Scalable</b><span>8&times;4, 8&times;8, 16&times;8, 16&times;16, &hellip;</span></div>
         <div class="stat"><b>R&sup2; = 0.999</b><span>linear to force</span></div>
         <div class="stat"><b>104 mN</b><span>detection threshold</span></div>
         <div class="stat"><b>63% vs 40%</b><span>average robot success, with vs without touch</span></div>
@@ -64,7 +64,7 @@
     <h2 class="reveal reveal-up">Abstract</h2>
     <div class="rainbow-bar"></div>
     <div class="lead reveal reveal-up">
-      <p>Dense, low-cost tactile arrays have made touch a practical input for robot learning, but the dominant piezoresistive designs report an electrical quantity that is only loosely tied to the physics of contact, which makes them hard to characterize, compare across units, or reproduce in simulation. We present LuxTac, a 4&times;4 optical taxel array in which each taxel is a digital RGBC light-to-digital converter that observes LED light back-scattered from a white translucent silicone layer capped by an opaque, light-absorbing black layer. Pressing the surface thins the scattering layer, so the reading falls monotonically with <em>local indentation depth</em> rather than with force directly. We exploit this to split calibration into two independent maps: an optical transfer function from depth to signal and a mechanical stiffness from force to depth, which is exactly the quantity a penalty-based tactile simulator needs.</p>
+      <p>Dense, low-cost tactile arrays have made touch a practical input for robot learning, but the dominant piezoresistive designs report an electrical quantity that is only loosely tied to the physics of contact, which makes them hard to characterize, compare across units, or reproduce in simulation. We present LuxTac, a scalable optical taxel array in which each taxel is a digital RGBC light-to-digital converter that observes LED light back-scattered from a white translucent silicone layer capped by an opaque, light-absorbing black layer. Pressing the surface thins the scattering layer, so the reading falls monotonically with <em>local indentation depth</em> rather than with force directly. We exploit this to split calibration into two independent maps: an optical transfer function from depth to signal and a mechanical stiffness from force to depth, which is exactly the quantity a penalty-based tactile simulator needs.</p>
       <p>The same board accepts two interchangeable gel cartridges: a plain cartridge for normal sensing and a cartridge with colored walls that also encodes shear in the color of the returned light. We characterize the array with an automated CNC indenter instrumented with a six-axis force/torque sensor, extending the protocol of 3D-ViTac with full loading&ndash;unloading cycles and every channel recorded on every press. Over 240 presses, the normal cartridge responds linearly to force (R&sup2; = 0.999) from a 104 mN detection threshold to at least 5.8 N, with 2.0% repeatability, 5.9% hysteresis, and a taxel-to-taxel coefficient of variation that drops from 38% to 6% after normalization. With the shear cartridge, LuxTac estimates the local shear direction within a median of 7&deg; and lateral force with R&sup2; = 0.98, at the cost of lower sensitivity to pressure. Adding LuxTac to an Action Chunking Transformer policy raises success in peg-in-hole insertion from 47% to 87%. Design files and code will be released.</p>
     </div>
   </div>
@@ -75,7 +75,7 @@
     <h2 class="reveal reveal-up">Key Highlights</h2>
     <div class="rainbow-bar"></div>
     <div class="stat-grid">
-      <div class="stat-card reveal reveal-up"><b>16 taxels</b><span>TCS34725 RGBC converters on a 4.42 &times; 4.80 mm grid, nine LEDs, four-layer flexible PCB.</span></div>
+      <div class="stat-card reveal reveal-up"><b>Scalable grid</b><span>TCS34725 RGBC converters on a 4.42 &times; 4.80 mm pitch, LEDs between the taxels, four-layer flexible PCB.</span></div>
       <div class="stat-card reveal reveal-up"><b>Depth, not force</b><span>Each reading is set by local indentation depth, a physical quantity. No camera, no analog front end.</span></div>
       <div class="stat-card reveal reveal-up"><b>Separable calibration</b><span>Optical depth-to-signal and mechanical force-to-depth maps plug straight into a simulator.</span></div>
       <div class="stat-card reveal reveal-up"><b>R&sup2; = 0.999</b><span>Linear from 104 mN to at least 5.8 N. No dead zone, no saturation in range.</span></div>
@@ -128,7 +128,7 @@
         <div class="fig-card">
           <img src="assets/pcb-4b4.jpg" alt="3D CAD render of the 4 by 4 sensing head, photodiodes and LEDs on the flexible PCB">
         </div>
-        <figcaption class="caption">The 4&times;4 sensing head. Sixteen TCS34725 RGBC converters and nine LEDs on the flexible PCB.</figcaption>
+        <figcaption class="caption">The LuxTac sensing head. TCS34725 RGBC converters and LEDs on the flexible PCB.</figcaption>
         <p class="reveal reveal-up converter-note">Each converter integrates an IR-blocking filter, a photodiode array, and a 16-bit integrating ADC per channel, so the analog signal never leaves the package. All 16 converters share one fixed I&sup2;C address, so two TCA9548A switches give each sensor its own bus segment with dedicated 4.7 k&Omega; pull-ups.</p>
       </figure>
       <div>
@@ -189,9 +189,9 @@
       <h3>One design, many sizes</h3>
       <p>Every taxel is an independent digital detector on its own bus segment, so the same taxel cell tiles into arrays of other sizes by adding sensors and multiplexers, without changing the readout scheme.</p>
       <div class="scale-chips">
-        <span class="scale-chip current">4&times;4 <small>current</small></span>
-        <span class="scale-chip">4&times;8</span>
+        <span class="scale-chip">8&times;4</span>
         <span class="scale-chip">8&times;8</span>
+        <span class="scale-chip">16&times;8</span>
         <span class="scale-chip">16&times;16</span>
         <span class="scale-chip more">&hellip;</span>
       </div>
@@ -268,7 +268,7 @@
       <figcaption class="caption">Shear cartridge, 9 plate positions &times; 4 depths &times; 8 directions &times; 3 repeats (12 &times; 12 mm flat plate). (g) Lateral force vs. plate displacement, outward (solid) and return (dashed) strokes, by press depth. (h) Per-taxel shear estimate vs. true displacement on the held-out repeat, by depth; solid: with the brightness-based gain, dashed: without. (i) Normal response of the shear cartridge: normalized clear-channel signal vs. normal force, linear fit R&sup2; = 0.996.</figcaption>
     </figure>
     <table class="reveal reveal-up">
-      <caption>Characterization summary. Normal cartridge: mean &plusmn; std over 16 taxels. Shear cartridge: held-out repeat.</caption>
+      <caption>Characterization summary. Normal cartridge: mean &plusmn; std over all taxels. Shear cartridge: held-out repeat.</caption>
       <tr><th>Metric</th><th class="num">Value</th></tr>
       <tr><td colspan="2"><b>Normal cartridge</b></td></tr>
       <tr><td>Noise &sigma;</td><td class="num">1.06 &plusmn; 0.44 counts (0.08% of baseline)</td></tr>
@@ -335,7 +335,7 @@
       <button class="exp-arrow" id="demoNext" aria-label="Next clips">&#8250;</button>
     </div>
     <div class="exp-dots demo-dots" id="demoDots"></div>
-    <p class="caption">Four real-time clips, three at a time. Top: the live 4&times;4 LuxTac reading. Bottom: the hand press that made it.</p>
+    <p class="caption">Four real-time clips, three at a time. Top: the live LuxTac reading. Bottom: the hand press that made it.</p>
 
     <h2 class="reveal reveal-up exp-heading">Robot Experiments</h2>
     <div class="rainbow-bar"></div>
@@ -469,7 +469,7 @@
     </div>
     <button class="exp-lightbox-close" type="button" aria-label="Close enlarged video">&times;</button>
   </div>
-  <p class="caption reveal reveal-up">Vision + LuxTac clips show the live 4&times;4 LuxTac reading in the bottom-left inset,<br>frame-synced to the camera <span class="magma-bar" aria-hidden="true"></span> <span class="magma-ends">0 &rarr; 1</span>.</p>
+  <p class="caption reveal reveal-up">Vision + LuxTac clips show the live LuxTac reading in the bottom-left inset,<br>frame-synced to the camera <span class="magma-bar" aria-hidden="true"></span> <span class="magma-ends">0 &rarr; 1</span>.</p>
     <table class="reveal reveal-up">
       <caption>Real-world success rates, with 95% Wilson confidence intervals in brackets</caption>
       <tr><th>Task</th><th class="num">Vision only</th><th class="num">Vision + LuxTac</th></tr>
@@ -524,7 +524,7 @@ const PATHS = {
     S({ mold: 'A', screws: 'mold', gel: 'pour', title: 'Cast', caption: 'The degassed white translucent XP-565 mixture (15:1 by weight) is poured slowly into the mold to minimize air entrapment.' }),
     S({ mold: 'A', screws: 'mold', gel: 'full', level: true, title: 'Level', caption: 'An acrylic plate is pressed onto the white layer to remove the excess silicone and leave a flat layer of uniform thickness. Then heat cure for about 20 minutes.' }),
     S({ gel: 'full', coat: 'pour', title: 'Coat', caption: 'The mold frame comes off, leaving the white layer bonded to the acrylic base. The black mixture is poured over it and spreads across the acrylic, covering the top and sides and stopping short of the screw holes. Then heat cure for about 10 minutes.' }),
-    S({ gel: 'full', coat: 'full', pcb: true, screws: 'base', title: 'Assemble', caption: 'The finished stack on its acrylic base is aligned over the 4&times;4 photodiode array and secured with four M2 screws through the base plate into the PCB mounting holes.' })
+    S({ gel: 'full', coat: 'full', pcb: true, screws: 'base', title: 'Assemble', caption: 'The finished stack on its acrylic base is aligned over the photodiode array and secured with four M2 screws through the base plate into the PCB mounting holes.' })
   ],
   2: [
     S({ mold: 'B', screws: 'mold', title: 'Assemble the mold', caption: 'The same 1 mm clear acrylic base plate and a 2 mm acrylic frame with slots for the wall inserts, fastened with four M2 screws from the top.' }),
@@ -533,7 +533,7 @@ const PATHS = {
     S({ mold: 'B', screws: 'mold', gel: 'full', title: 'Remove walls', caption: 'Removing the grid leaves 16 translucent cubes (about 3.8 &times; 3.4 mm) separated by 1 mm slits.' }),
     S({ mold: 'B', screws: 'mold', gel: 'full', color: 'inject', title: 'Inject color', caption: 'The pigmented mixtures are injected into the slits: row slits alternate green / red, column slits yellow / blue. The rows are filled and heat cured first (about 10 minutes), then the columns.' }),
     S({ gel: 'full', color: 'full', coat: 'pour', title: 'Coat', caption: 'The frame comes off and the black coating is applied as in Mode 1. Then heat cure for about 10 minutes.' }),
-    S({ gel: 'full', color: 'full', coat: 'full', pcb: true, screws: 'base', title: 'Assemble', caption: 'The finished stack on its acrylic base is aligned over the 4&times;4 photodiode array and secured with four M2 screws through the base plate into the PCB mounting holes.' })
+    S({ gel: 'full', color: 'full', coat: 'full', pcb: true, screws: 'base', title: 'Assemble', caption: 'The finished stack on its acrylic base is aligned over the photodiode array and secured with four M2 screws through the base plate into the PCB mounting holes.' })
   ]
 };
 // Screw / insert spots: on the mold frame, inset from its outer corners.
@@ -580,7 +580,7 @@ const cable = new THREE.Mesh(new THREE.BoxGeometry(16, 0.12, 8), pcbMat);
 cable.position.set(-18, -0.25, 0);
 pcbGroup.add(cable);
 
-// Raised photodiodes (16 dark TCS34725 converters, 4x4) and LEDs (9 small white 0603, 3x3).
+// Raised photodiodes (dark TCS34725 converters) and LEDs (small white 0603) between them.
 const chipGroup = new THREE.Group();
 const pdMat = new THREE.MeshStandardMaterial({ color: 0x16233f, roughness: 0.4, metalness: 0.2 });
 const pdGeo = new THREE.BoxGeometry(2.0, 0.5, 2.44);
@@ -727,7 +727,7 @@ walls.position.y = 18;
 walls.visible = false;
 scene.add(walls);
 
-// White silicone pillars: 4x4 grid, pitch 4.42 x 4.80 mm. Hidden until the pour.
+// White silicone pillars on the taxel grid, pitch 4.42 x 4.80 mm. Hidden until the pour.
 // The pillars sit on top of the soft acrylic base (y 0.5 to 2.5).
 // Pillar height 2.0 matches the paper's 2 mm white silicone layer.
 const pillarGroup = new THREE.Group();
