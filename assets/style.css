@@ -397,9 +397,15 @@
   }
   @media (max-width: 820px) { .video-duo { grid-template-columns: 1fr; } }
 
-  /* paired demo videos: 2 rows x 6 columns, portrait cells, dark panel, no hover move */
-  .demo-pairs { background: #161618; border-radius: 16px; padding: 20px; }
-  .demo-pairs-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
+  /* paired demo videos: 2 rows x 6 columns, portrait cells, dark panel, no hover move.
+     The rainbow lives ONLY in the thin corona border around the panel, never as
+     a background fill. .corona::before/::after are negative z-index and cover
+     the whole .demo-pairs box, so they paint over its own background and the
+     rainbow showed through the grid gaps. The dark panel is therefore on the
+     grid child, which paints over the rainbow pseudos, leaving only the 3px
+     rainbow rim and the blurred glow halo outside the panel. */
+  .demo-pairs { background: transparent; border-radius: 16px; padding: 0; }
+  .demo-pairs-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; background: #161618; border-radius: 13px; padding: 20px; }
   .demo-pairs-grid video { width: 100%; height: auto; border-radius: 8px; display: block; background: #000; }
   @media (max-width: 820px) { .demo-pairs-grid { grid-template-columns: repeat(3, 1fr); } }
 
