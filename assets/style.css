@@ -549,3 +549,7 @@
   border: 1px solid var(--card-border); background: var(--card); color: var(--text);
   font-size: 26px; line-height: 1; cursor: pointer;
 }
+
+/* second section heading inside #robot: same look as the h2 above, with breathing room */
+.exp-heading { margin-top: 72px; }
+.exp-carousel ~ .caption { margin-top: 20px; }

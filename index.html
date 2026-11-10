@@ -236,7 +236,7 @@
 
 <section class="section" id="robot">
   <div class="container">
-    <h2 class="reveal reveal-up">Robot Experiments</h2>
+    <h2 class="reveal reveal-up">Real-time Demonstration</h2>
     <div class="rainbow-bar"></div>
     <div class="lead reveal reveal-up">
       <p>The trained policies were evaluated on two real-world manipulation tasks: peg-in-hole insertion and cube sorting. For cube sorting, the vision-only policy successfully completed 5 out of 15 trials (33.3%), while the visuotactile policy achieved 6 out of 15 successful trials (40.0%). For peg-in-hole insertion, the vision-only policy successfully completed 7 out of 16 trials (43.8%), while the LuxTac-based policy achieved 13 out of 15 successful trials (86.7%).</p>
@@ -258,7 +258,8 @@
       </div>
     </div>
     
-  <h3 class="reveal reveal-up" style="text-align:center;margin:36px 0 8px;">Robot Experiments</h3>
+    <h2 class="reveal reveal-up exp-heading">Robot Experiments</h2>
+    <div class="rainbow-bar"></div>
   <p class="reveal reveal-up" style="text-align:center;color:var(--muted);margin:0 0 20px;">Vision-only vs vision + LuxTac, on the two manipulation tasks.</p>
 <div class="exp-carousel">
     <button class="exp-arrow" id="expPrev" aria-label="Previous task">&#8249;</button>
@@ -384,24 +385,13 @@
     </div>
     <button class="exp-arrow" id="expNext" aria-label="Next task">&#8250;</button>
   </div>
-  <div class="exp-counter" id="expCounter">1 of 2</div>
-  <div class="exp-dots">
-    <button data-i="0" class="active" aria-label="Cube sorting"></button>
-    <button data-i="1" aria-label="Peg-in-hole"></button>
-  </div>
   <div class="exp-lightbox" id="expLightbox" hidden>
     <div class="exp-lightbox-inner corona">
       <video controls muted loop playsinline></video>
     </div>
     <button class="exp-lightbox-close" type="button" aria-label="Close enlarged video">&times;</button>
   </div>
-  <p class="caption reveal reveal-up">Vision + LuxTac clips show the live 4&times;4 LuxTac reading in the bottom-left inset, frame-synced to the camera <span class="magma-bar" aria-hidden="true"></span> <span class="magma-ends">0 &rarr; 1</span>.</p>
-<figure class="reveal reveal-up">
-      <div class="fig-card corona">
-        <img src="assets/policy-timeline.jpg" alt="Temporal tactile observations during peg insertion and cube sorting">
-      </div>
-      <figcaption class="caption">Temporal tactile observations during end-to-end manipulation using LuxTac. Representative execution sequences for (Task 1) peg-in-hole insertion and (Task 2) cube sorting with smooth and dotted surfaces. Each row illustrates successive manipulation stages, including positioning, grasping, object transport, lowering, and release. The LuxTac heatmaps reveal contact-dependent responses during manipulation.</figcaption>
-    </figure>
+  <p class="caption reveal reveal-up">Vision + LuxTac clips show the live 4&times;4 LuxTac reading in the bottom-left inset,<br>frame-synced to the camera <span class="magma-bar" aria-hidden="true"></span> <span class="magma-ends">0 &rarr; 1</span>.</p>
     <table class="reveal reveal-up">
       <caption>Real-world success rates (95% Wilson confidence intervals)</caption>
       <tr><th>Task</th><th class="num">Vision only</th><th class="num">Vision + LuxTac</th></tr>

@@ -264,7 +264,7 @@
   function show(i) {
     idx = (i + total) % total;
     track.style.transform = 'translateX(' + (-idx * 100) + '%)';
-    counter.textContent = (idx + 1) + ' of ' + total;
+    if (counter) counter.textContent = (idx + 1) + ' of ' + total;
     dots.forEach(function (d, j) { d.classList.toggle('active', j === idx); });
     syncPlayback();
   }
