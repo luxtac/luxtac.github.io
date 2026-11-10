@@ -337,6 +337,19 @@
     <div class="exp-dots demo-dots" id="demoDots"></div>
     <p class="caption">Four real-time clips, three at a time. Top: the live LuxTac reading. Bottom: the hand press that made it.</p>
 
+    <h2 class="reveal reveal-up exp-heading" id="simulation">Simulation</h2>
+    <div class="rainbow-bar"></div>
+    <div class="sim-grid">
+      <div class="sim-text reveal reveal-left">
+        <p>We simulate LuxTac in IsaacGym with TacSL, on the same Franka Panda arm and gripper as the real setup. Each taxel's penetration depth is turned into the reading the real taxel would give, using the depth curve fitted on the calibration bench, so no raw counts, baselines, or LED drift have to be simulated.</p>
+        <p>Over 12 grasps of four 3D-printed objects in three orientations, simulated contact patterns match the real pad with a mean cosine of <b>0.968</b>, against 0.61&ndash;0.78 for the wrong object, orientation, or taxel order.</p>
+      </div>
+      <div class="sim-video reveal reveal-right">
+        <div class="corona"><video class="wide-video" src="assets/sim-episode.mp4" controls autoplay muted loop playsinline preload="metadata"></video></div>
+      </div>
+    </div>
+    <p class="caption">A simulated grasp in IsaacGym. Top right: the simulated LuxTac reading.</p>
+
     <h2 class="reveal reveal-up exp-heading">Robot Experiments</h2>
     <div class="rainbow-bar"></div>
   <p class="reveal reveal-up" style="text-align:center;color:var(--muted);margin:0 0 20px;">Action Chunking Transformer policies, vision only vs. vision + LuxTac, on the two manipulation tasks.</p>

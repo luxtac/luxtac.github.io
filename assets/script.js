@@ -423,6 +423,32 @@ document.querySelectorAll('.pi-panel').forEach(function (panel) {
       return '<marker id="pi-' + uid + '-' + h[0] + '" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="' + h[1] + '"/></marker>';
     }).join('') + '</defs>';
   }
+  /* Tactile view (top right): a 3x3 patch of taxels around this one, colored the
+     way the live viewer would show them. The center taxel carries the full
+     reading, neighbors a weaker share of it.
+     Normal: gray level = light at the detector (white unpressed, dark pressed).
+     Shear: additive mix of the red and green light (yellow = no shear,
+     red = shear right, green = shear left). */
+  function shearColor(s) {
+    var r = Math.max(0.08, Math.min(1, 0.4 + 0.6 * s));
+    var g = Math.max(0.08, Math.min(1, 0.4 - 0.6 * s));
+    var m = Math.max(r, g);
+    return 'rgb(' + Math.round(235 * r / m) + ',' + Math.round(235 * g / m) + ',40)';
+  }
+  function taxelView(v, shear) {
+    // a single taxel (1x1), framed like the live viewer's inset
+    var S = 86, x0 = 736 - S, y0 = 20, fill;
+    if (mode === 'normal') {
+      var lv = Math.round(250 * (1 - 0.78 * v));
+      fill = 'rgb(' + lv + ',' + lv + ',' + lv + ')';
+    } else {
+      fill = shearColor(shear);
+    }
+    var g = '<rect x="' + (x0 - 5) + '" y="' + (y0 - 5) + '" width="' + (S + 10) + '" height="' + (S + 10) + '" rx="6" fill="#fff" stroke="#222" stroke-width="2"/>';
+    g += '<rect x="' + x0 + '" y="' + y0 + '" width="' + S + '" height="' + S + '" rx="3" fill="' + fill + '" stroke="#9a9a9a" stroke-width="1"/>';
+    g += '<text x="' + (x0 + S / 2) + '" y="' + (y0 + S + 30) + '" text-anchor="middle" font-size="17" fill="#444" letter-spacing="0.5">tactile view</text>';
+    return g;
+  }
   function render() {
     var v = slider.value / 100;
     var out = heads();
@@ -486,6 +512,7 @@ document.querySelectorAll('.pi-panel').forEach(function (panel) {
     out += '<rect x="' + X0 + '" y="' + PCB + '" width="' + (X1 - X0) + '" height="64" fill="#9a4f06"/>';
     out += '<text x="400" y="' + (PCB + 45) + '" text-anchor="middle" font-size="34" fill="#fff">PCB</text>';
     out += '<text x="' + (X0 + 4) + '" y="60" font-size="28" fill="#111">' + (mode === 'normal' ? '(a) Normal Force' : '(b) Shear Force') + '</text>';
+    out += taxelView(v, shear);
     svg.innerHTML = out;
 
     if (mode === 'normal') {
