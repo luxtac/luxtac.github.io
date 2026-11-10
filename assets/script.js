@@ -217,3 +217,25 @@
     real.addEventListener('pause', function(){ if(!screen.paused) screen.pause(); });
   });
 })();
+
+
+/* Robot experiments carousel */
+(function () {
+  var track = document.getElementById('expTrack');
+  var counter = document.getElementById('expCounter');
+  var dots = document.querySelectorAll('.exp-dots button');
+  var total = 2;
+  var idx = 0;
+  function show(i) {
+    idx = (i + total) % total;
+    track.style.transform = 'translateX(' + (-idx * 100) + '%)';
+    counter.textContent = (idx + 1) + ' of ' + total;
+    dots.forEach(function (d, j) { d.classList.toggle('active', j === idx); });
+  }
+  document.getElementById('expPrev').addEventListener('click', function () { show(idx - 1); });
+  document.getElementById('expNext').addEventListener('click', function () { show(idx + 1); });
+  dots.forEach(function (d) {
+    d.addEventListener('click', function () { show(parseInt(d.getAttribute('data-i'), 10)); });
+  });
+  show(0);
+})();
