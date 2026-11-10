@@ -219,23 +219,88 @@
 })();
 
 
-/* Robot experiments carousel */
+/* Robot experiments carousel: two task slides, each a success row over a failure row.
+   Clips on the visible slide play together, fade to black with the outcome, and restart together. */
 (function () {
   var track = document.getElementById('expTrack');
+  if (!track) return;
+  var slides = track.querySelectorAll('.exp-slide');
   var counter = document.getElementById('expCounter');
   var dots = document.querySelectorAll('.exp-dots button');
-  var total = 2;
-  var idx = 0;
+  var total = slides.length, idx = 0, inView = false;
+  var HOLD = 2200; // ms all outcome cards stay up after the longest clip ends
+
+  function clipsOf(slide) { return slide.querySelectorAll('.exp-clip'); }
+
+  // One shared cycle per slide: every clip starts together, each fades to its
+  // outcome when it ends, and once the longest has ended the whole slide restarts.
+  function stopSlide(s) {
+    clearTimeout(s._t);
+    clipsOf(s).forEach(function (c) { c.classList.remove('ended'); c.querySelector('video').pause(); });
+  }
+  function startSlide(s) {
+    clearTimeout(s._t);
+    clipsOf(s).forEach(function (c) {
+      var v = c.querySelector('video');
+      c.classList.remove('ended');
+      v.currentTime = 0;
+      var p = v.play(); if (p && p.catch) p.catch(function () {});
+    });
+  }
+  function syncPlayback() {
+    slides.forEach(function (s, j) { (inView && j === idx) ? startSlide(s) : stopSlide(s); });
+  }
+
+  slides.forEach(function (s) {
+    clipsOf(s).forEach(function (c) {
+      c.querySelector('video').addEventListener('ended', function () {
+        c.classList.add('ended');
+        var all = Array.prototype.every.call(clipsOf(s), function (x) { return x.classList.contains('ended'); });
+        if (all) s._t = setTimeout(function () { if (inView && s === slides[idx]) startSlide(s); }, HOLD);
+      });
+    });
+  });
+
   function show(i) {
     idx = (i + total) % total;
     track.style.transform = 'translateX(' + (-idx * 100) + '%)';
     counter.textContent = (idx + 1) + ' of ' + total;
     dots.forEach(function (d, j) { d.classList.toggle('active', j === idx); });
+    syncPlayback();
   }
   document.getElementById('expPrev').addEventListener('click', function () { show(idx - 1); });
   document.getElementById('expNext').addEventListener('click', function () { show(idx + 1); });
   dots.forEach(function (d) {
     d.addEventListener('click', function () { show(parseInt(d.getAttribute('data-i'), 10)); });
   });
+
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (es) {
+      var now = es[0].isIntersecting;
+      if (now !== inView) { inView = now; syncPlayback(); }
+    }, { threshold: 0.25 }).observe(track.parentElement); // the viewport stays put; the track slides
+  } else { inView = true; }
   show(0);
+
+  // enlarge a clip
+  var box = document.getElementById('expLightbox');
+  var big = box.querySelector('video');
+  var lastFocus = null;
+  function open(src) {
+    lastFocus = document.activeElement;
+    big.src = src; box.hidden = false; document.body.style.overflow = 'hidden';
+    var p = big.play(); if (p && p.catch) p.catch(function () {});
+    box.querySelector('.exp-lightbox-close').focus();
+  }
+  function close() {
+    big.pause(); big.removeAttribute('src'); big.load();
+    box.hidden = true; document.body.style.overflow = '';
+    if (lastFocus) lastFocus.focus();
+  }
+  document.querySelectorAll('.exp-frame').forEach(function (f) {
+    f.addEventListener('click', function () { open(f.querySelector('video').currentSrc || f.querySelector('video').src); });
+  });
+  box.addEventListener('click', function (e) { if (e.target === box) close(); });
+  box.querySelector('.exp-lightbox-close').addEventListener('click', close);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !box.hidden) close(); });
 })();
