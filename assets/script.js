@@ -407,7 +407,21 @@ document.querySelectorAll('.pi-panel').forEach(function (panel) {
   var X0 = 60, X1 = 740, TOP = 170, PCB = 340, DET = { x: 400, y: 318 };
   var LEDS = [190, 610];
 
-  function surf(x, depth, cx) { return TOP + depth * Math.exp(-Math.pow((x - cx) / 105, 2)); }
+  /* Gel surface. Under pure normal load the dent is symmetric. When the
+     indenter is dragged (sk = shear in -1..1), friction drags the surface with it:
+     the dent's leading side is steep with gel piled up ahead of the indenter,
+     the trailing side is stretched into a long, shallow tail. */
+  var sk = 0;
+  function surf(x, depth, cx) {
+    var dx = x - cx, lead = sk * dx > 0;
+    var w = 105 * (1 + (lead ? -0.15 : 0.4) * Math.abs(sk));
+    var y = depth * Math.exp(-Math.pow(dx / w, 2));
+    if (sk !== 0) {
+      var dir = sk > 0 ? 1 : -1;
+      y -= 12 * Math.abs(sk) * Math.exp(-Math.pow((dx - dir * 135) / 62, 2));
+    }
+    return TOP + y;
+  }
   function surfPath(depth, cx) {
     var d = 'M' + X0 + ',' + TOP;
     for (var x = X0; x <= X1; x += 8) d += ' L' + x + ',' + surf(x, depth, cx).toFixed(1);
@@ -427,13 +441,15 @@ document.querySelectorAll('.pi-panel').forEach(function (panel) {
      way the live viewer would show them. The center taxel carries the full
      reading, neighbors a weaker share of it.
      Normal: gray level = light at the detector (white unpressed, dark pressed).
-     Shear: additive mix of the red and green light (yellow = no shear,
-     red = shear right, green = shear left). */
+     Shear: the detector mostly sees white light scattered by the white
+     translucent layer; the tilted wall only adds a tint. So no shear is a
+     neutral near-white, and full shear is at most light pink (right) or light
+     green (left), never saturated. */
   function shearColor(s) {
-    var r = Math.max(0.08, Math.min(1, 0.4 + 0.6 * s));
-    var g = Math.max(0.08, Math.min(1, 0.4 - 0.6 * s));
-    var m = Math.max(r, g);
-    return 'rgb(' + Math.round(235 * r / m) + ',' + Math.round(235 * g / m) + ',40)';
+    var t = Math.min(1, Math.abs(s));
+    var base = [238, 238, 236];
+    var tint = s > 0 ? [250, 196, 206] : [196, 236, 200];
+    return 'rgb(' + base.map(function (b, i) { return Math.round(b + (tint[i] - b) * t); }).join(',') + ')';
   }
   function taxelView(v, shear) {
     // a single taxel (1x1), framed like the live viewer's inset
@@ -446,7 +462,7 @@ document.querySelectorAll('.pi-panel').forEach(function (panel) {
     }
     var g = '<rect x="' + (x0 - 5) + '" y="' + (y0 - 5) + '" width="' + (S + 10) + '" height="' + (S + 10) + '" rx="6" fill="#fff" stroke="#222" stroke-width="2"/>';
     g += '<rect x="' + x0 + '" y="' + y0 + '" width="' + S + '" height="' + S + '" rx="3" fill="' + fill + '" stroke="#9a9a9a" stroke-width="1"/>';
-    g += '<text x="' + (x0 + S / 2) + '" y="' + (y0 + S + 30) + '" text-anchor="middle" font-size="17" fill="#444" letter-spacing="0.5">tactile view</text>';
+    g += '<text x="' + (x0 + S / 2) + '" y="' + (y0 + S + 30) + '" text-anchor="middle" font-size="17" fill="#444" letter-spacing="0.5">PD feedback</text>';
     return g;
   }
   function render() {
@@ -455,6 +471,7 @@ document.querySelectorAll('.pi-panel').forEach(function (panel) {
     var depth, cx, shear = 0;
     if (mode === 'normal') { depth = 10 + v * 95; cx = 400; }
     else { shear = v * 2 - 1; depth = 45; cx = 400 + shear * 60; }
+    sk = shear;
     // gel body
     var body = surfPath(depth, cx) + ' L' + X1 + ',' + PCB + ' L' + X0 + ',' + PCB + ' Z';
     out += '<path d="' + body + '" fill="#c9c9c9"/>';
