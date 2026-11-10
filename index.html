@@ -215,17 +215,26 @@
   <div class="container">
     <h2 class="reveal reveal-up">Fabrication</h2>
     <div class="rainbow-bar"></div>
-    <div class="fab-anim reveal reveal-up">
-      <div class="fab-modes" role="group" aria-label="Fabrication mode">
-        <button type="button" class="active" data-mode="1">Mode 1: intensity-encoded gel</button>
-        <button type="button" data-mode="2">Mode 2: shear-encoded gel</button>
+    <div class="fab-duo reveal reveal-up">
+      <div class="fab-anim" data-mode="1">
+        <h3 class="mode-heading small">Mode 1: intensity-encoded gel</h3>
+        <div class="corona"><div class="fab-stage"></div></div>
+        <div class="fab-controls">
+          <button class="fab-prev" type="button">Previous</button>
+          <div class="fab-dots"></div>
+          <button class="fab-next" type="button">Next</button>
+        </div>
+        <p class="fab-caption"></p>
       </div>
-      <div class="corona"><div class="fab-stage" id="fabStage"></div></div>
-      <p class="fab-caption" id="fabCaption"></p>
-      <div class="fab-controls">
-        <button id="fabPrev" type="button">Previous</button>
-        <div class="fab-dots" id="fabDots"></div>
-        <button id="fabNext" type="button">Next</button>
+      <div class="fab-anim" data-mode="2">
+        <h3 class="mode-heading small">Mode 2: shear-encoded gel</h3>
+        <div class="corona"><div class="fab-stage"></div></div>
+        <div class="fab-controls">
+          <button class="fab-prev" type="button">Previous</button>
+          <div class="fab-dots"></div>
+          <button class="fab-next" type="button">Next</button>
+        </div>
+        <p class="fab-caption"></p>
       </div>
     </div>
   </div>
@@ -533,16 +542,17 @@ const PATHS = {
     S({ gel: 'full', color: 'full', coat: 'full', pcb: true, screws: 'base', title: 'Assemble', caption: 'The finished stack on its acrylic base is aligned over the 4&times;4 photodiode array and secured with four M2 screws through the base plate into the PCB mounting holes.' })
   ]
 };
-let mode = 1;
-let STEPS = PATHS[1];
 // Screw / insert spots: on the mold frame, inset from its outer corners.
 const SCREW_XZ = [[-9.5, -10], [9.5, -10], [-9.5, 10], [9.5, 10]];
 
-const stage = document.getElementById('fabStage');
-const captionEl = document.getElementById('fabCaption');
-const prevBtn = document.getElementById('fabPrev');
-const nextBtn = document.getElementById('fabNext');
-const dotsEl = document.getElementById('fabDots');
+// One self-contained scene per mode, so Mode 1 and Mode 2 run side by side.
+function buildFab(root, mode) {
+const STEPS = PATHS[mode];
+const stage = root.querySelector('.fab-stage');
+const captionEl = root.querySelector('.fab-caption');
+const prevBtn = root.querySelector('.fab-prev');
+const nextBtn = root.querySelector('.fab-next');
+const dotsEl = root.querySelector('.fab-dots');
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -552,7 +562,7 @@ stage.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(40, stage.clientWidth / stage.clientHeight, 1, 200);
-camera.position.set(38, 30, 44);
+camera.position.set(29, 23, 34);
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.target.set(0, 1.0, 0);
 controls.enableDamping = true;
@@ -1072,7 +1082,6 @@ let stepClock = 0;
 const OFF = { moldAY: 14, moldAOn: 0, moldBY: 14, moldBOn: 0, wallY: 18, wallOn: 0, pcbY: -20, pcbOn: 0, screwY: 18, screwOn: 0, plateY: 14, plateOn: 0, oven: 0, acrY: 10 };
 const st = Object.assign({}, OFF);
 
-const modeBtns = document.querySelectorAll('.fab-modes button');
 function buildDots() {
   dotsEl.innerHTML = '';
   STEPS.forEach((_, k) => {
@@ -1092,19 +1101,10 @@ function showStep(i) {
   nextBtn.textContent = current === STEPS.length - 1 ? 'Restart' : 'Next';
   [...dotsEl.children].forEach((d, k) => d.classList.toggle('active', k === current));
 }
-function setMode(m) {
-  mode = m;
-  STEPS = PATHS[m];
-  Object.assign(st, OFF);
-  lastStep = -1;
-  modeBtns.forEach((b) => b.classList.toggle('active', Number(b.dataset.mode) === m));
-  buildDots();
-  showStep(0);
-}
-modeBtns.forEach((b) => b.addEventListener('click', () => { if (Number(b.dataset.mode) !== mode) setMode(Number(b.dataset.mode)); }));
 prevBtn.addEventListener('click', () => showStep(current - 1));
 nextBtn.addEventListener('click', () => showStep(current === STEPS.length - 1 ? 0 : current + 1));
-setMode(1);
+buildDots();
+showStep(0);
 
 // Cup pour shared by the gel cast and the black coat: returns the fill fraction 0..1.
 function pour(colorHex, opacityScale) {
@@ -1249,6 +1249,8 @@ window.addEventListener('resize', () => {
   camera.updateProjectionMatrix();
   renderer.setSize(stage.clientWidth, stage.clientHeight);
 });
+}
+document.querySelectorAll('.fab-anim[data-mode]').forEach((root) => buildFab(root, Number(root.dataset.mode)));
 </script>
 </body>
 </html>

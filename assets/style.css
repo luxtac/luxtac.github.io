@@ -645,3 +645,15 @@
   .pi-panel .pi-bar { width: auto; }
   .pi-dir { grid-column: 1 / -1; text-align: center; font-style: normal; font-weight: 700; color: #f2f2f2; }
   .converter-note { text-align: left; color: inherit; font-size: 16px; margin: 14px 0 0; }
+
+  /* fabrication: Mode 1 and Mode 2 side by side */
+  .fab-duo { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: start; }
+  .fab-duo .fab-anim { max-width: none; margin: 0; }
+  .fab-duo .mode-heading.small { margin: 0 0 14px; }
+  .fab-duo .fab-stage { height: 400px; }
+  .fab-duo .fab-controls { gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+  .fab-duo .fab-controls > button { padding: 7px 14px; font-size: 14px; }
+  .fab-duo .fab-dots { gap: 6px; }
+  .fab-dots button { display: inline-grid; place-items: center; flex: none; line-height: 1; }
+  .fab-duo .fab-caption { margin-top: 12px; }
+  @media (max-width: 900px) { .fab-duo { grid-template-columns: 1fr; gap: 44px; } }
