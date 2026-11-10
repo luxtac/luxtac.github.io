@@ -534,7 +534,7 @@
 /* legend for the LuxTac inset on with-sensor experiment clips */
 .magma-bar {
   display: inline-block; width: 72px; height: 8px; border-radius: 4px; vertical-align: middle;
-  background: linear-gradient(90deg, #000004, #3b0f70, #8c2981, #de4968, #fe9f6d, #fcfdbf);
+  background: linear-gradient(90deg, #f7fbff, #c6dbef, #6baed6, #2171b5, #08306b);
 }
 .magma-ends { font-size: 13px; color: var(--dim); }
 
@@ -711,3 +711,4 @@
 .sim-text p { margin: 0 0 14px; font-size: 17px; line-height: 1.6; }
 .sim-text p:last-child { margin-bottom: 0; }
 @media (max-width: 820px) { .sim-grid { grid-template-columns: 1fr; gap: 24px; } }
+.demo-label { margin: 14px 0 0; text-align: center; font-weight: 700; font-size: 16px; color: var(--text, #fff); }

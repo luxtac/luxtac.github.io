@@ -195,7 +195,7 @@
 })();
 
 (function(){
-  var stems = ['demo1','part1','part2','part3','part4'];
+  var stems = ['demo1','part1','part2','part3','part4','gripper-shear','gripper-normal1','gripper-normal2'];
   function play(v){ var p = v.play(); if (p && p.catch) p.catch(function(){}); }
   stems.forEach(function(stem){
     var screen = document.querySelector('video[src*="' + stem + '-screen"]');
@@ -388,7 +388,7 @@
     show(Math.min(idx, maxIdx()));
   });
   new IntersectionObserver(function (es) { onScreen = es[0].isIntersecting; sync(); },
-                           { threshold: 0.3 }).observe(track);
+                           { threshold: 0.3 }).observe(track.parentElement);
   buildDots();
   show(0);
 })();

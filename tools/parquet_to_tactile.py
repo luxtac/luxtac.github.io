@@ -5,8 +5,8 @@ Each rollout trial (LeRobot v3 layout) holds one row per camera frame with
 `observation.luxtac`: 16 floats in [0, 1], one per taxel of the 4x4 array
 (row-major). For each trial this script:
 
-  1. writes one PNG per frame: the 4x4 reading as a magma heatmap
-     (fixed 0..1 scale, same look as the policy-timeline figure),
+  1. writes one PNG per frame: the 4x4 reading as a Blues heatmap
+     (fixed 0..1 scale, same Blues scale as the live viewer),
   2. encodes those frames into an H.264 heatmap video at the rollout fps,
   3. overlays the heatmap as an inset on the trial's front-camera video and
      writes a browser-safe H.264 mp4 (the camera videos are AV1).
@@ -35,7 +35,7 @@ CELL = 60            # px per taxel in the PNG frames (240x240 frames)
 INSET = 144          # px size of the inset on the 640x480 camera video
 MARGIN = 14          # px from the bottom-left corner of the camera video
 BORDER = 2           # px frame around the inset
-LUT = (colormaps["magma"](np.linspace(0, 1, 256))[:, :3] * 255).astype(np.uint8)
+LUT = (colormaps["Blues"](np.linspace(0, 1, 256))[:, :3] * 255).astype(np.uint8)
 
 
 def trial_dir(data: Path, rollout: str, n: int) -> Path:
