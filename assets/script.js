@@ -186,6 +186,7 @@
     }
   }
   function render(){
+    if (!document.getElementById('panelA')) return;
     buildPanel(document.getElementById('panelA'), false);
     buildPanel(document.getElementById('panelB'), true);
   }
@@ -194,7 +195,8 @@
 })();
 
 (function(){
-  var stems = ['demo1','demo2','part1','part2','part3','part4'];
+  var stems = ['demo1','part1','part2','part3','part4'];
+  function play(v){ var p = v.play(); if (p && p.catch) p.catch(function(){}); }
   stems.forEach(function(stem){
     var screen = document.querySelector('video[src*="' + stem + '-screen"]');
     var real = document.querySelector('video[src*="' + stem + '-real"]');
@@ -211,8 +213,8 @@
     }
     screen.addEventListener('timeupdate', function(){ syncFrom(screen, real); });
     real.addEventListener('timeupdate', function(){ syncFrom(real, screen); });
-    screen.addEventListener('play', function(){ if(real.paused) real.play(); });
-    real.addEventListener('play', function(){ if(screen.paused) screen.play(); });
+    screen.addEventListener('play', function(){ if(real.paused) play(real); });
+    real.addEventListener('play', function(){ if(screen.paused) play(screen); });
     screen.addEventListener('pause', function(){ if(!real.paused) real.pause(); });
     real.addEventListener('pause', function(){ if(!screen.paused) screen.pause(); });
   });
@@ -334,4 +336,166 @@
   box.addEventListener('click', function (e) { if (e.target === box) close(); });
   box.querySelector('.exp-lightbox-close').addEventListener('click', close);
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !box.hidden) close(); });
+})();
+
+
+/* Real-time demo feed: plays only the clip in view, Shorts style. */
+(function () {
+  var feed = document.getElementById('shortsFeed');
+  if (!feed) return;
+  var shorts = Array.prototype.slice.call(feed.querySelectorAll('.short'));
+  var up = document.getElementById('shortsUp'), down = document.getElementById('shortsDown');
+  var count = document.getElementById('shortsCount');
+  var active = 0, feedVisible = false;
+  function vids(i) { return Array.prototype.slice.call(shorts[i].querySelectorAll('video')); }
+  function play(v) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+  function sync() {
+    shorts.forEach(function (sh, i) {
+      vids(i).forEach(function (v) {
+        if (i === active && feedVisible) play(v);
+        else if (!v.paused) v.pause();
+      });
+    });
+    count.textContent = (active + 1) + ' / ' + shorts.length;
+    up.disabled = active === 0;
+    down.disabled = active === shorts.length - 1;
+  }
+  function go(i) {
+    i = Math.max(0, Math.min(shorts.length - 1, i));
+    feed.scrollTo({ top: i * feed.clientHeight, behavior: "smooth" });
+  }
+  feed.addEventListener('scroll', function () {
+    var i = Math.round(feed.scrollTop / feed.clientHeight);
+    if (i !== active) {
+      vids(i).forEach(function (v) { v.currentTime = 0; });
+      active = i;
+      sync();
+    }
+  }, { passive: true });
+  up.addEventListener('click', function () { go(active - 1); });
+  down.addEventListener('click', function () { go(active + 1); });
+  new IntersectionObserver(function (es) {
+    feedVisible = es[0].isIntersecting;
+    sync();
+  }, { threshold: 0.4 }).observe(feed);
+  sync();
+})();
+
+
+/* Interactive sensing principle: one taxel in cross-section, after the paper figure.
+   Normal mode: the slider presses the indenter down; returned white light falls.
+   Shear mode: the slider drags the indenter left or right; the colored walls tilt
+   and the detector sees more red (right) or more green (left). */
+(function () {
+  var svg = document.getElementById('piSvg');
+  if (!svg) return;
+  var slider = document.getElementById('piForce');
+  var label = document.getElementById('piLabel');
+  var readout = document.getElementById('piReadout');
+  var btns = document.querySelectorAll('.pi-modes button');
+  var mode = 'normal';
+  var X0 = 60, X1 = 740, TOP = 170, PCB = 340, DET = { x: 400, y: 318 };
+  var LEDS = [190, 610];
+
+  function surf(x, depth, cx) { return TOP + depth * Math.exp(-Math.pow((x - cx) / 105, 2)); }
+  function surfPath(depth, cx) {
+    var d = 'M' + X0 + ',' + TOP;
+    for (var x = X0; x <= X1; x += 8) d += ' L' + x + ',' + surf(x, depth, cx).toFixed(1);
+    return d;
+  }
+  function arrow(x1, y1, x2, y2, color, op, dash) {
+    return '<line x1="' + x1.toFixed(1) + '" y1="' + y1.toFixed(1) + '" x2="' + x2.toFixed(1) + '" y2="' + y2.toFixed(1) +
+      '" stroke="' + color + '" stroke-width="3" stroke-dasharray="' + (dash || '9 6') + '" opacity="' + op.toFixed(2) +
+      '" marker-end="url(#pi-head-' + (color === '#ffffff' ? 'w' : color === '#e8302a' ? 'r' : 'g') + ')"/>';
+  }
+  function heads() {
+    return '<defs>' + [['w', '#ffffff'], ['r', '#e8302a'], ['g', '#3aa63a']].map(function (h) {
+      return '<marker id="pi-head-' + h[0] + '" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="' + h[1] + '"/></marker>';
+    }).join('') + '</defs>';
+  }
+  function render() {
+    var v = slider.value / 100;
+    var out = heads();
+    var depth, cx, shear = 0;
+    if (mode === 'normal') { depth = 10 + v * 95; cx = 400; }
+    else { shear = v * 2 - 1; depth = 45; cx = 400 + shear * 60; }
+    // gel body
+    var body = surfPath(depth, cx) + ' L' + X1 + ',' + PCB + ' L' + X0 + ',' + PCB + ' Z';
+    out += '<path d="' + body + '" fill="#c9c9c9"/>';
+    // colored walls (shear mode): bottoms fixed, tops lean with the shear
+    var lean = shear * 75, red = 0, green = 0;
+    if (mode === 'shear') {
+      [[250, '#e8302a'], [570, '#3aa63a']].forEach(function (w) {
+        var tx = w[0] + 30 + lean, ty = surf(tx, depth, cx) + 4;
+        out += '<polygon points="' + (w[0] - 9) + ',' + PCB + ' ' + (w[0] + 9) + ',' + PCB + ' ' + (tx + 9) + ',' + ty.toFixed(1) + ' ' + (tx - 9) + ',' + ty.toFixed(1) + '" fill="' + w[1] + '"/>';
+      });
+      red = Math.max(0.08, Math.min(1, 0.4 + 0.6 * shear));
+      green = Math.max(0.08, Math.min(1, 0.4 - 0.6 * shear));
+    }
+    // light rays
+    var bright = mode === 'normal' ? 1 - 0.78 * v : 0.55;
+    LEDS.forEach(function (lx) {
+      var side = lx < 400 ? -1 : 1;
+      [-60, 40].forEach(function (off) {
+        var px = lx + off * side, py = surf(px, depth, cx) + 6;
+        out += arrow(lx, PCB - 22, px, py, '#ffffff', 0.9);
+      });
+      [55, 120].forEach(function (off) {
+        var px = lx - side * off, py = surf(px, depth, cx) + 6;
+        out += arrow(lx, PCB - 22, px, py, '#ffffff', 0.9);
+        out += arrow(px, py, DET.x + side * 22, DET.y - 6, '#ffffff', Math.max(0.12, bright));
+      });
+    });
+    if (mode === 'shear') {
+      [[250, '#e8302a', red, 1], [570, '#3aa63a', green, -1]].forEach(function (w) {
+        for (var i = 0; i < 3; i++) {
+          var t = 0.35 + i * 0.18;
+          var wx = w[0] + (30 + lean) * t, wy = PCB + (surf(w[0] + 30 + lean, depth, cx) - PCB) * t;
+          out += arrow(wx + 10 * w[3], wy, DET.x - 18 * w[3] + i * 8 * w[3], DET.y - 8, w[1], w[2], '7 5');
+        }
+      });
+    }
+    // black film
+    out += '<path d="' + surfPath(depth, cx) + '" fill="none" stroke="#111" stroke-width="12" stroke-linejoin="round"/>';
+    // indenter, sitting in the dent
+    var r = 66, icy = surf(cx, depth, cx) - r - 4;
+    out += '<circle cx="' + cx + '" cy="' + icy.toFixed(1) + '" r="' + r + '" fill="#7d7d7d"/>';
+    out += '<text x="' + cx + '" y="' + (icy + 8).toFixed(1) + '" text-anchor="middle" font-size="24" fill="#111">indenter</text>';
+    // force arrow
+    if (mode === 'normal') {
+      var ax = cx + 115;
+      out += '<line x1="' + ax + '" y1="' + (icy - 80) + '" x2="' + ax + '" y2="' + (icy - 80 + 40 + 70 * v) + '" stroke="#111" stroke-width="4" marker-end="url(#pi-head-k)"/>';
+    } else if (Math.abs(shear) > 0.05) {
+      var len = 140 * shear, ay = icy - r - 24;
+      out += '<line x1="' + (cx - len / 2) + '" y1="' + ay + '" x2="' + (cx + len / 2) + '" y2="' + ay + '" stroke="#111" stroke-width="4" marker-end="url(#pi-head-k)"/>';
+    }
+    out = out.replace('</defs>', '<marker id="pi-head-k" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#111"/></marker></defs>');
+    // LEDs, detector, PCB
+    LEDS.forEach(function (lx) { out += '<rect x="' + (lx - 38) + '" y="' + (PCB - 22) + '" width="76" height="22" rx="5" fill="#f5c518"/>'; });
+    out += '<rect x="' + (DET.x - 62) + '" y="' + (PCB - 30) + '" width="124" height="30" fill="#5f5f5f"/>';
+    out += '<rect x="' + X0 + '" y="' + PCB + '" width="' + (X1 - X0) + '" height="64" fill="#9a4f06"/>';
+    out += '<text x="400" y="' + (PCB + 45) + '" text-anchor="middle" font-size="34" fill="#fff">PCB</text>';
+    out += '<text x="' + (X0 + 4) + '" y="60" font-size="28" fill="#111">' + (mode === 'normal' ? '(a) Normal Force' : '(b) Shear Force') + '</text>';
+    svg.innerHTML = out;
+
+    if (mode === 'normal') {
+      label.textContent = 'Press';
+      readout.innerHTML = '<span>Light at the detector</span><div class="pi-bar"><i style="width:' + Math.round(bright * 100) + '%"></i></div><b>' + Math.round(bright * 100) + '%</b>';
+    } else {
+      label.textContent = 'Shear  ←  →';
+      readout.innerHTML = '<span>Red</span><div class="pi-bar red"><i style="width:' + Math.round(red * 100) + '%"></i></div>' +
+        '<span>Green</span><div class="pi-bar green"><i style="width:' + Math.round(green * 100) + '%"></i></div>' +
+        '<b>' + (Math.abs(shear) < 0.05 ? 'no shear' : shear > 0 ? 'shear right' : 'shear left') + '</b>';
+    }
+  }
+  btns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      mode = b.dataset.pi;
+      btns.forEach(function (o) { o.classList.toggle('active', o === b); });
+      slider.value = mode === 'normal' ? 55 : 80;
+      render();
+    });
+  });
+  slider.addEventListener('input', render);
+  render();
 })();

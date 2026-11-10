@@ -37,21 +37,19 @@
 
 <header class="hero">
   <div class="container">
-    <p class="eyebrow">Very first tactile array with per taxel shear sensing</p>
+    <p class="eyebrow">Optical tactile array with per-taxel shear sensing</p>
     <h1><span>Lux</span>Tac</h1>
-    <p class="tagline">A 4&times;4 optical taxel array. Each taxel is a light-to-digital converter that observes LED light back-scattered from a translucent white silicone layer capped by an opaque black film. Pressing thins the layer, so the reading falls with local indentation depth.</p>
+    <p class="tagline">A 4&times;4 optical taxel array. Each taxel is a digital RGBC light-to-digital converter that observes LED light back-scattered from a white translucent silicone layer capped by a black opaque layer. Pressing thins the layer, so the reading falls with local indentation depth.</p>
     <div class="rainbow-bar"></div>
     <div class="hero-grid reveal reveal-up">
-      <div class="corona">
-        <div class="hero-photo">
-          <img src="assets/hero-white.png" alt="Render of the LuxTac sensing head, two stacks on a white background.">
-        </div>
+      <div class="hero-photo">
+        <img src="assets/hero-white.png" alt="Render of the LuxTac sensing head, two stacks on a white background.">
       </div>
       <div class="hero-stats">
-        <div class="stat"><b>Scalable</b><span>4&times;4, 4&times;8, 8&times;8, 16&times;16, 26&times;8</span></div>
+        <div class="stat"><b>Scalable</b><span>4&times;4, 4&times;8, 8&times;8, 16&times;16, &hellip;</span></div>
         <div class="stat"><b>R&sup2; = 0.999</b><span>linear to force</span></div>
         <div class="stat"><b>104 mN</b><span>detection threshold</span></div>
-        <div class="stat"><b>63% vs 39%</b><span>average robot success, with vs without touch</span></div>
+        <div class="stat"><b>63% vs 40%</b><span>average robot success, with vs without touch</span></div>
       </div>
     </div>
     <p class="caption">The LuxTac sensing head.</p>
@@ -65,8 +63,8 @@
     <h2 class="reveal reveal-up">Abstract</h2>
     <div class="rainbow-bar"></div>
     <div class="lead reveal reveal-up">
-      <p>Dense, low-cost tactile arrays have made touch a practical input for robot learning, but the dominant piezoresistive designs report an electrical quantity that is only loosely tied to the physics of contact, which makes them hard to characterize, compare across units, or reproduce in simulation. We present LuxTac, a 4&times;4 optical taxel array in which each taxel is a light-to-digital converter that observes LED light back-scattered from a translucent white silicone layer capped by an opaque, light-absorbing black film. Pressing the surface thins the scattering layer, so the reading falls monotonically with local indentation depth rather than with force directly.</p>
-      <p>We exploit this to split calibration into two independent maps: an optical transfer function from depth to signal, and a mechanical stiffness from force to depth, which is exactly the quantity a penalty-based tactile simulator needs. Over 240 presses, LuxTac responds linearly to force (R&sup2; = 0.999) from a 104 mN detection threshold to at least 5.8 N, with 2.0% repeatability, 5.9% hysteresis, and a taxel-to-taxel coefficient of variation that drops from 38% to 6% after normalization. Adding LuxTac to a visuomotor policy raises success on peg-in-hole and cube sorting from 44% and 33% to 87% and 40%. Design files and code will be released.</p>
+      <p>Dense, low-cost tactile arrays have made touch a practical input for robot learning, but the dominant piezoresistive designs report an electrical quantity that is only loosely tied to the physics of contact, which makes them hard to characterize, compare across units, or reproduce in simulation. We present LuxTac, a 4&times;4 optical taxel array in which each taxel is a digital RGBC light-to-digital converter that observes LED light back-scattered from a white translucent silicone layer capped by an opaque, light-absorbing black layer. Pressing the surface thins the scattering layer, so the reading falls monotonically with <em>local indentation depth</em> rather than with force directly. We exploit this to split calibration into two independent maps: an optical transfer function from depth to signal and a mechanical stiffness from force to depth, which is exactly the quantity a penalty-based tactile simulator needs.</p>
+      <p>The same board accepts two interchangeable gel cartridges: a plain cartridge for normal sensing and a cartridge with colored walls that also encodes shear in the color of the returned light. We characterize the array with an automated CNC indenter instrumented with a six-axis force/torque sensor, extending the protocol of 3D-ViTac with full loading&ndash;unloading cycles and every channel recorded on every press. Over 240 presses, the normal cartridge responds linearly to force (R&sup2; = 0.999) from a 104 mN detection threshold to at least 5.8 N, with 2.0% repeatability, 5.9% hysteresis, and a taxel-to-taxel coefficient of variation that drops from 38% to 6% after normalization. With the shear cartridge, LuxTac estimates the local shear direction within a median of 7&deg; and lateral force with R&sup2; = 0.98, at the cost of lower sensitivity to pressure. Adding LuxTac to an Action Chunking Transformer policy raises success in peg-in-hole insertion from 47% to 87%. Design files and code will be released.</p>
     </div>
   </div>
 </section>
@@ -76,12 +74,12 @@
     <h2 class="reveal reveal-up">Key Highlights</h2>
     <div class="rainbow-bar"></div>
     <div class="stat-grid">
-      <div class="stat-card reveal reveal-up"><b>16 taxels</b><span>TCS34725 converters on a 4.42 &times; 4.80 mm grid, 9 white LEDs, flexible PCB.</span></div>
-      <div class="stat-card reveal reveal-up"><b>Direct depth</b><span>Each taxel reports indentation depth, a physical quantity. No camera, no inversion.</span></div>
+      <div class="stat-card reveal reveal-up"><b>16 taxels</b><span>TCS34725 RGBC converters on a 4.42 &times; 4.80 mm grid, nine LEDs, four-layer flexible PCB.</span></div>
+      <div class="stat-card reveal reveal-up"><b>Depth, not force</b><span>Each reading is set by local indentation depth, a physical quantity. No camera, no analog front end.</span></div>
       <div class="stat-card reveal reveal-up"><b>Separable calibration</b><span>Optical depth-to-signal and mechanical force-to-depth maps plug straight into a simulator.</span></div>
       <div class="stat-card reveal reveal-up"><b>R&sup2; = 0.999</b><span>Linear from 104 mN to at least 5.8 N. No dead zone, no saturation in range.</span></div>
       <div class="stat-card reveal reveal-up"><b>2.0% repeatability</b><span>5.9% hysteresis over 240 presses. Variation falls from 38% to 6% after normalization.</span></div>
-      <div class="stat-card reveal reveal-up"><b>~$140</b><span>Per setup, including the Teensy 4.1 readout. A 32-taxel 8&times;4 board needs no readout change.</span></div>
+      <div class="stat-card reveal reveal-up"><b>~$140</b><span>Bill of materials per setup, pad plus Teensy 4.1 readout board. A 32-taxel 4&times;8 board uses the same readout scheme.</span></div>
     </div>
   </div>
 </section>
@@ -92,23 +90,25 @@
     <div class="rainbow-bar"></div>
     <div class="principle-wrap" style="grid-template-columns: 1fr;">
       <div class="reveal reveal-left">
-        <p>Each taxel consists of a photodetector and nearby LEDs under a layer of translucent white silicone, capped by an opaque black film. LED light entering the silicone is scattered by the white pigment; part of it returns to the detector, and part reaches the black film and is absorbed. The black film also shields the detector from ambient light.</p>
+        <p>Each taxel consists of a photodetector and nearby LEDs under a white translucent silicone layer, capped by a black opaque layer. LED light entering the white translucent silicone is scattered; part of it returns to the detector, and part reaches the black opaque layer and is absorbed. The black opaque layer also shields the detector from ambient light.</p>
         <p>Indenting the surface reduces the local thickness and therefore reduces the returned light. A key consequence is that the raw reading decreases with load and depends on the deformation of the elastomer, not on force directly. Force enters only through the mechanics of the silicone, which we treat as a separate map.</p>
+        <p>In the shear-encoded gel, four-color silicone walls separate the white translucent cubes above the taxels. Shear drags the colored walls sideways, so each detector sees a different mixture of colored light: a detector reports normal deformation through its brightness and shear through its chromaticity.</p>
       </div>
     </div>
-    <div class="principle-demo reveal reveal-up">
-      <div class="principle-panels">
-        <div class="principle-panel">
-          <h3>(a) No force</h3>
-          <div class="corona"><svg id="panelA" viewBox="0 0 600 340" role="img" aria-label="Sensor segment under no force"></svg></div>
+    <figure class="reveal reveal-up principle-fig">
+      <div class="pi-controls">
+        <div class="pi-modes" role="group" aria-label="Load type">
+          <button type="button" class="active" data-pi="normal">Normal force</button>
+          <button type="button" data-pi="shear">Shear force</button>
         </div>
-        <div class="principle-panel">
-          <h3>(b) Under force</h3>
-          <div class="corona"><svg id="panelB" viewBox="0 0 600 340" role="img" aria-label="Sensor segment under force"></svg></div>
-        </div>
+        <label class="pi-slider"><span id="piLabel">Press</span><input type="range" id="piForce" min="0" max="100" value="55"></label>
       </div>
-    </div>
-    </div>
+      <div class="fig-card paper">
+        <svg id="piSvg" viewBox="0 0 800 430" role="img" aria-label="Interactive cross-section of one LuxTac taxel"></svg>
+      </div>
+      <div class="pi-readout" id="piReadout"></div>
+      <figcaption class="caption">Drag the slider. (a) Normal loading produces symmetric deformation, altering the optical paths between the LEDs and the photodetector. (b) Shear loading produces asymmetric deformation, changing the light propagation and intensity received by the photodetector. Interactive version of the paper's figure.</figcaption>
+    </figure>
   </div>
 </section>
 
@@ -118,60 +118,92 @@
   <div class="container">
     <h2 class="reveal reveal-up">Sensor Design</h2>
     <div class="rainbow-bar"></div>
+    <p class="lead reveal reveal-up" style="text-align:center;">LuxTac comes in two modes: two interchangeable gel cartridges on the same board and electronics. They share the same materials and base process, and differ in the structure of the white translucent layer.</p>
+
+    <h3 class="mode-heading reveal reveal-up">Shared by both modes</h3>
     <div class="design-grid">
+      <figure class="reveal reveal-up">
+        <div class="fig-card">
+          <img src="assets/pcb-4b4.jpg" alt="3D CAD render of the 4 by 4 sensing head, photodiodes and LEDs on the flexible PCB">
+        </div>
+        <figcaption class="caption">The 4&times;4 sensing head. Sixteen TCS34725 RGBC converters and nine LEDs on the flexible PCB.</figcaption>
+      </figure>
       <div>
-    <figure class="reveal reveal-up">
-      <div class="fig-card corona">
-        <img src="assets/stack-4b4.jpg" alt="Exploded view of the LuxTac stack, the black film peeled back to show the colored taxel grid, clear soft acrylic layer, and flexible PCB">
-      </div>
-      <figcaption class="caption">The LuxTac stack, black film peeled back to show the colored taxel grid.</figcaption>
-    </figure>
-        <ul class="spec-list reveal reveal-left">
-          <li><b>Taxels:</b> 16, TCS34725 (2.0 &times; 2.44 mm), pitch 4.42 &times; 4.80 mm</li>
-          <li><b>Illumination:</b> 9 white 0603 LEDs, 3&times;3 grid between sensor columns</li>
-          <li><b>Scattering layer:</b> Smooth-On XP-565, 15:1, 0.04% white pigment</li>
-          <li><b>Top film:</b> Psycho Paint + black Sil-Pig + NOVOCS, 0.1 mm</li>
-          <li><b>Head:</b> 21.8 &times; 23.8 mm, 4-layer 0.2 mm flex PCB, Teensy 4.1 readout</li>
-          <li><b>Depth at 6 N:</b> 0 to 1.81 &plusmn; 0.07 mm</li>
-          <li><b>Normal stiffness:</b> k<sub>n</sub> = 3.86 &plusmn; 0.09 N/mm per taxel</li>
-          <li><b>Frame rate:</b> 20 Hz (I&sup2;C multiplexing)</li>
+        <ul class="spec-list reveal reveal-up">
+          <li><b>Taxels:</b> 16 TCS34725 RGBC light-to-digital converters, pitch 4.42 mm (columns) &times; 4.80 mm (rows)</li>
+          <li><b>Illumination:</b> nine 0603 LEDs in a 3&times;3 grid, each centered between four photodiodes, gated by one NMOS switch</li>
+          <li><b>Head:</b> 21.8 &times; 23.8 mm region of a four-layer, 0.2 mm flexible PCB</li>
+          <li><b>Base:</b> 1 mm clear acrylic base plate, part of the stack, screwed to the PCB with four M2 screws</li>
+          <li><b>Black opaque layer:</b> Psycho Paint Part A, Part B, black Silc Pig, NOVOCS, 1:1:0.5:1 by weight</li>
+          <li><b>Readout:</b> Teensy 4.1, two TCA9548A I&sup2;C switches on two independent buses</li>
+          <li><b>Frame rate:</b> 100 Hz over USB serial; 2.4 ms integration, 4&times; gain</li>
         </ul>
+        <p class="reveal reveal-up" style="margin-top:18px;">Each converter integrates an IR-blocking filter, a photodiode array, and a 16-bit integrating ADC per channel, so the analog signal never leaves the package. All 16 converters share one fixed I&sup2;C address, so two TCA9548A switches give each sensor its own bus segment with dedicated 4.7 k&Omega; pull-ups.</p>
       </div>
-      <div>
-    <figure class="reveal reveal-up">
-      <div class="fig-card corona">
-        <img src="assets/stack-4b4-shear.jpg" alt="Exploded view of the LuxTac stack, the black film peeled back to show the colored shear grid, clear soft acrylic layer, and flexible PCB">
-      </div>
-      <figcaption class="caption">LuxTac overview. The stack, peeled apart: black opaque film, white translucent silicone, soft acrylic layer, flexible PCB.</figcaption>
-    </figure>
-        <figure class="reveal reveal-right">
-          <div class="fig-card corona">
-            <img src="assets/pcb-4b4.jpg" alt="3D CAD render of the 4 by 4 sensing head, photodiodes and LEDs on the flexible PCB">
+    </div>
+
+    <h3 class="mode-heading reveal reveal-up">Two modes</h3>
+    <div class="table-scroll reveal reveal-up">
+    <table class="mode-table">
+      <tr><th></th><th>Mode 1: intensity-encoded gel</th><th>Mode 2: shear-encoded gel</th></tr>
+      <tr><td>Senses</td><td>Normal deformation</td><td>Normal deformation and shear</td></tr>
+      <tr><td>Channels read</td><td>Clear (C) only, 16 values per frame</td><td>All four RGBC, 64 values per frame</td></tr>
+      <tr><td>White layer</td><td>One continuous white translucent layer, 21.5 &times; 21.5 mm cavity</td><td>16 white translucent cubes (about 3.8 &times; 3.4 mm), 16.4 &times; 18.0 mm cavity</td></tr>
+      <tr><td>Color</td><td>None</td><td>Four-color silicone walls in 1 mm slits: rows alternate green / red, columns yellow / blue</td></tr>
+      <tr><td>How it reads</td><td>Pressing thins the layer, so less light returns</td><td>Brightness for normal deformation, chromaticity for shear</td></tr>
+      <tr><td>Stack</td><td>Black opaque layer, white translucent layer, soft acrylic layer, flexible PCB</td><td>Black opaque layer, white translucent layer, four-color silicone walls, soft acrylic layer, flexible PCB</td></tr>
+      <tr><td>Mold</td><td>1 mm acrylic base, 2 mm acrylic frame, heat-set inserts, M2 screws</td><td>Same, plus 3 column walls and 3 row walls with 1.25 mm half-lap notches</td></tr>
+      <tr><td>Stiffness</td><td>k<sub>n</sub> = 3.86 &plusmn; 0.09 N/mm per taxel (normal)</td><td>1.01 / 1.25 N/mm at 0.5 / 1.5 mm depth (shear)</td></tr>
+      <tr><td>Trade-off</td><td>Default when only pressure is needed</td><td>About 3&times; lower optical sensitivity to pressure</td></tr>
+    </table>
+    </div>
+
+    <div class="mode-duo">
+        <h3 class="mode-heading small m1 r1 reveal reveal-up">Mode 1: intensity-encoded gel</h3>
+        <h3 class="mode-heading small m2 r1 reveal reveal-up">Mode 2: shear-encoded gel</h3>
+        <figure class="m1 r2 reveal reveal-up">
+          <div class="fig-card">
+            <img src="assets/stack-4b4.jpg" alt="Exploded view of the Mode 1 stack: black opaque layer, white translucent layer, soft acrylic layer, flexible PCB">
           </div>
-          <figcaption class="caption">The 4&times;4 sensing head in 3D. Sixteen TCS34725 photodiodes and nine white LEDs on the flexible PCB.</figcaption>
+          <figcaption class="caption">The Mode 1 stack, black opaque layer peeled back.</figcaption>
         </figure>
-      </div>
+        <figure class="m2 r2 reveal reveal-up">
+          <div class="fig-card">
+            <img src="assets/stack-4b4-shear.jpg" alt="Exploded view of the Mode 2 stack: black opaque layer, white translucent layer, four-color silicone walls, soft acrylic layer, flexible PCB">
+          </div>
+          <figcaption class="caption">The Mode 2 stack, black opaque layer peeled back to show the four-color silicone walls.</figcaption>
+        </figure>
+        <figure class="m1 r3 reveal reveal-up">
+          <div class="corona"><video class="wide-video" src="assets/animation.mp4#t=3" controls autoplay muted loop playsinline></video></div>
+          <figcaption class="caption">The stack peels apart to show the photodiodes and LEDs, then a press dims the light.</figcaption>
+        </figure>
+        <figure class="m2 r3 reveal reveal-up">
+          <div class="corona"><video class="wide-video" src="assets/shear-animation.mp4#t=3" controls autoplay muted loop playsinline></video></div>
+          <figcaption class="caption">A single taxel under normal force, shear, and rotation, then a roller press with the taxel grid lighting up (8&times;4 board).</figcaption>
+        </figure>
     </div>
-    <p class="reveal reveal-up" style="margin-top: 28px;">Each converter integrates an IR-blocking filter, a photodiode array, and a 16-bit integrating ADC per channel, so the analog signal never leaves the package. All 16 converters share one fixed I&sup2;C address, so two TCA9548A switches give each sensor its own bus segment. A Teensy 4.1 polls the 16 sensors and streams a frame over USB serial at a nominal 100 Hz.</p>
-    <div class="video-duo">
-    <figure class="reveal reveal-up">
-      <div class="corona"><video class="wide-video" src="assets/animation.mp4#t=3" controls autoplay muted loop playsinline></video></div>
-      <figcaption class="caption">Sensing principle, mode one. The stack peels apart to show the photodiodes and LEDs, then a press dims the light.</figcaption>
-    </figure>
-    <figure class="reveal reveal-up">
-      <div class="corona"><video class="wide-video" src="assets/shear-animation.mp4#t=3" controls autoplay muted loop playsinline></video></div>
-      <figcaption class="caption">Shear sensing, mode two. A single taxel under normal force, shear, and rotation, then a roller press with the taxel grid lighting up (8&times;4 board).</figcaption>
-    </figure>
-    </div>
+
     <div class="scales reveal reveal-up">
       <h3>One design, many sizes</h3>
-      <p>LuxTac scales without changing the readout. The same stack and the same Teensy readout run every size below.</p>
+      <p>Every taxel is an independent digital detector on its own bus segment, so the same taxel cell tiles into arrays of other sizes by adding sensors and multiplexers, without changing the readout scheme.</p>
       <div class="scale-chips">
         <span class="scale-chip current">4&times;4 <small>current</small></span>
         <span class="scale-chip">4&times;8</span>
         <span class="scale-chip">8&times;8</span>
         <span class="scale-chip">16&times;16</span>
-        <span class="scale-chip">26&times;8</span>
+        <span class="scale-chip more">&hellip;</span>
+      </div>
+    </div>
+
+    <div class="gen-card reveal reveal-up">
+      <div class="gen-text">
+        <p class="gen-eyebrow">Coming soon</p>
+        <h3>LuxTac GEN</h3>
+        <p>We are building a platform where you can design your own LuxTac PCB: pick a size and layout, generate the board, and build it yourself.</p>
+      </div>
+      <div class="gen-actions">
+        <span class="gen-btn primary" role="button" aria-disabled="true">PCB Generator <small>LuxTac GEN</small></span>
+        <span class="gen-btn" role="button" aria-disabled="true">Custom design <small>Contact us</small></span>
       </div>
     </div>
   </div>
@@ -183,6 +215,10 @@
     <h2 class="reveal reveal-up">Fabrication</h2>
     <div class="rainbow-bar"></div>
     <div class="fab-anim reveal reveal-up">
+      <div class="fab-modes" role="group" aria-label="Fabrication mode">
+        <button type="button" class="active" data-mode="1">Mode 1: intensity-encoded gel</button>
+        <button type="button" data-mode="2">Mode 2: shear-encoded gel</button>
+      </div>
       <div class="corona"><div class="fab-stage" id="fabStage"></div></div>
       <p class="fab-caption" id="fabCaption"></p>
       <div class="fab-controls">
@@ -190,12 +226,6 @@
         <div class="fab-dots" id="fabDots"></div>
         <button id="fabNext" type="button">Next</button>
       </div>
-    </div>
-    <div class="fab-steps">
-      <div class="fab-step reveal reveal-up"><span class="num">1</span><h4>Pour the soft acrylic</h4><p>A clear soft acrylic layer, mostly transparent and slightly grey, poured into the mold to form the soft base the silicone stack sits on.</p></div>
-      <div class="fab-step reveal reveal-up"><span class="num">2</span><h4>Cast the white silicone</h4><p>XP-565 at a 15:1 ratio by weight, pigmented with 0.04% white Silk Pig. Cast into laser-cut acrylic molds, 2 mm and 0.5 mm thick, secured with M2 screws. Degassed, poured slowly to minimize air entrapment, then oven-cured about 20 minutes.</p></div>
-      <div class="fab-step reveal reveal-up"><span class="num">3</span><h4>Paint the color in</h4><p>Colored rows and columns between the channels, the vibrant grid under the film.</p></div>
-      <div class="fab-step reveal reveal-up"><span class="num">4</span><h4>Seal it in black</h4><p>Opaque top layer: Smooth-On Psycho Paint Part A, Part B, black Silk Pig, and NOVOCS silicone solvent in a 1:1:0.5:1 ratio by weight, 0.1 mm.</p></div>
     </div>
   </div>
 </section>
@@ -207,29 +237,43 @@
     <div class="lead reveal reveal-up">
       <p>Raw readings differ strongly across the array: center taxels have baselines of 2364 &plusmn; 284 counts, edge taxels 1322 &plusmn; 203, and corner taxels 673 &plusmn; 100, consistent with edge and corner detectors collecting scattered light from fewer LEDs. After normalization the response is linear in force. The mean over taxels follows s = 0.02 + 0.170F with R&sup2; = 0.999 from 0.1 N to the 5.8 N limit of the test, and neither a dead zone nor saturation is reached.</p>
     </div>
-    <figure class="reveal reveal-up">
-      <div class="fig-card corona">
-        <img src="assets/fig5-response.png" alt="Individual-taxel response over 15 passes, 240 presses">
+    <h3 class="mode-heading reveal reveal-up">Normal force (Mode 1)</h3>
+    <figure class="reveal reveal-up char-fig">
+      <div class="fig-card paper">
+        <img src="assets/fig-char-normal.png" alt="Normal-force characterization: signal vs force and depth, force vs depth, predicted vs measured force, and per-taxel uniformity maps at 0.5, 1.5, 3, and 5.5 N">
       </div>
-      <figcaption class="caption">Individual-taxel response over 15 passes (240 presses). (a) Raw reading vs. force during loading; center taxels have the highest baselines and corner taxels the lowest. (b) Normalized signal vs. force. The response is linear in force, s = 0.02 + 0.170F (R&sup2; = 0.999), with no dead zone or saturation up to 5.8 N. (c) Optical map g(&delta;). (d) Force vs. depth, loading and unloading; k<sub>n</sub> = 3.86 &plusmn; 0.09 N/mm.</figcaption>
+      <figcaption class="caption">(a) Normalized signal vs. force: s = 0.02 + 0.170F, R&sup2; = 0.999. (b) Signal vs. indentation depth with the shared optical map g. (c) Force vs. depth, loading and unloading; k<sub>n</sub> = 3.86 &plusmn; 0.09 N/mm. (d) Force predicted through F&#770; = h(g<sup>&minus;1</sup>(s)) vs. measured; RMSE 0.20 N, R&sup2; = 0.988. (e, f) Baseline-subtracted drop per taxel at 0.5, 1.5, 3, and 5.5 N, coefficient of variation 34&ndash;40%. (g, h) After normalization the variation falls to 21%, 10%, 5.9%, and 3.0%.</figcaption>
     </figure>
-    <figure class="reveal reveal-up">
-      <div class="fig-card corona">
-        <img src="assets/fig6-uniformity.png" alt="Array uniformity at 0.5, 1.5, 3, and 5.5 N">
+
+    <h3 class="mode-heading reveal reveal-up">Shear (Mode 2)</h3>
+    <div class="lead reveal reveal-up">
+      <p>With the shear cartridge, the lateral force grows almost linearly with plate displacement up to the 2 mm limit, and the shear stiffness rises from 1.01 N/mm at 0.5 mm depth to 1.25 N/mm at 1.5 mm. The per-taxel model recovers the local shear with R&sup2; = 0.86 / 0.90 (x / y), an RMSE of 0.29 mm, and a median direction error of 7&deg;. Decoded as force, the lateral components reach R&sup2; = 0.98 with an RMSE of 0.15 / 0.14 N. Brightness alone memorizes contact positions; color generalizes much better, and brightness and color together are best.</p>
+    </div>
+    <figure class="reveal reveal-up char-fig">
+      <div class="fig-card paper">
+        <img src="assets/fig-char-shear.png" alt="Shear characterization: lateral force vs plate displacement, predicted vs true shear, held-out R squared by feature set, and shear cartridge signal vs force">
       </div>
-      <figcaption class="caption">Array uniformity from the individual-taxel presses at 0.5, 1.5, 3, and 5.5 N. Top: baseline-subtracted drop of the pressed taxel; bottom: normalized signal; each row shares one color scale. Right: distribution over all taxels and passes with the coefficient of variation, about 38% before and 6% after normalization.</figcaption>
+      <figcaption class="caption">Shear cartridge, 9 plate positions &times; 4 depths &times; 8 directions &times; 3 repeats (12 &times; 12 mm flat plate). (i) Lateral force vs. plate displacement, outward (solid) and return (dashed) strokes, by press depth. (j) Per-taxel shear estimate vs. true displacement on the held-out repeat, by depth; solid: with the brightness-based gain, dashed: without. (k) Whole-pad linear decoder with brightness (16 features), color (48), or both (64): held-out R&sup2; at the trained positions and at a position left out of training. (l) Normal response of the shear cartridge: normalized clear-channel signal vs. normal force, linear fit R&sup2; = 0.996.</figcaption>
     </figure>
     <table class="reveal reveal-up">
-      <caption>Characterization summary (mean &plusmn; std over 16 taxels)</caption>
+      <caption>Characterization summary. Normal cartridge: mean &plusmn; std over 16 taxels. Shear cartridge: held-out repeat.</caption>
       <tr><th>Metric</th><th class="num">Value</th></tr>
-      <tr><td>Noise &sigma;</td><td class="num">1.06 &plusmn; 0.44 counts</td></tr>
+      <tr><td colspan="2"><b>Normal cartridge</b></td></tr>
+      <tr><td>Noise &sigma;</td><td class="num">1.06 &plusmn; 0.44 counts (0.08% of baseline)</td></tr>
       <tr><td>Detection threshold</td><td class="num">104 &plusmn; 49 mN</td></tr>
-      <tr><td>Working range</td><td class="num">0.10 to 5.8 N</td></tr>
-      <tr><td>Sensitivity</td><td class="num">0.170 FS/N</td></tr>
-      <tr><td>Linearity</td><td class="num">R&sup2; = 0.999</td></tr>
+      <tr><td>Working range</td><td class="num">0.10 to 5.8 N (saturation not reached)</td></tr>
+      <tr><td>Sensitivity, linearity</td><td class="num">0.170 FS/N, R&sup2; = 0.999</td></tr>
       <tr><td>Hysteresis</td><td class="num">5.9 &plusmn; 1.1 %FS</td></tr>
       <tr><td>Repeatability</td><td class="num">2.0 &plusmn; 0.3 %FS</td></tr>
-      <tr><td>Crosstalk (x / y / diagonal)</td><td class="num">0.7 / 5.2 / 0.8 %</td></tr>
+      <tr><td>Crosstalk, &minus;x / &plusmn;y / diagonal neighbor</td><td class="num">0.7 / 5.2 / 0.8 %</td></tr>
+      <tr><td>Per-taxel stiffness k<sub>n</sub></td><td class="num">3.86 &plusmn; 0.09 N/mm</td></tr>
+      <tr><td>Force from h &#8728; g<sup>&minus;1</sup>, RMSE</td><td class="num">0.20 N (R&sup2; = 0.988)</td></tr>
+      <tr><td colspan="2"><b>Shear cartridge</b></td></tr>
+      <tr><td>Whole-pad shear R&sup2;, x / y</td><td class="num">0.94 / 0.96</td></tr>
+      <tr><td>Per-taxel shear R&sup2;, x / y</td><td class="num">0.86 / 0.90 (RMSE 0.29 mm)</td></tr>
+      <tr><td>Median direction error</td><td class="num">7&deg;</td></tr>
+      <tr><td>Lateral force R&sup2;, x / y</td><td class="num">0.98 / 0.98 (RMSE 0.15 / 0.14 N)</td></tr>
+      <tr><td>Normal linearity vs. load</td><td class="num">R&sup2; = 0.996</td></tr>
     </table>
   </div>
 </section>
@@ -239,28 +283,62 @@
     <h2 class="reveal reveal-up">Real-time Demonstration</h2>
     <div class="rainbow-bar"></div>
     <div class="lead reveal reveal-up">
-      <p>The trained policies were evaluated on two real-world manipulation tasks: peg-in-hole insertion and cube sorting. For cube sorting, the vision-only policy successfully completed 5 out of 15 trials (33.3%), while the visuotactile policy achieved 6 out of 15 successful trials (40.0%). For peg-in-hole insertion, the vision-only policy successfully completed 7 out of 16 trials (43.8%), while the LuxTac-based policy achieved 13 out of 15 successful trials (86.7%).</p>
+      <p>The trained policies were evaluated on two real-world manipulation tasks: peg-in-hole insertion and cube sorting. For cube sorting, the vision-only policy successfully completed 5 out of 15 trials (33.3%), while the visuotactile policy achieved 6 out of 15 successful trials (40.0%). For peg-in-hole insertion, the vision-only policy successfully completed 7 out of 15 trials (46.7%), while the LuxTac-based policy achieved 13 out of 15 successful trials (86.7%).</p>
     </div>
-    <div class="demo-pairs corona no-zoom reveal reveal-up">
-      <div class="demo-pairs-grid">
-        <div><video src="assets/demo1-screen.mp4" controls autoplay muted loop playsinline></video></div>
-        <div><video src="assets/demo2-screen.mp4" controls autoplay muted loop playsinline></video></div>
-        <div><video src="assets/part1-screen.mp4" controls autoplay muted loop playsinline></video></div>
-        <div><video src="assets/part2-screen.mp4" controls autoplay muted loop playsinline></video></div>
-        <div><video src="assets/part3-screen.mp4" controls autoplay muted loop playsinline></video></div>
-        <div><video src="assets/part4-screen.mp4" controls autoplay muted loop playsinline></video></div>
-        <div><video src="assets/demo1-real.mp4" controls autoplay muted loop playsinline></video></div>
-        <div><video src="assets/demo2-real.mp4" controls autoplay muted loop playsinline></video></div>
-        <div><video src="assets/part1-real.mp4" controls autoplay muted loop playsinline></video></div>
-        <div><video src="assets/part2-real.mp4" controls autoplay muted loop playsinline></video></div>
-        <div><video src="assets/part3-real.mp4" controls autoplay muted loop playsinline></video></div>
-        <div><video src="assets/part4-real.mp4" controls autoplay muted loop playsinline></video></div>
+    <div class="shorts reveal reveal-up">
+      <div class="shorts-feed" id="shortsFeed" tabindex="0" aria-label="Real-time demonstration clips, scroll for the next one">
+        <div class="short">
+          <div class="reel corona no-zoom">
+            <div class="reel-inner">
+              <video class="reel-top" src="assets/demo1-screen.mp4" muted loop playsinline preload="metadata"></video>
+              <video class="reel-bot" src="assets/demo1-real.mp4" muted loop playsinline preload="metadata"></video>
+            </div>
+          </div>
+        </div>
+        <div class="short">
+          <div class="reel corona no-zoom">
+            <div class="reel-inner">
+              <video class="reel-top" src="assets/part1-screen.mp4" muted loop playsinline preload="metadata"></video>
+              <video class="reel-bot" src="assets/part1-real.mp4" muted loop playsinline preload="metadata"></video>
+            </div>
+          </div>
+        </div>
+        <div class="short">
+          <div class="reel corona no-zoom">
+            <div class="reel-inner">
+              <video class="reel-top" src="assets/part2-screen.mp4" muted loop playsinline preload="metadata"></video>
+              <video class="reel-bot" src="assets/part2-real.mp4" muted loop playsinline preload="metadata"></video>
+            </div>
+          </div>
+        </div>
+        <div class="short">
+          <div class="reel corona no-zoom">
+            <div class="reel-inner">
+              <video class="reel-top" src="assets/part3-screen.mp4" muted loop playsinline preload="metadata"></video>
+              <video class="reel-bot" src="assets/part3-real.mp4" muted loop playsinline preload="metadata"></video>
+            </div>
+          </div>
+        </div>
+        <div class="short">
+          <div class="reel corona no-zoom">
+            <div class="reel-inner">
+              <video class="reel-top" src="assets/part4-screen.mp4" muted loop playsinline preload="metadata"></video>
+              <video class="reel-bot" src="assets/part4-real.mp4" muted loop playsinline preload="metadata"></video>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="shorts-nav">
+        <button type="button" id="shortsUp" aria-label="Previous clip"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M6 15l6-6 6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <span id="shortsCount">1 / 5</span>
+        <button type="button" id="shortsDown" aria-label="Next clip"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
       </div>
     </div>
-    
+    <p class="caption">Scroll on a clip for the next one. Top: the live 4&times;4 LuxTac reading. Bottom: the press that made it.</p>
+
     <h2 class="reveal reveal-up exp-heading">Robot Experiments</h2>
     <div class="rainbow-bar"></div>
-  <p class="reveal reveal-up" style="text-align:center;color:var(--muted);margin:0 0 20px;">Vision-only vs vision + LuxTac, on the two manipulation tasks.</p>
+  <p class="reveal reveal-up" style="text-align:center;color:var(--muted);margin:0 0 20px;">Action Chunking Transformer policies, vision only vs. vision + LuxTac, on the two manipulation tasks.</p>
 <div class="exp-carousel">
     <button class="exp-arrow" id="expPrev" aria-label="Previous task">&#8249;</button>
     <div class="exp-viewport">
@@ -389,11 +467,11 @@
   </div>
   <p class="caption reveal reveal-up">Vision + LuxTac clips show the live 4&times;4 LuxTac reading in the bottom-left inset,<br>frame-synced to the camera <span class="magma-bar" aria-hidden="true"></span> <span class="magma-ends">0 &rarr; 1</span>.</p>
     <table class="reveal reveal-up">
-      <caption>Real-world success rates (95% Wilson confidence intervals)</caption>
+      <caption>Real-world success rates, with 95% Wilson confidence intervals in brackets</caption>
       <tr><th>Task</th><th class="num">Vision only</th><th class="num">Vision + LuxTac</th></tr>
-      <tr><td>Peg-in-hole</td><td class="num">7/16 (43.8%)</td><td class="num">13/15 (87%)</td></tr>
-      <tr><td>Cube sorting</td><td class="num">5/15 (33.3%)</td><td class="num">6/15 (40%)</td></tr>
-      <tr><td><b>Average</b></td><td class="num"><b>39%</b></td><td class="num"><b>63%</b></td></tr>
+      <tr><td>Peg-in-hole</td><td class="num">7/15 (47%) [25&ndash;70]</td><td class="num">13/15 (87%) [62&ndash;96]</td></tr>
+      <tr><td>Cube sorting</td><td class="num">5/15 (33%) [15&ndash;58]</td><td class="num">6/15 (40%) [20&ndash;64]</td></tr>
+      <tr><td><b>Average</b></td><td class="num"><b>40%</b></td><td class="num"><b>63%</b></td></tr>
     </table>
   </div>
 </section>
@@ -409,7 +487,7 @@
   title={LuxTac: An Optical Taxel Array with Separable
     Optical-Mechanical Calibration for Tactile Robot Learning},
   author={Prince, Md Rakibul Islam and Pelan, John and
-    Khera, Adyaa and Pesetski, Katherine and She, Yu},
+    Khera, Adyaa and Desai, Adeesh and Pesetski, Katherine and She, Yu},
   year={2026}
 }</pre>
     </div>
@@ -431,16 +509,33 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-const STEPS = [
-  { title: 'Put the mold casing on', caption: 'A plain smooth mold casing is placed down, before the acrylic pour. One big square opening, no slots, for the soft acrylic base.' },
-  { title: 'Pour the soft acrylic', caption: 'A clear soft acrylic layer is poured into the mold and left to set. It is mostly transparent, slightly grey, and forms the soft base the silicone stack sits on.' },
-  { title: 'Put the mold casing on', caption: 'The mold casing is placed down again, this time on top of the soft acrylic base, ready for the silicone.' },
-  { title: 'Put in the wall grid', caption: 'Row and column walls nestle into the slots in the casing, forming the gridded channels on top of the acrylic.' },
-  { title: 'Pour the silicone grid', caption: 'White silicone (XP-565, 15:1) is poured in on top of the acrylic, degassed, and oven-cured about 20 minutes. The grid leaves white silicone pillars.' },
-  { title: 'Paint the colors', caption: 'The mold casing and the walls are taken out first. Then a brush paints colored rows and columns between the channels, the vibrant grid under the film.' },
-  { title: 'Seal it in black', caption: 'A thin black film is stretched over the white squares, following every recess and edge. It is 95% opaque, but only 50% opaque over the colored lines, so the colors poke through along their full length.' },
-  { title: 'Secure onto the flexible PCB', caption: 'The finished stack is secured onto the flexible PCB below it, so the photodiodes and LEDs sit under the finished stack.' }
-];
+// Two fabrication pathways, following the paper's figure (Mode 1 intensity-encoded
+// gel, Mode 2 shear-encoded gel). Each step lists what is in the scene.
+function S(o) {
+  return Object.assign({ mold: null, walls: false, screws: null, pcb: false, gel: 'none', level: false, oven: false, color: 'none', coat: 'none' }, o);
+}
+const PATHS = {
+  1: [
+    S({ mold: 'A', screws: 'mold', title: 'Assemble the mold', caption: 'A 1 mm clear acrylic base plate, which stays in the final stack, and a 2 mm acrylic frame with heat-set inserts, fastened with four M2 screws from the top.' }),
+    S({ mold: 'A', screws: 'mold', gel: 'pour', title: 'Cast', caption: 'The degassed white translucent XP-565 mixture (15:1 by weight) is poured slowly into the mold to minimize air entrapment.' }),
+    S({ mold: 'A', screws: 'mold', gel: 'full', level: true, title: 'Level', caption: 'An acrylic plate is pressed onto the white layer to remove the excess silicone and leave a flat layer of uniform thickness. Then heat cure for about 20 minutes.' }),
+    S({ gel: 'full', coat: 'pour', title: 'Coat', caption: 'The mold frame comes off, leaving the white layer bonded to the acrylic base. The black mixture is poured over it and spreads across the acrylic, covering the top and sides and stopping short of the screw holes. Then heat cure for about 10 minutes.' }),
+    S({ gel: 'full', coat: 'full', pcb: true, screws: 'base', title: 'Assemble', caption: 'The finished stack on its acrylic base is aligned over the 4&times;4 photodiode array and secured with four M2 screws through the base plate into the PCB mounting holes.' })
+  ],
+  2: [
+    S({ mold: 'B', screws: 'mold', title: 'Assemble the mold', caption: 'The same 1 mm clear acrylic base plate and a 2 mm acrylic frame with slots for the wall inserts, fastened with four M2 screws from the top.' }),
+    S({ mold: 'B', screws: 'mold', walls: true, title: 'Insert walls', caption: 'Three straight column walls go into the frame slots, then three row walls with 1.25 mm half-lap notches are lowered on top so the two sets interlock.' }),
+    S({ mold: 'B', screws: 'mold', walls: true, gel: 'pour', title: 'Cast', caption: 'The white translucent mixture is poured around the walls, leveled, and heat cured for about 20 minutes.' }),
+    S({ mold: 'B', screws: 'mold', gel: 'full', title: 'Remove walls', caption: 'Removing the grid leaves 16 translucent cubes (about 3.8 &times; 3.4 mm) separated by 1 mm slits.' }),
+    S({ mold: 'B', screws: 'mold', gel: 'full', color: 'inject', title: 'Inject color', caption: 'The pigmented mixtures are injected into the slits: row slits alternate green / red, column slits yellow / blue. The rows are filled and heat cured first (about 10 minutes), then the columns.' }),
+    S({ gel: 'full', color: 'full', coat: 'pour', title: 'Coat', caption: 'The frame comes off and the black coating is applied as in Mode 1. Then heat cure for about 10 minutes.' }),
+    S({ gel: 'full', color: 'full', coat: 'full', pcb: true, screws: 'base', title: 'Assemble', caption: 'The finished stack on its acrylic base is aligned over the 4&times;4 photodiode array and secured with four M2 screws through the base plate into the PCB mounting holes.' })
+  ]
+};
+let mode = 1;
+let STEPS = PATHS[1];
+// Screw / insert spots: on the mold frame, inset from its outer corners.
+const SCREW_XZ = [[-9.5, -10], [9.5, -10], [-9.5, 10], [9.5, 10]];
 
 const stage = document.getElementById('fabStage');
 const captionEl = document.getElementById('fabCaption');
@@ -451,7 +546,7 @@ const dotsEl = document.getElementById('fabDots');
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setSize(stage.clientWidth, stage.clientHeight);
-renderer.setClearColor(0x161618);
+renderer.setClearColor(0x4a4c53);
 stage.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
@@ -555,7 +650,7 @@ function buildMoldGeometry() {
   geo.rotateX(-Math.PI / 2);
   return geo;
 }
-const moldMat = new THREE.MeshStandardMaterial({ color: 0xdfe8ee, roughness: 0.5, metalness: 0 });
+const moldMat = new THREE.MeshStandardMaterial({ color: 0xa9b8c4, roughness: 0.5, metalness: 0 });
 const moldB = new THREE.Mesh(buildMoldGeometry(), moldMat);
 moldB.position.y = 22;
 moldB.visible = false;
@@ -599,14 +694,13 @@ scene.add(moldA);
 // is lifted 0.02 so the acrylic bottom does not z-fight with the PCB top.
 const acrylicGroup = new THREE.Group();
 const acrylicMat = new THREE.MeshStandardMaterial({ color: 0xbcdcf0, roughness: 0.3, metalness: 0, transparent: true, opacity: 0.85, depthWrite: false });
-const acrylicGeo = new THREE.BoxGeometry(17, 0.5, 17);
+const acrylicGeo = new THREE.BoxGeometry(21, 0.5, 22.5);
 acrylicGeo.translate(0, 0.25, 0);
 const acrylic = new THREE.Mesh(acrylicGeo, acrylicMat);
 acrylic.renderOrder = 5;
 acrylicGroup.add(acrylic);
 acrylicGroup.position.y = 0.02;
-acrylicGroup.scale.y = 0.001;
-acrylicGroup.visible = false;
+acrylicGroup.position.y = 10;
 scene.add(acrylicGroup);
 
 // Wall grid: opaque solid light blue so they never flicker while orbiting.
@@ -763,29 +857,112 @@ vX.forEach((vx, vi) => {
   });
 });
 
-// Paint brush: wooden handle, metal ferrule, bristles whose tip color matches the line it paints.
+// Syringe for the color injection: clear barrel with colored fill, grey plunger,
+// steel needle. The needle tip sits at the group origin so it rides in the slits.
 const brush = new THREE.Group();
-const handle = new THREE.Mesh(
-  new THREE.CylinderGeometry(0.55, 0.65, 13, 12),
-  new THREE.MeshStandardMaterial({ color: 0x8b5a2a, roughness: 0.7 })
-);
-handle.position.y = 8;
-brush.add(handle);
-const ferrule = new THREE.Mesh(
-  new THREE.CylinderGeometry(0.7, 0.8, 2.2, 12),
-  new THREE.MeshStandardMaterial({ color: 0xc0c0c0, roughness: 0.35, metalness: 0 })
-);
-ferrule.position.y = 2.4;
-brush.add(ferrule);
-const tipMat = new THREE.MeshStandardMaterial({ color: 0x30d158, roughness: 0.9 });
-const bristles = new THREE.Mesh(new THREE.BoxGeometry(1.4, 2.6, 0.5), tipMat);
-bristles.position.y = 0.4;
-brush.add(bristles);
-brush.rotation.z = -0.45;
-brush.rotation.x = 0.25;
+const barrelMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.2, metalness: 0, transparent: true, opacity: 0.35, depthWrite: false });
+const barrel = new THREE.Mesh(new THREE.CylinderGeometry(0.75, 0.75, 6, 20, 1, true), barrelMat);
+barrel.position.y = 5.2;
+brush.add(barrel);
+const tipMat = new THREE.MeshStandardMaterial({ color: 0x30d158, roughness: 0.6 });
+const fill = new THREE.Mesh(new THREE.CylinderGeometry(0.6, 0.6, 3.6, 20), tipMat);
+fill.position.y = 4.0;
+brush.add(fill);
+const greyMat = new THREE.MeshStandardMaterial({ color: 0x8a8a8a, roughness: 0.5, metalness: 0 });
+const plunger = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 5, 10), greyMat);
+plunger.position.y = 9.6;
+brush.add(plunger);
+const thumb = new THREE.Mesh(new THREE.CylinderGeometry(0.9, 0.9, 0.25, 20), greyMat);
+thumb.position.y = 12.1;
+brush.add(thumb);
+const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.75, 0.3, 0.8, 16), greyMat);
+hub.position.y = 1.8;
+brush.add(hub);
+const needle = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 1.6, 8), new THREE.MeshStandardMaterial({ color: 0xd0d0d0, roughness: 0.3, metalness: 0 }));
+needle.position.y = 0.8;
+brush.add(needle);
+brush.rotation.z = -0.35;
 brush.position.set(0, 9, 0);
 brush.visible = false;
 scene.add(brush);
+
+// Mode 1 gel: one continuous white slab, 17 x 2 x 17, on the acrylic (y 0.5 to 2.5).
+const slabMat = new THREE.MeshStandardMaterial({ color: 0xf2ede4, roughness: 0.85, metalness: 0, transparent: true, opacity: 0, depthWrite: false });
+const slabGeo = new THREE.BoxGeometry(17, 2, 17);
+slabGeo.translate(0, 1, 0);
+const slab = new THREE.Mesh(slabGeo, slabMat);
+slab.position.y = 0.5;
+slab.scale.y = 0.001;
+slab.visible = false;
+scene.add(slab);
+
+// Mode 1 black coating: wraps the slab top and sides.
+const capMat = new THREE.MeshStandardMaterial({ color: 0x141414, roughness: 0.35, metalness: 0.1, transparent: true, opacity: 0, depthWrite: false });
+const capGeo = new THREE.BoxGeometry(17.4, 2.15, 17.4);
+capGeo.translate(0, 1.075, 0);
+const cap = new THREE.Mesh(capGeo, capMat);
+cap.position.y = 0.5;
+cap.renderOrder = 10;
+cap.visible = false;
+scene.add(cap);
+
+// Leveling plate: a clear acrylic sheet pressed onto the mold top (Mode 1, step 3).
+const plateMat = new THREE.MeshStandardMaterial({ color: 0xbcdcf0, roughness: 0.2, metalness: 0, transparent: true, opacity: 0, depthWrite: false });
+const plate = new THREE.Mesh(new THREE.BoxGeometry(16.9, 0.4, 16.9), plateMat);
+plate.renderOrder = 6;
+plate.visible = false;
+scene.add(plate);
+
+// Heat-set brass inserts in the mold frame, under the screws.
+const insertGroup = new THREE.Group();
+const insertMat = new THREE.MeshStandardMaterial({ color: 0xc9a227, roughness: 0.4, metalness: 0 });
+SCREW_XZ.forEach(([sx, sz]) => {
+  const ins = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.55, 0.3, 20), insertMat);
+  ins.position.set(sx, 1.9, sz);
+  insertGroup.add(ins);
+});
+insertGroup.visible = false;
+scene.add(insertGroup);
+
+// Excess white solution squeezed out onto the mold top by the leveling plate.
+const excessShape = new THREE.Shape();
+excessShape.moveTo(-9.3, -9.3); excessShape.lineTo(9.3, -9.3); excessShape.lineTo(9.3, 9.3); excessShape.lineTo(-9.3, 9.3); excessShape.closePath();
+const excessHole = new THREE.Path();
+excessHole.moveTo(-8.5, -8.5); excessHole.lineTo(8.5, -8.5); excessHole.lineTo(8.5, 8.5); excessHole.lineTo(-8.5, 8.5); excessHole.closePath();
+excessShape.holes.push(excessHole);
+const excessGeo = new THREE.ExtrudeGeometry(excessShape, { depth: 0.12, bevelEnabled: false });
+excessGeo.rotateX(-Math.PI / 2);
+const excessMat = new THREE.MeshStandardMaterial({ color: 0xf2ede4, roughness: 0.6, metalness: 0, transparent: true, opacity: 0, depthWrite: false });
+const excess = new THREE.Mesh(excessGeo, excessMat);
+excess.visible = false;
+scene.add(excess);
+
+// Mode 1 black coating also covers the acrylic around the white layer.
+const capBase = new THREE.Mesh(new THREE.BoxGeometry(17.9, 0.12, 18.6), capMat);
+capBase.position.y = 0.56;
+capBase.renderOrder = 10;
+capBase.visible = false;
+scene.add(capBase);
+
+// Oven: a faint box outline around the part, glowing heater bars below it and a
+// warm pulsing light, shown on the cure steps.
+const ovenGroup = new THREE.Group();
+const ovenEdgeMat = new THREE.LineBasicMaterial({ color: 0x8a8a90, transparent: true, opacity: 0 });
+const ovenBox = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(32, 14, 32)), ovenEdgeMat);
+ovenBox.position.y = 5;
+ovenGroup.add(ovenBox);
+const coilMat = new THREE.MeshStandardMaterial({ color: 0x3a1a0a, emissive: 0xff6a1a, emissiveIntensity: 0, roughness: 0.6, transparent: true, opacity: 0 });
+[-9, -4.5, 0, 4.5, 9].forEach((z) => {
+  const c = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.35, 26, 12), coilMat);
+  c.rotation.z = Math.PI / 2;
+  c.position.set(0, -1.6, z);
+  ovenGroup.add(c);
+});
+const ovenLight = new THREE.PointLight(0xff8a3a, 0, 60);
+ovenLight.position.set(0, 4, 0);
+ovenGroup.add(ovenLight);
+ovenGroup.visible = false;
+scene.add(ovenGroup);
 
 // Black film: a thin shell that follows 0.1 mm away from the outside of the white
 // pillars and the colored lines, wrapping around the sides too. Uniform 50% opacity.
@@ -816,7 +993,7 @@ filmGeo.rotateX(-Math.PI / 2);
       surfH(x + R, z + R), surfH(x + R, z - R), surfH(x - R, z + R), surfH(x - R, z - R));
     let y = s + 0.1;
     const dOut = Math.max(0, Math.abs(x) - 9.26, Math.abs(z) - 10.0);
-    if (dOut > 0) y = Math.max(0.001, y - dOut * 2.5);
+    if (dOut > 0) y = Math.max(0.52, y - dOut * 2.5);
     pos.setY(i, y);
   }
   filmGeo.computeVertexNormals();
@@ -865,7 +1042,7 @@ scene.add(film);
 const screwGroup = new THREE.Group();
 const screwMat = new THREE.MeshStandardMaterial({ color: 0x9a9a9a, roughness: 0.45, metalness: 0 });
 const slotMat = new THREE.MeshStandardMaterial({ color: 0x3a3a3a, roughness: 0.6, metalness: 0 });
-[[-10, -11], [10, -11], [-10, 11], [10, 11]].forEach(([sx, sz]) => {
+SCREW_XZ.forEach(([sx, sz]) => {
   const shank = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.35, 0.5, 24), screwMat);
   shank.position.set(sx, -0.05, sz);
   shank.renderOrder = 11;
@@ -883,161 +1060,181 @@ screwGroup.position.y = 18;
 screwGroup.visible = false;
 scene.add(screwGroup);
 
-// Step targets: moldAY, moldAOn, moldBY, moldBOn, wallY, wallOn, filmY, filmOp, pcbY, pcbOn, screwY, screwOn.
-// Two molds, not one. The smooth casing (moldA) is placed at y=0 for the soft
-// acrylic base (steps 1-2), so the acrylic pours as ONE big square. The slotted
-// casing (moldB) is placed at y=0.5 on top of the acrylic for the silicone stack
-// (steps 3-5), where the wall grid nestles into its slots.
-// The walls sit on top of the acrylic, so their in-position is y=0.5.
-// The flexible PCB and the screws only come in at the last step, to fasten the
-// finished stack from below. The mold casing and the walls are both out before painting.
-const TARGETS = [
-  { moldAY: 0, moldAOn: 1, moldBY: 22, moldBOn: 0, wallY: 18, wallOn: 0, filmY: 14, filmOp: 0, pcbY: -20, pcbOn: 0, screwY: 18, screwOn: 0 },
-  { moldAY: 0, moldAOn: 1, moldBY: 22, moldBOn: 0, wallY: 18, wallOn: 0, filmY: 14, filmOp: 0, pcbY: -20, pcbOn: 0, screwY: 18, screwOn: 0 },
-  { moldAY: 22, moldAOn: 0, moldBY: 0.5, moldBOn: 1, wallY: 18, wallOn: 0, filmY: 14, filmOp: 0, pcbY: -20, pcbOn: 0, screwY: 18, screwOn: 0 },
-  { moldAY: 22, moldAOn: 0, moldBY: 0.5, moldBOn: 1, wallY: 0.5, wallOn: 1, filmY: 14, filmOp: 0, pcbY: -20, pcbOn: 0, screwY: 18, screwOn: 0 },
-  { moldAY: 22, moldAOn: 0, moldBY: 0.5, moldBOn: 1, wallY: 0.5, wallOn: 1, filmY: 14, filmOp: 0, pcbY: -20, pcbOn: 0, screwY: 18, screwOn: 0 },
-  { moldAY: 22, moldAOn: 0, moldBY: 22, moldBOn: 0, wallY: 18, wallOn: 0, filmY: 14, filmOp: 0, pcbY: -20, pcbOn: 0, screwY: 18, screwOn: 0 },
-  { moldAY: 22, moldAOn: 0, moldBY: 22, moldBOn: 0, wallY: 18, wallOn: 0, filmY: 0, filmOp: 1, pcbY: -20, pcbOn: 0, screwY: 18, screwOn: 0 },
-  { moldAY: 22, moldAOn: 0, moldBY: 22, moldBOn: 0, wallY: 18, wallOn: 0, filmY: 0, filmOp: 1, pcbY: 0, pcbOn: 1, screwY: 0, screwOn: 1 }
-];
+// Injection order: rows first, then columns (LINES holds the 5 columns, then the 5 rows).
+const ORDER = [5, 6, 7, 8, 9, 0, 1, 2, 3, 4];
+
 let current = 0;
 let pourClock = 0;
 let paintClock = 0;
 let lastStep = -1;
-const state = { moldAY: 22, moldAOn: 0, moldBY: 22, moldBOn: 0, wallY: 18, wallOn: 0, filmY: 14, filmOp: 0, pcbY: -20, pcbOn: 0, screwY: 18, screwOn: 0 };
+let stepClock = 0;
+const OFF = { moldAY: 14, moldAOn: 0, moldBY: 14, moldBOn: 0, wallY: 18, wallOn: 0, pcbY: -20, pcbOn: 0, screwY: 18, screwOn: 0, plateY: 14, plateOn: 0, oven: 0, acrY: 10 };
+const st = Object.assign({}, OFF);
 
+const modeBtns = document.querySelectorAll('.fab-modes button');
+function buildDots() {
+  dotsEl.innerHTML = '';
+  STEPS.forEach((_, k) => {
+    const d = document.createElement('button');
+    d.type = 'button';
+    d.textContent = String(k + 1);
+    d.setAttribute('aria-label', 'Step ' + (k + 1));
+    d.addEventListener('click', () => showStep(k));
+    dotsEl.appendChild(d);
+  });
+}
 function showStep(i) {
   current = Math.max(0, Math.min(STEPS.length - 1, i));
+  if (current === 0) { Object.assign(st, OFF); lastStep = -1; }
   const s = STEPS[current];
   captionEl.innerHTML = '<b>Step ' + (current + 1) + ' of ' + STEPS.length + ': ' + s.title + '.</b> ' + s.caption;
   nextBtn.textContent = current === STEPS.length - 1 ? 'Restart' : 'Next';
   [...dotsEl.children].forEach((d, k) => d.classList.toggle('active', k === current));
 }
-STEPS.forEach((_, k) => {
-  const d = document.createElement('button');
-  d.type = 'button';
-  d.textContent = String(k + 1);
-  d.setAttribute('aria-label', 'Step ' + (k + 1));
-  d.addEventListener('click', () => showStep(k));
-  dotsEl.appendChild(d);
-});
+function setMode(m) {
+  mode = m;
+  STEPS = PATHS[m];
+  Object.assign(st, OFF);
+  lastStep = -1;
+  modeBtns.forEach((b) => b.classList.toggle('active', Number(b.dataset.mode) === m));
+  buildDots();
+  showStep(0);
+}
+modeBtns.forEach((b) => b.addEventListener('click', () => { if (Number(b.dataset.mode) !== mode) setMode(Number(b.dataset.mode)); }));
 prevBtn.addEventListener('click', () => showStep(current - 1));
 nextBtn.addEventListener('click', () => showStep(current === STEPS.length - 1 ? 0 : current + 1));
-showStep(0);
+setMode(1);
+
+// Cup pour shared by the gel cast and the black coat: returns the fill fraction 0..1.
+function pour(colorHex, opacityScale) {
+  if (lastStep !== current) pourClock = 0;
+  pourClock += clockDt;
+  const fillAmt = Math.max(0, Math.min(1, (pourClock - 0.3) / 1.5));
+  const cupOp = pourClock < 0.3 ? pourClock / 0.3 : pourClock < 1.6 ? 1 : Math.max(0, 1 - (pourClock - 1.6) / 0.4);
+  resinMat.color.set(colorHex);
+  streamMat.color.set(colorHex);
+  cupMat.opacity = cupOp;
+  resinMat.opacity = cupOp * 0.6;
+  cupGroup.visible = cupOp > 0.01;
+  cupGroup.rotation.z = pourClock < 0.3 ? 0 : Math.min(0.55, (pourClock - 0.3) * 1.2);
+  streamMat.opacity = (pourClock < 0.3 ? 0 : pourClock < 1.6 ? 1 : Math.max(0, 1 - (pourClock - 1.6) / 0.4)) * opacityScale;
+  stream.visible = streamMat.opacity > 0.01;
+  return fillAmt;
+}
+
+function setPaint(n) {
+  const on = new Set(ORDER.slice(0, n));
+  LINES.forEach((Ln, i) => { Ln.mat.opacity = on.has(i) ? 1 : 0; Ln.mat.depthWrite = Ln.mat.opacity > 0; });
+  TILES.forEach((Tl) => {
+    Tl.mat.opacity = (on.has(Tl.vLine) || on.has(Tl.hLine)) ? 1 : 0;
+    Tl.mat.depthWrite = Tl.mat.opacity > 0;
+  });
+}
 
 const clock = new THREE.Clock();
+let clockDt = 0;
 function animate() {
   requestAnimationFrame(animate);
-  const dt = Math.min(clock.getDelta(), 0.05);
-  const t = TARGETS[current];
+  clockDt = Math.min(clock.getDelta(), 0.05);
+  const time = clock.elapsedTime;
+  const s = STEPS[current];
+  if (lastStep !== current) stepClock = 0;
+  stepClock += clockDt;
+  // Step 1 builds the mold in order: acrylic base, then frame, then screws.
+  const moldIn = current > 0 || stepClock > 0.7;
+  const screwIn = current > 0 || stepClock > 1.5;
+  const baseScrewY = 0.5;
+  const T = {
+    moldAY: s.mold === 'A' && moldIn ? 0.5 : 14, moldAOn: s.mold === 'A' && moldIn ? 1 : 0,
+    moldBY: s.mold === 'B' && moldIn ? 0.5 : 14, moldBOn: s.mold === 'B' && moldIn ? 1 : 0,
+    wallY: s.walls ? 0.5 : 18, wallOn: s.walls ? 1 : 0,
+    pcbY: s.pcb ? 0 : -20, pcbOn: s.pcb ? 1 : 0,
+    screwY: s.screws === 'mold' && screwIn ? 2.5 : s.screws === 'base' ? baseScrewY : 18, screwOn: s.screws && (s.screws === 'base' || screwIn) ? 1 : 0,
+    plateY: s.level ? 2.5 : 14, plateOn: s.level ? 1 : 0,
+    oven: s.oven ? 1 : 0, acrY: 0
+  };
   const k = 0.09;
-  state.moldAY += (t.moldAY - state.moldAY) * k;
-  state.moldAOn += (t.moldAOn - state.moldAOn) * k;
-  state.moldBY += (t.moldBY - state.moldBY) * k;
-  state.moldBOn += (t.moldBOn - state.moldBOn) * k;
-  state.wallY += (t.wallY - state.wallY) * k;
-  state.wallOn += (t.wallOn - state.wallOn) * k;
-  state.filmY += (t.filmY - state.filmY) * k;
-  state.filmOp += (t.filmOp - state.filmOp) * k;
-  state.pcbY += (t.pcbY - state.pcbY) * k;
-  state.pcbOn += (t.pcbOn - state.pcbOn) * k;
-  state.screwY += (t.screwY - state.screwY) * k;
-  state.screwOn += (t.screwOn - state.screwOn) * k;
+  for (const key in T) st[key] += (T[key] - st[key]) * k;
 
-  moldA.position.y = state.moldAY;
-  moldA.visible = state.moldAOn > 0.01;
-  moldB.position.y = state.moldBY;
-  moldB.visible = state.moldBOn > 0.01;
-  walls.position.y = state.wallY;
-  walls.visible = state.wallOn > 0.01;
-  film.position.y = state.filmY;
-  filmMat.opacity = state.filmOp * 0.95;
-  film.visible = state.filmOp > 0.01;
-  pcbGroup.position.y = state.pcbY;
-  pcbGroup.visible = state.pcbOn > 0.01;
-  screwGroup.position.y = state.screwY;
-  screwGroup.visible = state.screwOn > 0.01;
+  acrylicGroup.position.y = st.acrY;
+  moldA.position.y = st.moldAY;
+  moldA.visible = st.moldAOn > 0.01;
+  moldB.position.y = st.moldBY;
+  moldB.visible = st.moldBOn > 0.01;
+  walls.position.y = st.wallY;
+  walls.visible = st.wallOn > 0.01;
+  pcbGroup.position.y = st.pcbY;
+  pcbGroup.visible = st.pcbOn > 0.01;
+  screwGroup.position.y = st.screwY;
+  screwGroup.visible = st.screwOn > 0.01;
+  const moldOnY = st.moldAOn > st.moldBOn ? st.moldAY : st.moldBY;
+  insertGroup.position.y = moldOnY;
+  insertGroup.visible = Math.max(st.moldAOn, st.moldBOn) > 0.01;
+  plate.position.y = st.plateY + 0.2;
+  plateMat.opacity = 0.55 * st.plateOn;
+  plate.visible = st.plateOn > 0.01;
 
-  // Pour steps: step 2 (index 1) pours the soft acrylic base, step 5 (index 4)
-  // pours the silicone grid on top of it. The same cup and stream are reused;
-  // the resin and stream run grey for the acrylic and white for the silicone.
-  // Each pour fills its own layer over ~1.5 s, then the cup and stream disappear.
-  const isAcrylicPour = current === 1;
-  const isSiliconePour = current === 4;
-  const isPour = isAcrylicPour || isSiliconePour;
-  if (isPour) {
-    if (lastStep !== current) pourClock = 0;
-    pourClock += dt;
-    const fill = Math.max(0, Math.min(1, (pourClock - 0.3) / 1.5));
-    const cupOp = pourClock < 0.3 ? pourClock / 0.3 : pourClock < 1.6 ? 1 : Math.max(0, 1 - (pourClock - 1.6) / 0.4);
-    if (isAcrylicPour) { resinMat.color.set(0x9aa0a6); streamMat.color.set(0x9aa0a6); }
-    else { resinMat.color.set(0xffffff); streamMat.color.set(0xffffff); }
-    cupMat.opacity = cupOp;
-    resinMat.opacity = cupOp * 0.4;
-    cupGroup.visible = cupOp > 0.01;
-    cupGroup.rotation.z = pourClock < 0.3 ? 0 : Math.min(0.55, (pourClock - 0.3) * 1.2);
-    streamMat.opacity = pourClock < 0.3 ? 0 : pourClock < 1.6 ? 0.35 : Math.max(0, 0.35 * (1 - (pourClock - 1.6) / 0.4));
-    stream.visible = streamMat.opacity > 0.01;
-    if (isAcrylicPour) {
-      acrylicGroup.visible = fill > 0.01;
-      acrylicGroup.scale.y = Math.max(fill, 0.001);
-      pillarGroup.visible = false;
-      pillarGroup.scale.y = 0.001;
-      pillarMat.opacity = 0;
-      pillarMat.depthWrite = false;
-    } else {
-      acrylicGroup.visible = true;
-      acrylicGroup.scale.y = 1;
-      pillarGroup.visible = fill > 0.01;
-      pillarGroup.scale.y = Math.max(fill, 0.001);
-      pillarMat.opacity = fill;
-      pillarMat.depthWrite = fill > 0;
-    }
-  } else {
-    const acrylicFull = current > 1;
-    const pillarFull = current > 4;
-    acrylicGroup.visible = acrylicFull;
-    acrylicGroup.scale.y = acrylicFull ? 1 : 0.001;
-    pillarGroup.visible = pillarFull;
-    pillarGroup.scale.y = pillarFull ? 1 : 0.001;
-    pillarMat.opacity = pillarFull ? 1 : 0;
-    pillarMat.depthWrite = pillarFull;
-    cupGroup.visible = false;
-    stream.visible = false;
-  }
+  // Oven glow on the cure steps.
+  ovenGroup.visible = st.oven > 0.01;
+  const pulse = 0.75 + 0.25 * Math.sin(time * 4);
+  ovenEdgeMat.opacity = 0.6 * st.oven;
+  coilMat.opacity = st.oven;
+  coilMat.emissiveIntensity = 1.6 * st.oven * pulse;
+  ovenLight.intensity = 260 * st.oven * pulse;
 
-  // Paint step: each line appears once on the brush's first pass for that color,
-  // at 0.35 s per line (50% faster), then the brush stops. No looping.
-  // A crossing tile appears when either of the two lines crossing there is painted.
-  function setPaint(paintedCount) {
-    LINES.forEach((Ln, i) => { Ln.mat.opacity = i < paintedCount ? 1 : 0; Ln.mat.depthWrite = Ln.mat.opacity > 0; });
-    TILES.forEach((Tl) => {
-      Tl.mat.opacity = (Tl.vLine < paintedCount || Tl.hLine < paintedCount) ? 1 : 0;
-      Tl.mat.depthWrite = Tl.mat.opacity > 0;
-    });
-  }
-  if (current === 5) {
-    if (lastStep !== 5) paintClock = 0;
-    paintClock += dt;
+  // Gel: Mode 1 is one slab, Mode 2 is 16 white cubes.
+  const gelMesh = mode === 1 ? slab : pillarGroup;
+  const gelMat = mode === 1 ? slabMat : pillarMat;
+  (mode === 1 ? pillarGroup : slab).visible = false;
+  let gelFill = s.gel === 'full' ? 1 : 0;
+  let coatFill = s.coat === 'full' ? 1 : 0;
+  if (s.gel === 'pour') gelFill = pour(0xffffff, 0.35);
+  else if (s.coat === 'pour') coatFill = pour(0x1a1a1a, 0.9);
+  else { cupGroup.visible = false; stream.visible = false; }
+  // Mode 1: the cast overfills a little; the leveling plate presses it back flat
+  // and the excess squeezes out onto the mold top.
+  const press = s.level ? Math.max(0, Math.min(1, (14 - st.plateY) / 11.5)) : 0;
+  let gelScale = gelFill;
+  if (mode === 1 && s.gel === 'pour') gelScale = gelFill * 1.12;
+  if (mode === 1 && s.level) gelScale = 1.12 - 0.12 * press;
+  excess.position.y = st.moldAY + 2;
+  excessMat.opacity = mode === 1 ? Math.min(press * 1.2, 1) * st.moldAOn * 0.95 : 0;
+  excess.visible = excessMat.opacity > 0.01;
+  gelMesh.visible = gelFill > 0.01;
+  gelMesh.scale.y = Math.max(gelScale, 0.001);
+  gelMat.opacity = gelFill;
+  gelMat.depthWrite = gelFill > 0;
+
+  // Black coat: Mode 1 caps the slab, Mode 2 drapes the film over cubes and color.
+  cap.visible = mode === 1 && coatFill > 0.01;
+  capBase.visible = cap.visible;
+  capMat.opacity = 0.95 * coatFill;
+  capMat.depthWrite = coatFill > 0.99;
+  film.position.y = 0;
+  film.visible = mode === 2 && coatFill > 0.01;
+  filmMat.opacity = 0.95 * coatFill;
+
+  // Color injection (Mode 2): one line per 0.35 s, rows then columns.
+  if (s.color === 'inject') {
+    if (lastStep !== current) paintClock = 0;
+    paintClock += clockDt;
     const per = 0.35;
-    const total = LINES.length * per;
-    if (paintClock < total) {
+    if (paintClock < ORDER.length * per) {
       const idx = Math.floor(paintClock / per);
       const frac = (paintClock - idx * per) / per;
-      const L = LINES[idx];
+      const L = LINES[ORDER[idx]];
       tipMat.color.set(L.color);
-      if (L.axis === 'z') brush.position.set(L.pos, 3.3, -9.5 + frac * 19);
-      else brush.position.set(-9.5 + frac * 19, 3.3, L.pos);
+      if (L.axis === 'z') brush.position.set(L.pos, 1.4, -9.5 + frac * 19);
+      else brush.position.set(-9.5 + frac * 19, 1.4, L.pos);
       brush.visible = true;
       setPaint(idx + 1);
     } else {
       brush.visible = false;
-      setPaint(LINES.length);
+      setPaint(ORDER.length);
     }
   } else {
     brush.visible = false;
-    setPaint(current > 5 ? LINES.length : 0);
+    setPaint(s.color === 'full' ? ORDER.length : 0);
   }
   lastStep = current;
 
