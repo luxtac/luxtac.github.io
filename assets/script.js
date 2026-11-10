@@ -339,46 +339,58 @@
 })();
 
 
-/* Real-time demo feed: plays only the clip in view, Shorts style. */
+/* Real-time demo: sideways carousel, three cards in view (one on phones).
+   Arrows and dots move one card at a time and wrap around; only the cards in
+   view play, and only while the carousel is on screen. */
 (function () {
-  var feed = document.getElementById('shortsFeed');
-  if (!feed) return;
-  var shorts = Array.prototype.slice.call(feed.querySelectorAll('.short'));
-  var up = document.getElementById('shortsUp'), down = document.getElementById('shortsDown');
-  var count = document.getElementById('shortsCount');
-  var active = 0, feedVisible = false;
-  function vids(i) { return Array.prototype.slice.call(shorts[i].querySelectorAll('video')); }
+  var track = document.getElementById('demoTrack');
+  if (!track) return;
+  var slides = Array.prototype.slice.call(track.children);
+  var prev = document.getElementById('demoPrev'), next = document.getElementById('demoNext');
+  var dotsBox = document.getElementById('demoDots');
+  var idx = 0, onScreen = false;
+  function perView() { return window.matchMedia('(max-width: 760px)').matches ? 1 : 3; }
+  function maxIdx() { return Math.max(0, slides.length - perView()); }
+  var dots = [];
+  function buildDots() {
+    dotsBox.innerHTML = '';
+    dots = [];
+    for (var i = 0; i <= maxIdx(); i++) {
+      var d = document.createElement('button');
+      d.type = 'button'; d.setAttribute('aria-label', 'Show clip ' + (i + 1));
+      (function (k) { d.addEventListener('click', function () { show(k); }); })(i);
+      dotsBox.appendChild(d); dots.push(d);
+    }
+  }
   function play(v) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
   function sync() {
-    shorts.forEach(function (sh, i) {
-      vids(i).forEach(function (v) {
-        if (i === active && feedVisible) play(v);
-        else if (!v.paused) v.pause();
+    var n = perView();
+    slides.forEach(function (sl, i) {
+      var inView = i >= idx && i < idx + n;
+      sl.querySelectorAll('video').forEach(function (v) {
+        if (inView && onScreen) play(v); else if (!v.paused) v.pause();
       });
     });
-    count.textContent = (active + 1) + ' / ' + shorts.length;
-    up.disabled = active === 0;
-    down.disabled = active === shorts.length - 1;
+    dots.forEach(function (d, i) { d.classList.toggle('active', i === idx); });
   }
-  function go(i) {
-    i = Math.max(0, Math.min(shorts.length - 1, i));
-    feed.scrollTo({ top: i * feed.clientHeight, behavior: "smooth" });
-  }
-  feed.addEventListener('scroll', function () {
-    var i = Math.round(feed.scrollTop / feed.clientHeight);
-    if (i !== active) {
-      vids(i).forEach(function (v) { v.currentTime = 0; });
-      active = i;
-      sync();
-    }
-  }, { passive: true });
-  up.addEventListener('click', function () { go(active - 1); });
-  down.addEventListener('click', function () { go(active + 1); });
-  new IntersectionObserver(function (es) {
-    feedVisible = es[0].isIntersecting;
+  function show(i) {
+    var m = maxIdx();
+    idx = i < 0 ? m : i > m ? 0 : i;
+    var step = slides[0].getBoundingClientRect().width + parseFloat(getComputedStyle(track).columnGap || 0);
+    track.style.transform = 'translateX(' + (-idx * step) + 'px)';
     sync();
-  }, { threshold: 0.4 }).observe(feed);
-  sync();
+  }
+  prev.addEventListener('click', function () { show(idx - 1); });
+  next.addEventListener('click', function () { show(idx + 1); });
+  var lastN = perView();
+  window.addEventListener('resize', function () {
+    if (perView() !== lastN) { lastN = perView(); buildDots(); }
+    show(Math.min(idx, maxIdx()));
+  });
+  new IntersectionObserver(function (es) { onScreen = es[0].isIntersecting; sync(); },
+                           { threshold: 0.3 }).observe(track);
+  buildDots();
+  show(0);
 })();
 
 

@@ -249,10 +249,11 @@
     </div>
     <h3 class="mode-heading reveal reveal-up">Normal force (Mode 1)</h3>
     <figure class="reveal reveal-up char-fig">
-      <div class="fig-card paper">
-        <img src="assets/fig-char-normal.png" alt="Normal-force characterization: signal vs force and depth, force vs depth, predicted vs measured force, and per-taxel uniformity maps at 0.5, 1.5, 3, and 5.5 N">
+      <div class="fig-card dark-plot">
+        <img src="assets/fig-char-row1-dark.png" alt="Normal-force characterization: normalized signal vs force and depth, force vs depth, and predicted vs measured force">
+        <img src="assets/fig-char-row2-dark.png" alt="Normalized per-taxel uniformity maps and box plot at 0.5, 1.5, 3, and 5.5 N">
       </div>
-      <figcaption class="caption">(a) Normalized signal vs. force: s = 0.02 + 0.170F, R&sup2; = 0.999. (b) Signal vs. indentation depth with the shared optical map g. (c) Force vs. depth, loading and unloading; k<sub>n</sub> = 3.86 &plusmn; 0.09 N/mm. (d) Force predicted through F&#770; = h(g<sup>&minus;1</sup>(s)) vs. measured; RMSE 0.20 N, R&sup2; = 0.988. (e, f) Baseline-subtracted drop per taxel at 0.5, 1.5, 3, and 5.5 N, coefficient of variation 34&ndash;40%. (g, h) After normalization the variation falls to 21%, 10%, 5.9%, and 3.0%.</figcaption>
+      <figcaption class="caption">(a) Normalized signal vs. force: s = 0.02 + 0.170F, R&sup2; = 0.999. (b) Signal vs. indentation depth with the shared optical map g. (c) Force vs. depth, loading and unloading; k<sub>n</sub> = 3.86 &plusmn; 0.09 N/mm. (d) Force predicted through F&#770; = h(g<sup>&minus;1</sup>(s)) vs. measured; RMSE 0.20 N, R&sup2; = 0.988. (e) Normalized signal of each pressed taxel at 0.5, 1.5, 3, and 5.5 N. (f) Distribution over all taxels and passes: the coefficient of variation is 21%, 10%, 5.9%, and 3.0% (34&ndash;40% before normalization).</figcaption>
     </figure>
 
     <h3 class="mode-heading reveal reveal-up">Shear (Mode 2)</h3>
@@ -260,10 +261,10 @@
       <p>With the shear cartridge, the lateral force grows almost linearly with plate displacement up to the 2 mm limit, and the shear stiffness rises from 1.01 N/mm at 0.5 mm depth to 1.25 N/mm at 1.5 mm. The per-taxel model recovers the local shear with R&sup2; = 0.86 / 0.90 (x / y), an RMSE of 0.29 mm, and a median direction error of 7&deg;. Decoded as force, the lateral components reach R&sup2; = 0.98 with an RMSE of 0.15 / 0.14 N. Brightness alone memorizes contact positions; color generalizes much better, and brightness and color together are best.</p>
     </div>
     <figure class="reveal reveal-up char-fig">
-      <div class="fig-card paper">
-        <img src="assets/fig-char-shear.png" alt="Shear characterization: lateral force vs plate displacement, predicted vs true shear, held-out R squared by feature set, and shear cartridge signal vs force">
+      <div class="fig-card dark-plot">
+        <img src="assets/fig-char-row3-dark.png" alt="Shear characterization: lateral force vs plate displacement, predicted vs true shear, and shear cartridge signal vs force">
       </div>
-      <figcaption class="caption">Shear cartridge, 9 plate positions &times; 4 depths &times; 8 directions &times; 3 repeats (12 &times; 12 mm flat plate). (i) Lateral force vs. plate displacement, outward (solid) and return (dashed) strokes, by press depth. (j) Per-taxel shear estimate vs. true displacement on the held-out repeat, by depth; solid: with the brightness-based gain, dashed: without. (k) Whole-pad linear decoder with brightness (16 features), color (48), or both (64): held-out R&sup2; at the trained positions and at a position left out of training. (l) Normal response of the shear cartridge: normalized clear-channel signal vs. normal force, linear fit R&sup2; = 0.996.</figcaption>
+      <figcaption class="caption">Shear cartridge, 9 plate positions &times; 4 depths &times; 8 directions &times; 3 repeats (12 &times; 12 mm flat plate). (g) Lateral force vs. plate displacement, outward (solid) and return (dashed) strokes, by press depth. (h) Per-taxel shear estimate vs. true displacement on the held-out repeat, by depth; solid: with the brightness-based gain, dashed: without. (i) Normal response of the shear cartridge: normalized clear-channel signal vs. normal force, linear fit R&sup2; = 0.996.</figcaption>
     </figure>
     <table class="reveal reveal-up">
       <caption>Characterization summary. Normal cartridge: mean &plusmn; std over 16 taxels. Shear cartridge: held-out repeat.</caption>
@@ -295,56 +296,48 @@
     <div class="lead reveal reveal-up">
       <p>The trained policies were evaluated on two real-world manipulation tasks: peg-in-hole insertion and cube sorting. For cube sorting, the vision-only policy successfully completed 5 out of 15 trials (33.3%), while the visuotactile policy achieved 6 out of 15 successful trials (40.0%). For peg-in-hole insertion, the vision-only policy successfully completed 7 out of 15 trials (46.7%), while the LuxTac-based policy achieved 13 out of 15 successful trials (86.7%).</p>
     </div>
-    <div class="shorts reveal reveal-up">
-      <div class="shorts-feed" id="shortsFeed" tabindex="0" aria-label="Real-time demonstration clips, scroll for the next one">
-        <div class="short">
-          <div class="reel corona no-zoom">
-            <div class="reel-inner">
-              <video class="reel-top" src="assets/demo1-screen.mp4" muted loop playsinline preload="metadata"></video>
-              <video class="reel-bot" src="assets/demo1-real.mp4" muted loop playsinline preload="metadata"></video>
+    <div class="demo-carousel reveal reveal-up">
+      <button class="exp-arrow" id="demoPrev" aria-label="Previous clips">&#8249;</button>
+      <div class="demo-viewport">
+        <div class="demo-track" id="demoTrack">
+          <div class="demo-slide">
+            <div class="demo-card corona no-zoom">
+              <div class="demo-inner">
+                <video class="demo-sensor" src="assets/demo1-screen.mp4" muted loop playsinline preload="metadata"></video>
+                <video class="demo-hand" src="assets/demo1-real.mp4" muted loop playsinline preload="metadata"></video>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="short">
-          <div class="reel corona no-zoom">
-            <div class="reel-inner">
-              <video class="reel-top" src="assets/part1-screen.mp4" muted loop playsinline preload="metadata"></video>
-              <video class="reel-bot" src="assets/part1-real.mp4" muted loop playsinline preload="metadata"></video>
+          <div class="demo-slide">
+            <div class="demo-card corona no-zoom">
+              <div class="demo-inner">
+                <video class="demo-sensor" src="assets/part1-screen.mp4?v=trim7" muted loop playsinline preload="metadata"></video>
+                <video class="demo-hand" src="assets/part1-real.mp4?v=trim7" muted loop playsinline preload="metadata"></video>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="short">
-          <div class="reel corona no-zoom">
-            <div class="reel-inner">
-              <video class="reel-top" src="assets/part2-screen.mp4" muted loop playsinline preload="metadata"></video>
-              <video class="reel-bot" src="assets/part2-real.mp4" muted loop playsinline preload="metadata"></video>
+          <div class="demo-slide">
+            <div class="demo-card corona no-zoom">
+              <div class="demo-inner">
+                <video class="demo-sensor" src="assets/part2-screen.mp4" muted loop playsinline preload="metadata"></video>
+                <video class="demo-hand" src="assets/part2-real.mp4" muted loop playsinline preload="metadata"></video>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="short">
-          <div class="reel corona no-zoom">
-            <div class="reel-inner">
-              <video class="reel-top" src="assets/part3-screen.mp4" muted loop playsinline preload="metadata"></video>
-              <video class="reel-bot" src="assets/part3-real.mp4" muted loop playsinline preload="metadata"></video>
-            </div>
-          </div>
-        </div>
-        <div class="short">
-          <div class="reel corona no-zoom">
-            <div class="reel-inner">
-              <video class="reel-top" src="assets/part4-screen.mp4" muted loop playsinline preload="metadata"></video>
-              <video class="reel-bot" src="assets/part4-real.mp4" muted loop playsinline preload="metadata"></video>
+          <div class="demo-slide">
+            <div class="demo-card corona no-zoom">
+              <div class="demo-inner">
+                <video class="demo-sensor" src="assets/part4-screen.mp4" muted loop playsinline preload="metadata"></video>
+                <video class="demo-hand" src="assets/part4-real.mp4" muted loop playsinline preload="metadata"></video>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="shorts-nav">
-        <button type="button" id="shortsUp" aria-label="Previous clip"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M6 15l6-6 6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-        <span id="shortsCount">1 / 5</span>
-        <button type="button" id="shortsDown" aria-label="Next clip"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-      </div>
+      <button class="exp-arrow" id="demoNext" aria-label="Next clips">&#8250;</button>
     </div>
-    <p class="caption">Scroll on a clip for the next one. Top: the live 4&times;4 LuxTac reading. Bottom: the press that made it.</p>
+    <div class="exp-dots demo-dots" id="demoDots"></div>
+    <p class="caption">Four real-time clips, three at a time. Top: the live 4&times;4 LuxTac reading. Bottom: the hand press that made it.</p>
 
     <h2 class="reveal reveal-up exp-heading">Robot Experiments</h2>
     <div class="rainbow-bar"></div>
