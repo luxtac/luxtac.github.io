@@ -411,9 +411,6 @@
   .demo-pairs { background: #161618; border-radius: 16px; padding: 20px; }
   .demo-pairs-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
   .demo-pairs-grid video { width: 100%; height: auto; border-radius: 8px; display: block; background: #000; }
-  .demo-label { display: block; text-align: center; font-size: 13px; color: #a8a8ad; margin-top: 6px; }
-  .demo-pairs.corona:hover { scale: 1; }
-  .demo-pairs.corona:hover::before, .demo-pairs.corona:hover::after { animation-play-state: paused; }
   @media (max-width: 820px) { .demo-pairs-grid { grid-template-columns: repeat(3, 1fr); } }
 
   /* scroll reveal, same feel as the PhoTac site */
@@ -627,20 +624,20 @@
     <div class="lead reveal reveal-up">
       <p>The trained policies were evaluated on two real-world manipulation tasks: peg-in-hole insertion and cube sorting. For cube sorting, the vision-only policy successfully completed 5 out of 15 trials (33.3%), while the visuotactile policy achieved 6 out of 15 successful trials (40.0%). For peg-in-hole insertion, the vision-only policy successfully completed 7 out of 16 trials (43.8%), while the LuxTac-based policy achieved 13 out of 15 successful trials (86.7%).</p>
     </div>
-    <div class="demo-pairs corona reveal reveal-up">
+    <div class="demo-pairs reveal reveal-up">
       <div class="demo-pairs-grid">
-        <div><video src="assets/demo1-screen.mp4" controls autoplay muted loop playsinline></video><span class="demo-label">Demo 1, screen</span></div>
-        <div><video src="assets/demo2-screen.mp4" controls autoplay muted loop playsinline></video><span class="demo-label">Demo 2, screen</span></div>
-        <div><video src="assets/part1-screen.mp4" controls autoplay muted loop playsinline></video><span class="demo-label">Part 1, screen</span></div>
-        <div><video src="assets/part2-screen.mp4" controls autoplay muted loop playsinline></video><span class="demo-label">Part 2, screen</span></div>
-        <div><video src="assets/part3-screen.mp4" controls autoplay muted loop playsinline></video><span class="demo-label">Part 3, screen</span></div>
-        <div><video src="assets/part4-screen.mp4" controls autoplay muted loop playsinline></video><span class="demo-label">Part 4, screen</span></div>
-        <div><video src="assets/demo1-real.mp4" controls autoplay muted loop playsinline></video><span class="demo-label">Demo 1, real</span></div>
-        <div><video src="assets/demo2-real.mp4" controls autoplay muted loop playsinline></video><span class="demo-label">Demo 2, real</span></div>
-        <div><video src="assets/part1-real.mp4" controls autoplay muted loop playsinline></video><span class="demo-label">Part 1, real</span></div>
-        <div><video src="assets/part2-real.mp4" controls autoplay muted loop playsinline></video><span class="demo-label">Part 2, real</span></div>
-        <div><video src="assets/part3-real.mp4" controls autoplay muted loop playsinline></video><span class="demo-label">Part 3, real</span></div>
-        <div><video src="assets/part4-real.mp4" controls autoplay muted loop playsinline></video><span class="demo-label">Part 4, real</span></div>
+        <div><video src="assets/demo1-screen.mp4" controls autoplay muted loop playsinline></video></div>
+        <div><video src="assets/demo2-screen.mp4" controls autoplay muted loop playsinline></video></div>
+        <div><video src="assets/part1-screen.mp4" controls autoplay muted loop playsinline></video></div>
+        <div><video src="assets/part2-screen.mp4" controls autoplay muted loop playsinline></video></div>
+        <div><video src="assets/part3-screen.mp4" controls autoplay muted loop playsinline></video></div>
+        <div><video src="assets/part4-screen.mp4" controls autoplay muted loop playsinline></video></div>
+        <div><video src="assets/demo1-real.mp4" controls autoplay muted loop playsinline></video></div>
+        <div><video src="assets/demo2-real.mp4" controls autoplay muted loop playsinline></video></div>
+        <div><video src="assets/part1-real.mp4" controls autoplay muted loop playsinline></video></div>
+        <div><video src="assets/part2-real.mp4" controls autoplay muted loop playsinline></video></div>
+        <div><video src="assets/part3-real.mp4" controls autoplay muted loop playsinline></video></div>
+        <div><video src="assets/part4-real.mp4" controls autoplay muted loop playsinline></video></div>
       </div>
     </div>
     <figure class="reveal reveal-up">
@@ -878,6 +875,33 @@
   }
   // Static figure now: fixed parameters, no sliders, no toggles.
   render();
+})();
+</script>
+
+<script>
+(function(){
+  var stems = ['demo1','demo2','part1','part2','part3','part4'];
+  stems.forEach(function(stem){
+    var screen = document.querySelector('video[src*="' + stem + '-screen"]');
+    var real = document.querySelector('video[src*="' + stem + '-real"]');
+    if(!screen || !real) return;
+    var syncing = false;
+    function syncFrom(a, b){
+      if(syncing) return;
+      var d = a.currentTime - b.currentTime;
+      if(Math.abs(d) > 0.25){
+        syncing = true;
+        b.currentTime = a.currentTime;
+        setTimeout(function(){ syncing = false; }, 100);
+      }
+    }
+    screen.addEventListener('timeupdate', function(){ syncFrom(screen, real); });
+    real.addEventListener('timeupdate', function(){ syncFrom(real, screen); });
+    screen.addEventListener('play', function(){ if(real.paused) real.play(); });
+    real.addEventListener('play', function(){ if(screen.paused) screen.play(); });
+    screen.addEventListener('pause', function(){ if(!real.paused) real.pause(); });
+    real.addEventListener('pause', function(){ if(!screen.paused) screen.pause(); });
+  });
 })();
 </script>
 </body>
