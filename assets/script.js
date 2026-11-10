@@ -470,20 +470,20 @@ document.querySelectorAll('.pi-panel').forEach(function (panel) {
     var out = heads();
     var depth, cx, shear = 0;
     if (mode === 'normal') { depth = 10 + v * 95; cx = 400; }
-    else { shear = v * 2 - 1; depth = 45; cx = 400 + shear * 60; }
+    else { shear = v * 2 - 1; depth = 45; cx = 400 + shear * 130; }
     sk = shear;
     // gel body
     var body = surfPath(depth, cx) + ' L' + X1 + ',' + PCB + ' L' + X0 + ',' + PCB + ' Z';
     out += '<path d="' + body + '" fill="#c9c9c9"/>';
     // colored walls (shear mode): bottoms fixed, tops lean with the shear
-    var lean = shear * 75, red = 0, green = 0;
+    var lean = shear * 90, red = 0, green = 0;
     if (mode === 'shear') {
       [[250, '#e8302a'], [570, '#3aa63a']].forEach(function (w) {
-        var tx = w[0] + 30 + lean, ty = surf(tx, depth, cx) + 4;
+        var tx = w[0] + lean, ty = surf(tx, depth, cx) + 4;
         out += '<polygon points="' + (w[0] - 9) + ',' + PCB + ' ' + (w[0] + 9) + ',' + PCB + ' ' + (tx + 9) + ',' + ty.toFixed(1) + ' ' + (tx - 9) + ',' + ty.toFixed(1) + '" fill="' + w[1] + '"/>';
       });
-      red = Math.max(0.08, Math.min(1, 0.4 + 0.6 * shear));
-      green = Math.max(0.08, Math.min(1, 0.4 - 0.6 * shear));
+      red = 0.5 + 0.5 * shear;
+      green = 0.5 - 0.5 * shear;
     }
     // light rays
     var bright = mode === 'normal' ? 1 - 0.78 * v : 0.55;
@@ -503,8 +503,8 @@ document.querySelectorAll('.pi-panel').forEach(function (panel) {
       [[250, '#e8302a', red, 1], [570, '#3aa63a', green, -1]].forEach(function (w) {
         for (var i = 0; i < 3; i++) {
           var t = 0.35 + i * 0.18;
-          var wx = w[0] + (30 + lean) * t, wy = PCB + (surf(w[0] + 30 + lean, depth, cx) - PCB) * t;
-          out += arrow(wx + 10 * w[3], wy, DET.x - 18 * w[3] + i * 8 * w[3], DET.y - 8, w[1], w[2], '7 5');
+          var wx = w[0] + lean * t, wy = PCB + (surf(w[0] + lean, depth, cx) - PCB) * t;
+          out += arrow(wx + 10 * w[3], wy, DET.x - 18 * w[3] + i * 8 * w[3], DET.y - 8, w[1], Math.max(0.08, w[2]), '7 5');
         }
       });
     }
@@ -518,8 +518,8 @@ document.querySelectorAll('.pi-panel').forEach(function (panel) {
     if (mode === 'normal') {
       var ax = cx + 115;
       out += '<line x1="' + ax + '" y1="' + (icy - 80) + '" x2="' + ax + '" y2="' + (icy - 80 + 40 + 70 * v) + '" stroke="#111" stroke-width="4" marker-end="url(#pi-' + uid + '-k)"/>';
-    } else if (Math.abs(shear) > 0.05) {
-      var len = 140 * shear, ay = icy - r - 24;
+    } else if (shear !== 0) {
+      var len = (shear > 0 ? 1 : -1) * (14 + 126 * Math.abs(shear)), ay = icy - r - 24;
       out += '<line x1="' + (cx - len / 2) + '" y1="' + ay + '" x2="' + (cx + len / 2) + '" y2="' + ay + '" stroke="#111" stroke-width="4" marker-end="url(#pi-' + uid + '-k)"/>';
     }
     out = out.replace('</defs>', '<marker id="pi-' + uid + '-k" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#111"/></marker></defs>');
@@ -537,7 +537,7 @@ document.querySelectorAll('.pi-panel').forEach(function (panel) {
     } else {
       readout.innerHTML = '<span>Red light</span><div class="pi-bar red"><i style="width:' + Math.round(red * 100) + '%"></i></div><b>' + Math.round(red * 100) + '%</b>' +
         '<span>Green light</span><div class="pi-bar green"><i style="width:' + Math.round(green * 100) + '%"></i></div><b>' + Math.round(green * 100) + '%</b>' +
-        '<em class="pi-dir">' + (Math.abs(shear) < 0.05 ? 'No shear' : shear > 0 ? 'Shear to the right' : 'Shear to the left') + '</em>';
+        '<em class="pi-dir">' + (shear === 0 ? 'No shear' : shear > 0 ? 'Shear to the right' : 'Shear to the left') + '</em>';
     }
   }
   slider.addEventListener('input', render);
