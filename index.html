@@ -50,7 +50,7 @@
         <div class="stat"><b>Scalable</b><span>8&times;4, 8&times;8, 16&times;8, 16&times;16, &hellip;</span></div>
         <div class="stat"><b>R&sup2; = 0.999</b><span>linear to force</span></div>
         <div class="stat"><b>104 mN</b><span>detection threshold</span></div>
-        <div class="stat"><b>63% vs 40%</b><span>average robot success, with vs without touch</span></div>
+        <div class="stat"><b>63.3% vs 36.7%</b><span>average robot success, with vs without touch</span></div>
       </div>
     </div>
     <p class="caption">The LuxTac sensing head.</p>
@@ -341,7 +341,7 @@
     <div class="rainbow-bar"></div>
   <p class="reveal reveal-up" style="text-align:center;color:var(--muted);margin:0 0 20px;">Action Chunking Transformer policies, vision only vs. vision + LuxTac, on the two manipulation tasks.</p>
     <div class="lead reveal reveal-up">
-      <p>The trained policies were evaluated on two real-world manipulation tasks: peg-in-hole insertion and cube sorting. For cube sorting, the vision-only policy successfully completed 5 out of 15 trials (33.3%), while the visuotactile policy achieved 6 out of 15 successful trials (40.0%). For peg-in-hole insertion, the vision-only policy successfully completed 7 out of 15 trials (46.7%), while the LuxTac-based policy achieved 13 out of 15 successful trials (86.7%).</p>
+      <p>The trained policies were evaluated on two real-world manipulation tasks: peg-in-hole insertion and cube sorting. For cube sorting, the vision-only policy successfully completed 5 out of 15 trials (33.3%), while the visuotactile policy achieved 6 out of 15 successful trials (40.0%). For peg-in-hole insertion, the vision-only policy successfully completed 6 out of 15 trials (40.0%), while the LuxTac-based policy achieved 13 out of 15 successful trials (86.7%). Averaged across both tasks, the success rate rose from 36.7% with vision only to 63.3% with LuxTac.</p>
     </div>
 <div class="exp-carousel">
     <button class="exp-arrow" id="expPrev" aria-label="Previous task">&#8249;</button>
@@ -473,9 +473,9 @@
     <table class="reveal reveal-up">
       <caption>Real-world success rates, with 95% Wilson confidence intervals in brackets</caption>
       <tr><th>Task</th><th class="num">Vision only</th><th class="num">Vision + LuxTac</th></tr>
-      <tr><td>Peg-in-hole</td><td class="num">7/15 (47%) [25&ndash;70]</td><td class="num">13/15 (87%) [62&ndash;96]</td></tr>
-      <tr><td>Cube sorting</td><td class="num">5/15 (33%) [15&ndash;58]</td><td class="num">6/15 (40%) [20&ndash;64]</td></tr>
-      <tr><td><b>Average</b></td><td class="num"><b>40%</b></td><td class="num"><b>63%</b></td></tr>
+      <tr><td>Peg-in-hole</td><td class="num">6/15 (40.0%) [20&ndash;64]</td><td class="num">13/15 (86.7%) [62&ndash;96]</td></tr>
+      <tr><td>Cube sorting</td><td class="num">5/15 (33.3%) [15&ndash;58]</td><td class="num">6/15 (40.0%) [20&ndash;64]</td></tr>
+      <tr><td><b>Average</b></td><td class="num"><b>36.7%</b></td><td class="num"><b>63.3%</b></td></tr>
     </table>
   </div>
 </section>
