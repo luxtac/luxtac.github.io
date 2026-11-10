@@ -224,11 +224,21 @@
 (function () {
   var track = document.getElementById('expTrack');
   if (!track) return;
-  var slides = track.querySelectorAll('.exp-slide');
+  var slides = Array.prototype.slice.call(track.querySelectorAll('.exp-slide'));
   var counter = document.getElementById('expCounter');
   var dots = document.querySelectorAll('.exp-dots button');
-  var total = slides.length, idx = 0, inView = false;
+  var total = slides.length, idx = 0, inView = false, pos = 1, animating = false;
   var HOLD = 2200; // ms all outcome cards stay up after the longest clip ends
+
+  // True carousel: clone the first and last slides so the track always moves in
+  // the direction of the arrow pressed, even with only two slides. The clones
+  // sit at the ends; after sliding onto one, the track snaps back to the real
+  // slide with no animation, so the motion never reverses.
+  if (total > 1) {
+    track.appendChild(slides[0].cloneNode(true));
+    track.insertBefore(slides[total - 1].cloneNode(true), slides[0]);
+    track.style.transform = 'translateX(-100%)';
+  }
 
   function clipsOf(slide) { return slide.querySelectorAll('.exp-clip'); }
 
@@ -248,7 +258,14 @@
     });
   }
   function syncPlayback() {
-    slides.forEach(function (s, j) { (inView && j === idx) ? startSlide(s) : stopSlide(s); });
+    if (total < 2) {
+      slides.forEach(function (s, j) { (inView && j === idx) ? startSlide(s) : stopSlide(s); });
+      return;
+    }
+    var kids = track.children;
+    for (var k = 0; k < kids.length; k++) {
+      if (inView && k === pos) startSlide(kids[k]); else stopSlide(kids[k]);
+    }
   }
 
   slides.forEach(function (s) {
@@ -261,17 +278,31 @@
     });
   });
 
-  function show(i) {
-    idx = (i + total) % total;
-    track.style.transform = 'translateX(' + (-idx * 100) + '%)';
+  function go(dir) {
+    if (animating || total < 2) return;
+    animating = true;
+    setTimeout(function () { animating = false; }, 500);
+    pos += dir;
+    idx = (idx + dir + total) % total;
+    track.style.transform = 'translateX(' + (-pos * 100) + '%)';
     if (counter) counter.textContent = (idx + 1) + ' of ' + total;
     dots.forEach(function (d, j) { d.classList.toggle('active', j === idx); });
     syncPlayback();
   }
-  document.getElementById('expPrev').addEventListener('click', function () { show(idx - 1); });
-  document.getElementById('expNext').addEventListener('click', function () { show(idx + 1); });
+  track.addEventListener('transitionend', function () {
+    if (pos === 0 || pos === total + 1) {
+      track.style.transition = 'none';
+      pos = (pos === 0) ? total : 1;
+      track.style.transform = 'translateX(' + (-pos * 100) + '%)';
+      void track.offsetWidth;
+      track.style.transition = '';
+      syncPlayback();
+    }
+  });
+  document.getElementById('expPrev').addEventListener('click', function () { go(-1); });
+  document.getElementById('expNext').addEventListener('click', function () { go(1); });
   dots.forEach(function (d) {
-    d.addEventListener('click', function () { show(parseInt(d.getAttribute('data-i'), 10)); });
+    d.addEventListener('click', function () { go(parseInt(d.getAttribute('data-i'), 10) - idx); });
   });
 
   if ('IntersectionObserver' in window) {
@@ -280,7 +311,7 @@
       if (now !== inView) { inView = now; syncPlayback(); }
     }, { threshold: 0.25 }).observe(track.parentElement); // the viewport stays put; the track slides
   } else { inView = true; }
-  show(0);
+  syncPlayback();
 
   // enlarge a clip
   var box = document.getElementById('expLightbox');

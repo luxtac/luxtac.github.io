@@ -378,6 +378,7 @@
     animation-play-state: paused;
   }
   .corona:hover { scale: 1.05; }
+  .corona.no-zoom:hover { scale: none; }
   .corona:hover::before { animation-play-state: running; }
   .corona:hover::after { animation-play-state: running; }
   @keyframes corona-spin { to { --corona-angle: 360deg; } }
@@ -494,16 +495,8 @@
 
 /* experiment clips: success row over failure row, 3 per row */
 .exp-slide { box-sizing: border-box; padding: 8px 26px 28px; }
-.exp-row-label {
-  display: flex; align-items: center; gap: 8px; margin: 22px 0 12px;
-  font-size: 13px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted);
-}
-.exp-row-label::before { content: ""; width: 8px; height: 8px; border-radius: 50%; }
-.exp-row-label.success::before { background: #30d158; box-shadow: 0 0 8px #30d158; }
-.exp-row-label.failure::before { background: #ff3b30; box-shadow: 0 0 8px #ff3b30; }
-.exp-row-label em { font-style: normal; letter-spacing: 1px; text-transform: none; color: var(--dim); }
-.exp-row-label em::before { content: "\00b7"; margin: 0 8px 0 0; }
 .exp-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.exp-grid + .exp-grid { margin-top: 18px; }
 @media (max-width: 640px) { .exp-grid { grid-template-columns: 1fr; } }
 .exp-clip { margin: 0; min-width: 0; }
 .exp-clip figcaption { text-align: center; color: var(--muted); font-size: 13px; margin-top: 8px; }
