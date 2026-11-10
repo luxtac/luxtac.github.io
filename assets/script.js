@@ -499,3 +499,130 @@ document.querySelectorAll('.pi-panel').forEach(function (panel) {
   slider.addEventListener('input', render);
   render();
 });
+
+
+/* Hero background: an interactive taxel array. The pointer acts as the indenter:
+   taxels under it light up (normal), and moving it tilts orange shear arrows
+   along the motion, as the real sensor's live viewer does. With no pointer
+   (phones, idle) a ghost indenter drifts slowly across the array. */
+(function () {
+  var cv = document.getElementById('heroTaxels');
+  if (!cv) return;
+  var hero = cv.closest('.hero');
+  var ctx = cv.getContext('2d');
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var W = 0, H = 0, dpr = 1, cols = 0, rows = 0, cell = 0, ox = 0, oy = 0, gap = 8;
+  var P = [], SX = [], SY = [];                    // per-taxel pressure and shear (smoothed)
+  var mouse = { x: -1e4, y: -1e4, vx: 0, vy: 0, last: 0, inside: false };
+  var ghost = { x: 0, y: 0, px: 0, py: 0 };
+  var running = false, visible = true, t0 = performance.now();
+
+  function layout() {
+    var r = hero.getBoundingClientRect();
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = r.width; H = r.height;
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    cell = W < 700 ? 58 : 84;
+    cols = Math.ceil(W / cell) + 1; rows = Math.ceil(H / cell) + 1;
+    ox = (W - cols * cell) / 2; oy = (H - rows * cell) / 2;
+    var n = cols * rows;
+    P = new Float32Array(n); SX = new Float32Array(n); SY = new Float32Array(n);
+  }
+
+  hero.addEventListener('pointermove', function (e) {
+    var r = hero.getBoundingClientRect();
+    var x = e.clientX - r.left, y = e.clientY - r.top, now = performance.now();
+    if (mouse.inside) {
+      var dt = Math.max(8, now - mouse.last);
+      mouse.vx = 0.7 * mouse.vx + 0.3 * (x - mouse.x) / dt * 16;
+      mouse.vy = 0.7 * mouse.vy + 0.3 * (y - mouse.y) / dt * 16;
+    }
+    mouse.x = x; mouse.y = y; mouse.last = now; mouse.inside = true;
+    if (!running) loop();
+  });
+  hero.addEventListener('pointerleave', function () { mouse.inside = false; });
+
+  function indenter(now) {
+    // real pointer while it moved in the last 2.5 s, else the ghost
+    if (mouse.inside && now - mouse.last < 2500) {
+      mouse.vx *= 0.92; mouse.vy *= 0.92;
+      return { x: mouse.x, y: mouse.y, vx: mouse.vx, vy: mouse.vy, depth: 1 };
+    }
+    var t = (now - t0) / 1000;
+    ghost.px = ghost.x; ghost.py = ghost.y;
+    ghost.x = W * (0.5 + 0.36 * Math.sin(t * 0.23)) ;
+    ghost.y = H * (0.5 + 0.30 * Math.sin(t * 0.37 + 1.3));
+    var press = 0.55 + 0.45 * Math.sin(t * 0.9);  // slow press and release
+    return { x: ghost.x, y: ghost.y, vx: (ghost.x - ghost.px) * 6, vy: (ghost.y - ghost.py) * 6,
+             depth: Math.max(0, press) * 0.8 };
+  }
+
+  function blue(p) {                               // light to deep blue, like the viewer
+    var a = [134, 182, 239], b = [28, 92, 171];
+    return 'rgb(' + Math.round(a[0] + (b[0] - a[0]) * p) + ',' + Math.round(a[1] + (b[1] - a[1]) * p) +
+           ',' + Math.round(a[2] + (b[2] - a[2]) * p) + ')';
+  }
+
+  function draw(now) {
+    var ind = indenter(now);
+    var sig = cell * 1.3, sig2 = 2 * sig * sig;
+    ctx.clearRect(0, 0, W, H);
+    var k = 0, s = cell - gap;
+    for (var r = 0; r < rows; r++) {
+      for (var c = 0; c < cols; c++, k++) {
+        var x = ox + c * cell, y = oy + r * cell, cx = x + cell / 2, cy = y + cell / 2;
+        var dx = cx - ind.x, dy = cy - ind.y;
+        var target = ind.depth * Math.exp(-(dx * dx + dy * dy) / sig2);
+        P[k] += (target - P[k]) * 0.16;
+        SX[k] += (ind.vx * target - SX[k]) * 0.12;
+        SY[k] += (ind.vy * target - SY[k]) * 0.12;
+        var p = P[k];
+        // idle taxel: faint outline and centre dot
+        ctx.fillStyle = 'rgba(255,255,255,0.025)';
+        ctx.fillRect(x + gap / 2, y + gap / 2, s, s);
+        ctx.fillStyle = 'rgba(255,255,255,0.10)';
+        ctx.fillRect(cx - 1, cy - 1, 2, 2);
+        if (p > 0.02) {
+          ctx.globalAlpha = Math.min(1, p * 1.4);
+          ctx.fillStyle = blue(Math.min(1, p));
+          ctx.fillRect(x + gap / 2, y + gap / 2, s, s);
+          ctx.globalAlpha = 1;
+        }
+        var sl = Math.hypot(SX[k], SY[k]);
+        if (p > 0.06 && sl > 0.25) {
+          var L = Math.min(cell * 0.85, sl * 5), ux = SX[k] / sl, uy = SY[k] / sl;
+          var x0 = cx - ux * L / 2, y0 = cy - uy * L / 2, x1 = cx + ux * L / 2, y1 = cy + uy * L / 2;
+          ctx.strokeStyle = 'rgba(240,112,60,' + Math.min(1, p * 1.8).toFixed(3) + ')';
+          ctx.fillStyle = ctx.strokeStyle;
+          ctx.lineWidth = 2.6;
+          ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke();
+          var hs = 9;
+          ctx.beginPath();
+          ctx.moveTo(x1, y1);
+          ctx.lineTo(x1 - ux * hs - uy * hs * 0.55, y1 - uy * hs + ux * hs * 0.55);
+          ctx.lineTo(x1 - ux * hs + uy * hs * 0.55, y1 - uy * hs - ux * hs * 0.55);
+          ctx.closePath(); ctx.fill();
+        }
+      }
+    }
+  }
+
+  function loop() {
+    running = true;
+    (function frame(now) {
+      if (!visible) { running = false; return; }
+      draw(now);
+      requestAnimationFrame(frame);
+    })(performance.now());
+  }
+
+  layout();
+  window.addEventListener('resize', layout);
+  if (reduce) { draw(performance.now()); return; }  // static frame only
+  new IntersectionObserver(function (es) {
+    visible = es[0].isIntersecting;
+    if (visible && !running) loop();
+  }).observe(hero);
+  loop();
+})();

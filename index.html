@@ -36,6 +36,7 @@
 <hr class="rainbow-strip">
 
 <header class="hero">
+  <div class="hero-bg" aria-hidden="true"><canvas id="heroTaxels"></canvas></div>
   <div class="container">
     <p class="eyebrow">Optical tactile array with per-taxel shear sensing</p>
     <h1><span>Lux</span>Tac</h1>
@@ -258,7 +259,7 @@
 
     <h3 class="mode-heading reveal reveal-up">Shear (Mode 2)</h3>
     <div class="lead reveal reveal-up">
-      <p>With the shear cartridge, the lateral force grows almost linearly with plate displacement up to the 2 mm limit, and the shear stiffness rises from 1.01 N/mm at 0.5 mm depth to 1.25 N/mm at 1.5 mm. The per-taxel model recovers the local shear with R&sup2; = 0.86 / 0.90 (x / y), an RMSE of 0.29 mm, and a median direction error of 7&deg;. Decoded as force, the lateral components reach R&sup2; = 0.98 with an RMSE of 0.15 / 0.14 N. Brightness alone memorizes contact positions; color generalizes much better, and brightness and color together are best.</p>
+      <p>With the shear cartridge, the lateral force grows almost linearly with plate displacement up to the 2 mm limit, and the shear stiffness rises from 1.01 N/mm at 0.5 mm depth to 1.25 N/mm at 1.5 mm. The per-taxel model recovers the local shear with R&sup2; = 0.86 / 0.90 (x / y), an RMSE of 0.29 mm, and a median direction error of 7&deg;. Decoded as force, the lateral components reach R&sup2; = 0.98 with an RMSE of 0.15 / 0.14 N.</p>
     </div>
     <figure class="reveal reveal-up char-fig">
       <div class="fig-card dark-plot">
@@ -293,9 +294,6 @@
   <div class="container">
     <h2 class="reveal reveal-up">Real-time Demonstration</h2>
     <div class="rainbow-bar"></div>
-    <div class="lead reveal reveal-up">
-      <p>The trained policies were evaluated on two real-world manipulation tasks: peg-in-hole insertion and cube sorting. For cube sorting, the vision-only policy successfully completed 5 out of 15 trials (33.3%), while the visuotactile policy achieved 6 out of 15 successful trials (40.0%). For peg-in-hole insertion, the vision-only policy successfully completed 7 out of 15 trials (46.7%), while the LuxTac-based policy achieved 13 out of 15 successful trials (86.7%).</p>
-    </div>
     <div class="demo-carousel reveal reveal-up">
       <button class="exp-arrow" id="demoPrev" aria-label="Previous clips">&#8249;</button>
       <div class="demo-viewport">
@@ -342,6 +340,9 @@
     <h2 class="reveal reveal-up exp-heading">Robot Experiments</h2>
     <div class="rainbow-bar"></div>
   <p class="reveal reveal-up" style="text-align:center;color:var(--muted);margin:0 0 20px;">Action Chunking Transformer policies, vision only vs. vision + LuxTac, on the two manipulation tasks.</p>
+    <div class="lead reveal reveal-up">
+      <p>The trained policies were evaluated on two real-world manipulation tasks: peg-in-hole insertion and cube sorting. For cube sorting, the vision-only policy successfully completed 5 out of 15 trials (33.3%), while the visuotactile policy achieved 6 out of 15 successful trials (40.0%). For peg-in-hole insertion, the vision-only policy successfully completed 7 out of 15 trials (46.7%), while the LuxTac-based policy achieved 13 out of 15 successful trials (86.7%).</p>
+    </div>
 <div class="exp-carousel">
     <button class="exp-arrow" id="expPrev" aria-label="Previous task">&#8249;</button>
     <div class="exp-viewport">
