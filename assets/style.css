@@ -633,3 +633,15 @@
   .pi-bar i { display: block; height: 100%; background: #f2f2f2; border-radius: inherit; transition: width .15s; }
   .pi-bar.red i { background: #e8302a; }
   .pi-bar.green i { background: #3aa63a; }
+
+  .pi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+  .pi-panel .pi-slider { justify-content: center; margin-top: 14px; }
+  .pi-panel svg { display: block; width: 100%; height: auto; }
+  .principle-fig { max-width: 1120px; }
+  @media (max-width: 820px) { .pi-grid { grid-template-columns: 1fr; } }
+  .pi-panel .pi-readout { display: grid; grid-template-columns: auto 1fr 3.2em; gap: 8px 12px; align-items: center; max-width: 380px; margin: 12px auto 0; }
+  .pi-panel .pi-readout span { text-align: left; white-space: nowrap; }
+  .pi-panel .pi-readout b { min-width: 0; text-align: right; }
+  .pi-panel .pi-bar { width: auto; }
+  .pi-dir { grid-column: 1 / -1; text-align: center; font-style: normal; font-weight: 700; color: #f2f2f2; }
+  .converter-note { text-align: left; color: inherit; font-size: 16px; margin: 14px 0 0; }

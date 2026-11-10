@@ -96,18 +96,19 @@
       </div>
     </div>
     <figure class="reveal reveal-up principle-fig">
-      <div class="pi-controls">
-        <div class="pi-modes" role="group" aria-label="Load type">
-          <button type="button" class="active" data-pi="normal">Normal force</button>
-          <button type="button" data-pi="shear">Shear force</button>
+      <div class="pi-grid">
+        <div class="pi-panel" data-pi="normal">
+          <div class="fig-card paper"><svg viewBox="0 0 800 430" role="img" aria-label="Interactive cross-section of one LuxTac taxel under normal force"></svg></div>
+          <label class="pi-slider"><span>Press</span><input type="range" min="0" max="100" value="55" aria-label="Normal force"></label>
+          <div class="pi-readout"></div>
         </div>
-        <label class="pi-slider"><span id="piLabel">Press</span><input type="range" id="piForce" min="0" max="100" value="55"></label>
+        <div class="pi-panel" data-pi="shear">
+          <div class="fig-card paper"><svg viewBox="0 0 800 430" role="img" aria-label="Interactive cross-section of one LuxTac taxel under shear force"></svg></div>
+          <label class="pi-slider"><span>Shear &larr; &rarr;</span><input type="range" min="0" max="100" value="80" aria-label="Shear direction"></label>
+          <div class="pi-readout"></div>
+        </div>
       </div>
-      <div class="fig-card paper">
-        <svg id="piSvg" viewBox="0 0 800 430" role="img" aria-label="Interactive cross-section of one LuxTac taxel"></svg>
-      </div>
-      <div class="pi-readout" id="piReadout"></div>
-      <figcaption class="caption">Drag the slider. (a) Normal loading produces symmetric deformation, altering the optical paths between the LEDs and the photodetector. (b) Shear loading produces asymmetric deformation, changing the light propagation and intensity received by the photodetector. Interactive version of the paper's figure.</figcaption>
+      <figcaption class="caption">Drag the sliders. (a) Normal loading produces symmetric deformation, altering the optical paths between the LEDs and the photodetector. (b) Shear loading produces asymmetric deformation, changing the light propagation and intensity received by the photodetector. Interactive version of the paper's figure.</figcaption>
     </figure>
   </div>
 </section>
@@ -127,6 +128,7 @@
           <img src="assets/pcb-4b4.jpg" alt="3D CAD render of the 4 by 4 sensing head, photodiodes and LEDs on the flexible PCB">
         </div>
         <figcaption class="caption">The 4&times;4 sensing head. Sixteen TCS34725 RGBC converters and nine LEDs on the flexible PCB.</figcaption>
+        <p class="reveal reveal-up converter-note">Each converter integrates an IR-blocking filter, a photodiode array, and a 16-bit integrating ADC per channel, so the analog signal never leaves the package. All 16 converters share one fixed I&sup2;C address, so two TCA9548A switches give each sensor its own bus segment with dedicated 4.7 k&Omega; pull-ups.</p>
       </figure>
       <div>
         <ul class="spec-list reveal reveal-up">
@@ -138,7 +140,6 @@
           <li><b>Readout:</b> Teensy 4.1, two TCA9548A I&sup2;C switches on two independent buses</li>
           <li><b>Frame rate:</b> 100 Hz over USB serial; 2.4 ms integration, 4&times; gain</li>
         </ul>
-        <p class="reveal reveal-up" style="margin-top:18px;">Each converter integrates an IR-blocking filter, a photodiode array, and a 16-bit integrating ADC per channel, so the analog signal never leaves the package. All 16 converters share one fixed I&sup2;C address, so two TCA9548A switches give each sensor its own bus segment with dedicated 4.7 k&Omega; pull-ups.</p>
       </div>
     </div>
 

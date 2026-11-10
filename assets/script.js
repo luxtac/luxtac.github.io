@@ -386,14 +386,12 @@
    Normal mode: the slider presses the indenter down; returned white light falls.
    Shear mode: the slider drags the indenter left or right; the colored walls tilt
    and the detector sees more red (right) or more green (left). */
-(function () {
-  var svg = document.getElementById('piSvg');
-  if (!svg) return;
-  var slider = document.getElementById('piForce');
-  var label = document.getElementById('piLabel');
-  var readout = document.getElementById('piReadout');
-  var btns = document.querySelectorAll('.pi-modes button');
-  var mode = 'normal';
+document.querySelectorAll('.pi-panel').forEach(function (panel) {
+  var svg = panel.querySelector('svg');
+  var slider = panel.querySelector('input');
+  var readout = panel.querySelector('.pi-readout');
+  var mode = panel.dataset.pi;
+  var uid = mode;
   var X0 = 60, X1 = 740, TOP = 170, PCB = 340, DET = { x: 400, y: 318 };
   var LEDS = [190, 610];
 
@@ -406,11 +404,11 @@
   function arrow(x1, y1, x2, y2, color, op, dash) {
     return '<line x1="' + x1.toFixed(1) + '" y1="' + y1.toFixed(1) + '" x2="' + x2.toFixed(1) + '" y2="' + y2.toFixed(1) +
       '" stroke="' + color + '" stroke-width="3" stroke-dasharray="' + (dash || '9 6') + '" opacity="' + op.toFixed(2) +
-      '" marker-end="url(#pi-head-' + (color === '#ffffff' ? 'w' : color === '#e8302a' ? 'r' : 'g') + ')"/>';
+      '" marker-end="url(#pi-' + uid + '-' + (color === '#ffffff' ? 'w' : color === '#e8302a' ? 'r' : 'g') + ')"/>';
   }
   function heads() {
     return '<defs>' + [['w', '#ffffff'], ['r', '#e8302a'], ['g', '#3aa63a']].map(function (h) {
-      return '<marker id="pi-head-' + h[0] + '" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="' + h[1] + '"/></marker>';
+      return '<marker id="pi-' + uid + '-' + h[0] + '" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="' + h[1] + '"/></marker>';
     }).join('') + '</defs>';
   }
   function render() {
@@ -464,12 +462,12 @@
     // force arrow
     if (mode === 'normal') {
       var ax = cx + 115;
-      out += '<line x1="' + ax + '" y1="' + (icy - 80) + '" x2="' + ax + '" y2="' + (icy - 80 + 40 + 70 * v) + '" stroke="#111" stroke-width="4" marker-end="url(#pi-head-k)"/>';
+      out += '<line x1="' + ax + '" y1="' + (icy - 80) + '" x2="' + ax + '" y2="' + (icy - 80 + 40 + 70 * v) + '" stroke="#111" stroke-width="4" marker-end="url(#pi-' + uid + '-k)"/>';
     } else if (Math.abs(shear) > 0.05) {
       var len = 140 * shear, ay = icy - r - 24;
-      out += '<line x1="' + (cx - len / 2) + '" y1="' + ay + '" x2="' + (cx + len / 2) + '" y2="' + ay + '" stroke="#111" stroke-width="4" marker-end="url(#pi-head-k)"/>';
+      out += '<line x1="' + (cx - len / 2) + '" y1="' + ay + '" x2="' + (cx + len / 2) + '" y2="' + ay + '" stroke="#111" stroke-width="4" marker-end="url(#pi-' + uid + '-k)"/>';
     }
-    out = out.replace('</defs>', '<marker id="pi-head-k" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#111"/></marker></defs>');
+    out = out.replace('</defs>', '<marker id="pi-' + uid + '-k" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#111"/></marker></defs>');
     // LEDs, detector, PCB
     LEDS.forEach(function (lx) { out += '<rect x="' + (lx - 38) + '" y="' + (PCB - 22) + '" width="76" height="22" rx="5" fill="#f5c518"/>'; });
     out += '<rect x="' + (DET.x - 62) + '" y="' + (PCB - 30) + '" width="124" height="30" fill="#5f5f5f"/>';
@@ -479,23 +477,13 @@
     svg.innerHTML = out;
 
     if (mode === 'normal') {
-      label.textContent = 'Press';
-      readout.innerHTML = '<span>Light at the detector</span><div class="pi-bar"><i style="width:' + Math.round(bright * 100) + '%"></i></div><b>' + Math.round(bright * 100) + '%</b>';
+      readout.innerHTML = '<span>Light at detector</span><div class="pi-bar"><i style="width:' + Math.round(bright * 100) + '%"></i></div><b>' + Math.round(bright * 100) + '%</b>';
     } else {
-      label.textContent = 'Shear  ←  →';
-      readout.innerHTML = '<span>Red</span><div class="pi-bar red"><i style="width:' + Math.round(red * 100) + '%"></i></div>' +
-        '<span>Green</span><div class="pi-bar green"><i style="width:' + Math.round(green * 100) + '%"></i></div>' +
-        '<b>' + (Math.abs(shear) < 0.05 ? 'no shear' : shear > 0 ? 'shear right' : 'shear left') + '</b>';
+      readout.innerHTML = '<span>Red light</span><div class="pi-bar red"><i style="width:' + Math.round(red * 100) + '%"></i></div><b>' + Math.round(red * 100) + '%</b>' +
+        '<span>Green light</span><div class="pi-bar green"><i style="width:' + Math.round(green * 100) + '%"></i></div><b>' + Math.round(green * 100) + '%</b>' +
+        '<em class="pi-dir">' + (Math.abs(shear) < 0.05 ? 'No shear' : shear > 0 ? 'Shear to the right' : 'Shear to the left') + '</em>';
     }
   }
-  btns.forEach(function (b) {
-    b.addEventListener('click', function () {
-      mode = b.dataset.pi;
-      btns.forEach(function (o) { o.classList.toggle('active', o === b); });
-      slider.value = mode === 'normal' ? 55 : 80;
-      render();
-    });
-  });
   slider.addEventListener('input', render);
   render();
-})();
+});
