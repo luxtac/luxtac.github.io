@@ -337,8 +337,8 @@
           <div class="demo-slide">
             <div class="demo-card corona no-zoom">
               <div class="demo-inner">
-                <video class="demo-sensor" src="assets/gripper-shear-screen.mp4" muted loop playsinline preload="metadata"></video>
-                <video class="demo-hand" src="assets/gripper-shear-real.mp4" muted loop playsinline preload="metadata"></video>
+                <video class="demo-sensor" src="assets/gripper-shear-screen.mp4?v=cut" muted loop playsinline preload="metadata"></video>
+                <video class="demo-hand" src="assets/gripper-shear-real.mp4?v=cut" muted loop playsinline preload="metadata"></video>
               </div>
             </div>
             <p class="demo-label">Gripper testing: shear</p>
@@ -346,8 +346,8 @@
           <div class="demo-slide">
             <div class="demo-card corona no-zoom">
               <div class="demo-inner">
-                <video class="demo-sensor" src="assets/gripper-normal1-screen.mp4" muted loop playsinline preload="metadata"></video>
-                <video class="demo-hand" src="assets/gripper-normal1-real.mp4" muted loop playsinline preload="metadata"></video>
+                <video class="demo-sensor" src="assets/gripper-normal1-screen.mp4?v=cut" muted loop playsinline preload="metadata"></video>
+                <video class="demo-hand" src="assets/gripper-normal1-real.mp4?v=cut" muted loop playsinline preload="metadata"></video>
               </div>
             </div>
             <p class="demo-label">Gripper testing: normal 1</p>
@@ -355,18 +355,36 @@
           <div class="demo-slide">
             <div class="demo-card corona no-zoom">
               <div class="demo-inner">
-                <video class="demo-sensor" src="assets/gripper-normal2-screen.mp4" muted loop playsinline preload="metadata"></video>
-                <video class="demo-hand" src="assets/gripper-normal2-real.mp4" muted loop playsinline preload="metadata"></video>
+                <video class="demo-sensor" src="assets/gripper-press-screen.mp4?v=cut" muted loop playsinline preload="metadata"></video>
+                <video class="demo-hand" src="assets/gripper-press-real.mp4?v=cut" muted loop playsinline preload="metadata"></video>
               </div>
             </div>
             <p class="demo-label">Gripper testing: normal 2</p>
+          </div>
+          <div class="demo-slide">
+            <div class="demo-card corona no-zoom">
+              <div class="demo-inner">
+                <video class="demo-sensor" src="assets/gripper-roll-screen.mp4?v=cut" muted loop playsinline preload="metadata"></video>
+                <video class="demo-hand" src="assets/gripper-roll-real.mp4?v=cut" muted loop playsinline preload="metadata"></video>
+              </div>
+            </div>
+            <p class="demo-label">Gripper testing: normal 3</p>
+          </div>
+          <div class="demo-slide">
+            <div class="demo-card corona no-zoom">
+              <div class="demo-inner">
+                <video class="demo-sensor" src="assets/gripper-tap2-screen.mp4?v=cut" muted loop playsinline preload="metadata"></video>
+                <video class="demo-hand" src="assets/gripper-tap2-real.mp4?v=cut" muted loop playsinline preload="metadata"></video>
+              </div>
+            </div>
+            <p class="demo-label">Gripper testing: normal 4</p>
           </div>
         </div>
       </div>
       <button class="exp-arrow" id="demoNext" aria-label="Next clips">&#8250;</button>
     </div>
     <div class="exp-dots demo-dots" id="demoDots"></div>
-    <p class="caption">Seven real-time clips, three at a time. Top: the live LuxTac reading. Bottom: the press that made it.</p>
+    <p class="caption">Nine real-time clips, three at a time. Top: the live LuxTac reading. Bottom: the press that made it.</p>
 
     <h2 class="reveal reveal-up exp-heading" id="simulation">Simulation</h2>
     <div class="rainbow-bar"></div>
@@ -397,7 +415,7 @@
           <div class="exp-grid">
               <figure class="exp-clip" data-outcome="success">
                 <div class="exp-frame corona">
-                  <video muted playsinline preload="metadata" src="assets/cube-with-1.mp4"></video>
+                  <video muted playsinline preload="metadata" src="assets/cube-with-1.mp4?v=blue"></video>
                   <div class="exp-end" aria-hidden="true"><span>Success</span></div>
                   <button class="exp-zoom" type="button" aria-label="Enlarge Vision + LuxTac clip 1"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
                 </div>
@@ -405,7 +423,7 @@
               </figure>
               <figure class="exp-clip" data-outcome="success">
                 <div class="exp-frame corona">
-                  <video muted playsinline preload="metadata" src="assets/cube-with-2.mp4"></video>
+                  <video muted playsinline preload="metadata" src="assets/cube-with-2.mp4?v=blue"></video>
                   <div class="exp-end" aria-hidden="true"><span>Success</span></div>
                   <button class="exp-zoom" type="button" aria-label="Enlarge Vision + LuxTac clip 2"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
                 </div>
@@ -413,7 +431,7 @@
               </figure>
               <figure class="exp-clip" data-outcome="success">
                 <div class="exp-frame corona">
-                  <video muted playsinline preload="metadata" src="assets/cube-with-3.mp4"></video>
+                  <video muted playsinline preload="metadata" src="assets/cube-with-3.mp4?v=blue"></video>
                   <div class="exp-end" aria-hidden="true"><span>Success</span></div>
                   <button class="exp-zoom" type="button" aria-label="Enlarge Vision + LuxTac clip 3"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
                 </div>
@@ -453,7 +471,7 @@
           <div class="exp-grid">
               <figure class="exp-clip" data-outcome="success">
                 <div class="exp-frame corona">
-                  <video muted playsinline preload="metadata" src="assets/peg-with-1.mp4"></video>
+                  <video muted playsinline preload="metadata" src="assets/peg-with-1.mp4?v=blue"></video>
                   <div class="exp-end" aria-hidden="true"><span>Success</span></div>
                   <button class="exp-zoom" type="button" aria-label="Enlarge Vision + LuxTac clip 1"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
                 </div>
@@ -461,7 +479,7 @@
               </figure>
               <figure class="exp-clip" data-outcome="success">
                 <div class="exp-frame corona">
-                  <video muted playsinline preload="metadata" src="assets/peg-with-2.mp4"></video>
+                  <video muted playsinline preload="metadata" src="assets/peg-with-2.mp4?v=blue"></video>
                   <div class="exp-end" aria-hidden="true"><span>Success</span></div>
                   <button class="exp-zoom" type="button" aria-label="Enlarge Vision + LuxTac clip 2"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
                 </div>
@@ -469,7 +487,7 @@
               </figure>
               <figure class="exp-clip" data-outcome="success">
                 <div class="exp-frame corona">
-                  <video muted playsinline preload="metadata" src="assets/peg-with-3.mp4"></video>
+                  <video muted playsinline preload="metadata" src="assets/peg-with-3.mp4?v=blue"></video>
                   <div class="exp-end" aria-hidden="true"><span>Success</span></div>
                   <button class="exp-zoom" type="button" aria-label="Enlarge Vision + LuxTac clip 3"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
                 </div>

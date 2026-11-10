@@ -195,7 +195,7 @@
 })();
 
 (function(){
-  var stems = ['demo1','part1','part2','part3','part4','gripper-shear','gripper-normal1','gripper-normal2'];
+  var stems = ['demo1','part1','part2','part3','part4','gripper-shear','gripper-normal1','gripper-press','gripper-roll','gripper-tap2'];
   function play(v){ var p = v.play(); if (p && p.catch) p.catch(function(){}); }
   stems.forEach(function(stem){
     var screen = document.querySelector('video[src*="' + stem + '-screen"]');
