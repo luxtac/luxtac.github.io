@@ -811,3 +811,25 @@ a.link-btn:hover { background: #fff; }
   .hero .affiliation-logo { margin: 72px auto 80px; display: flex; justify-content: center; }
   .hero .affiliation-logo img { height: 64px; width: auto; max-width: 90%; object-fit: contain; display: block; }
   @media (max-width: 720px) { .hero .affiliation-logo { margin: 44px auto 48px; } .hero .affiliation-logo img { height: auto; width: 85%; } }
+
+  /* fit everything before the abstract into the first screen */
+  .hero { padding: 28px 24px 28px; }
+  .hero .eyebrow { margin-bottom: 6px; }
+  .hero h1 { font-size: 64px; margin-bottom: 6px; }
+  .hero .paper-title { font-size: 22px; margin-top: 2px; }
+  .hero .authors { margin: 12px auto 14px; font-size: 16px; gap: 4px 18px; }
+  .hero .link-buttons { margin-bottom: 0; }
+  .hero .affiliation-logo { margin: 26px auto 22px; }
+  .hero .affiliation-logo img { height: 52px; }
+  .hero .rainbow-bar { margin-bottom: 20px; }
+  .hero .hero-grid { margin-top: 0; }
+  /* short screens (laptops): tighten a little more */
+  @media (max-height: 820px) and (min-width: 721px) {
+    .hero { padding-top: 16px; padding-bottom: 16px; }
+    .hero h1 { font-size: 54px; }
+    .hero .paper-title { font-size: 19px; }
+    .hero .authors { margin: 8px auto 10px; font-size: 15px; }
+    .hero .affiliation-logo { margin: 16px auto 14px; }
+    .hero .affiliation-logo img { height: 44px; }
+    .hero .rainbow-bar { margin-bottom: 14px; }
+  }
