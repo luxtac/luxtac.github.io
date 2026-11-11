@@ -1354,7 +1354,25 @@ window.addEventListener('resize', () => {
   renderer.setSize(stage.clientWidth, stage.clientHeight);
 });
 }
-document.querySelectorAll('.fab-anim[data-mode]').forEach((root) => buildFab(root, Number(root.dataset.mode)));
+// Without WebGL (hardware acceleration off, blocked GPU) show a still image instead of an empty box.
+document.querySelectorAll('.fab-anim[data-mode]').forEach((root) => {
+  const mode = Number(root.dataset.mode);
+  try { buildFab(root, mode); }
+  catch (err) {
+    console.warn('LuxTac fabrication animation needs WebGL:', err);
+    const stage = root.querySelector('.fab-stage');
+    stage.innerHTML = '';
+    const img = document.createElement('img');
+    img.src = mode === 2 ? 'assets/stack-4b4-shear.jpg' : 'assets/stack-4b4.jpg';
+    img.alt = mode === 2 ? 'Mode 2 stack (still image)' : 'Mode 1 stack (still image)';
+    img.className = 'fab-fallback-img';
+    const note = document.createElement('p');
+    note.className = 'fab-fallback-note';
+    note.textContent = 'The interactive 3D fabrication steps need WebGL. Turn on hardware acceleration in your browser to see them.';
+    stage.append(img, note);
+    root.querySelectorAll('.fab-controls').forEach((c) => { c.style.display = 'none'; });
+  }
+});
 </script>
 </body>
 </html>

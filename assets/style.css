@@ -800,3 +800,9 @@ a.link-btn:hover { background: #fff; }
   .section table { margin-top: 36px; margin-bottom: 36px; }
   .section .container > * + *:not(.rainbow-bar) { margin-top: 28px; }
   @media (max-width: 720px) { .section { padding: 64px 16px; } }
+
+  /* fabrication: still image when WebGL is unavailable */
+  .fab-stage .fab-fallback-img { display: block; width: 100%; height: 100%; object-fit: contain; background: #4a4c53; }
+  .fab-stage { position: relative; }
+  .fab-stage .fab-fallback-note { position: absolute; left: 0; right: 0; bottom: 8px; margin: 0; padding: 0 16px;
+    text-align: center !important; text-align-last: center; font-size: 13px; color: #e6e6ea; text-shadow: 0 1px 3px #000; }
