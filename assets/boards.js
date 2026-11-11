@@ -1,7 +1,6 @@
 // Board carousel ("One design, many sizes"), 3D viewer modal, and Gerber download.
 const root = document.querySelector('.board-carousel');
 const cards = root ? [...root.querySelectorAll('.board-card')] : [];
-const full = document.getElementById('boardFull'), cap = document.getElementById('boardCaption');
 const dots = root ? root.querySelector('.bc-dots') : null;
 const toast = document.getElementById('toast');
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -30,9 +29,7 @@ function layout() {
     c.querySelectorAll('button').forEach(b => b.tabIndex = o === 0 ? 0 : -1);
   });
   [...dots.children].forEach((d, i) => d.setAttribute('aria-selected', i === active ? 'true' : 'false'));
-  const c = cards[active];
-  if (full) { full.src = c.dataset.full; full.style.width = c.dataset.width + '%'; }
-  if (cap) cap.innerHTML = c.dataset.caption + ' Shown at the same scale.';
+
 }
 function go(i) { active = (i + cards.length) % cards.length; layout(); }
 function auto() {
