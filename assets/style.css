@@ -833,10 +833,3 @@ a.link-btn:hover { background: #fff; }
     .hero .affiliation-logo img { height: 44px; }
     .hero .rainbow-bar { margin-bottom: 14px; }
   }
-
-  /* paper thumbnails in dark mode: invert lightness, keep hues */
-  .paper-strip img {
-    filter: invert(0.9) hue-rotate(180deg) contrast(0.95);
-    background: #fff; border: 1px solid #c8c8cc;  /* inverted by the filter into a dark edge */
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6);
-  }
