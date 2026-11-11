@@ -808,6 +808,6 @@ a.link-btn:hover { background: #fff; }
     text-align: center !important; text-align-last: center; font-size: 13px; color: #e6e6ea; text-shadow: 0 1px 3px #000; }
 
   /* Purdue logo under the link buttons */
-  .hero .affiliation-logo { margin: 72px auto 80px; display: flex; justify-content: center; }
-  .hero .affiliation-logo img { height: 80px; width: auto; max-width: 90%; object-fit: contain; display: block; }
-  @media (max-width: 720px) { .hero .affiliation-logo { margin: 44px auto 48px; } .hero .affiliation-logo img { height: auto; width: 85%; } }
+  .hero .affiliation-logo { margin: 44px auto 48px; display: flex; justify-content: center; }
+  .hero .affiliation-logo img { height: 44px; width: auto; display: block; opacity: 0.95; }
+  @media (max-width: 720px) { .hero .affiliation-logo { margin: 28px auto 24px; } .hero .affiliation-logo img { height: 36px; } }
