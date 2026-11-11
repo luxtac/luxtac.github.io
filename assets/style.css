@@ -958,3 +958,9 @@ a.link-btn:hover { background: #fff; }
   @media (prefers-reduced-motion: reduce) {
     .board-card, .board-card:hover, .board-card::before, .board-thumb::after { animation: none; transition: none; }
   }
+
+  /* hero: "Get Your Sensing Pad" jumps to the board carousel */
+  .link-btn.get-pad { color: #fff; background: linear-gradient(#141417, #141417) padding-box, var(--rainbow) border-box;
+    border: 2px solid transparent; padding: 8px 18px; transition: transform .15s ease, box-shadow .25s ease; }
+  .link-btn.get-pad:hover { transform: translateY(-2px); box-shadow: -8px 0 22px rgba(255,45,120,.35), 8px 0 22px rgba(10,165,255,.35); }
+  #get-pad { scroll-margin-top: 96px; }
