@@ -247,36 +247,63 @@
     <div class="scales reveal reveal-up">
       <h3>One design, many sizes</h3>
       <p>Every taxel is an independent digital detector on its own bus segment, so the same taxel cell tiles into arrays of other sizes by adding sensors and multiplexers, without changing the readout scheme.</p>
-      <div class="scale-chips">
-        <span class="scale-chip">8&times;4</span>
-        <span class="scale-chip">8&times;8</span>
-        <span class="scale-chip">16&times;8</span>
-        <span class="scale-chip">16&times;16</span>
-        <span class="scale-chip more">&hellip;</span>
-      </div>
     </div>
 
-    <div class="board-picker reveal reveal-up" role="radiogroup" aria-label="Board sizes">
-      <button type="button" class="board-card is-selected" role="radio" aria-checked="true" data-full="assets/boards/board-4x4-full.png" data-width="54.3" data-caption="The 4&times;4 prototype characterized in this work: 16 RGBC taxels at a 4.42 &times; 4.80 mm pitch and two TCA9548A I&sup2;C switches on the flexible PCB.">
-        <span class="board-thumb"><img src="assets/boards/board-4x4-head.png" alt="4&times;4 sensing head, KiCad layout" style="height:125px" loading="lazy"></span>
-        <span class="board-name">4&times;4</span>
-        <span class="board-sub">16 taxels &middot; prototype</span>
-      </button>
-      <button type="button" class="board-card" role="radio" aria-checked="false" data-full="assets/boards/board-4x8-full.png" data-width="87.6" data-caption="The 4&times;8 board: 32 RGBC taxels at the same pitch and four TCA9548A I&sup2;C switches, with the same readout scheme. In fabrication.">
-        <span class="board-thumb"><img src="assets/boards/board-4x8-head.png" alt="4&times;8 sensing head, KiCad layout" style="height:180px" loading="lazy"></span>
-        <span class="board-name">4&times;8</span>
-        <span class="board-sub">32 taxels &middot; in fabrication</span>
-      </button>
-      <button type="button" class="board-card" role="radio" aria-checked="false" data-full="assets/boards/board-8x8-full.png" data-width="100" data-caption="The 8&times;8 board: 64 RGBC taxels at the same pitch and eight TCA9548A I&sup2;C switches, with the same readout scheme. Design.">
-        <span class="board-thumb"><img src="assets/boards/board-8x8-head.png" alt="8&times;8 sensing head, KiCad layout" style="height:200px" loading="lazy"></span>
-        <span class="board-name">8&times;8</span>
-        <span class="board-sub">64 taxels &middot; design</span>
-      </button>
+    <div class="board-carousel reveal reveal-up" aria-roledescription="carousel" aria-label="Board sizes">
+      <button type="button" class="bc-nav prev" aria-label="Previous board">&#8249;</button>
+      <div class="bc-track">
+        <article class="board-card" data-board="4x4" data-full="assets/boards/board-4x4-full.png" data-width="54.3" data-caption="The 4&times;4 prototype characterized in this work: 16 RGBC taxels at a 4.42 &times; 4.80 mm pitch and two TCA9548A I&sup2;C switches on the flexible PCB."
+          data-model="assets/models/board-4x4.glb" data-tex="assets/boards/board-4x4-tex.jpg" data-frame="186.7662,38.7096,0" data-pad="163.3,9.8,182.2,29.4"
+          data-gerber="assets/gerbers/luxtac-4x4-gerbers.zip">
+          <div class="board-thumb"><img src="assets/boards/board-4x4-head.png" alt="4&times;4 sensing pad, KiCad layout" loading="lazy" draggable="false"></div>
+          <div class="board-meta"><span class="board-name">4&times;4</span><span class="board-sub">16 taxels &middot; prototype</span></div>
+          <div class="board-actions">
+            <button type="button" class="board-btn view" data-act="view"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 3 7v10l9 5 9-5V7l-9-5Zm0 2.3L18.6 8 12 11.7 5.4 8 12 4.3ZM5 9.7l6 3.4v6.6l-6-3.4V9.7Zm8 10v-6.6l6-3.4v6.6l-6 3.4Z"/></svg>View</button>
+            <button type="button" class="board-btn download" data-act="download"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 3h2v9.6l3.3-3.3 1.4 1.4L12 16.4l-5.7-5.7 1.4-1.4 3.3 3.3V3ZM4 18h16v2H4v-2Z"/></svg>Download</button>
+          </div>
+        </article>
+        <article class="board-card" data-board="4x8" data-full="assets/boards/board-4x8-full.png" data-width="87.6" data-caption="The 4&times;8 board: 32 RGBC taxels at the same pitch and four TCA9548A I&sup2;C switches, with the same readout scheme. In fabrication."
+          data-model="assets/models/board-4x8.glb" data-tex="assets/boards/board-4x8-tex.jpg" data-frame="301.2948,43.9166,0" data-pad="280.3,2.6,299.0,41.3"
+          data-gerber="assets/gerbers/luxtac-4x8-gerbers.zip">
+          <div class="board-thumb"><img src="assets/boards/board-4x8-head.png" alt="4&times;8 sensing pad, KiCad layout" loading="lazy" draggable="false"></div>
+          <div class="board-meta"><span class="board-name">4&times;8</span><span class="board-sub">32 taxels &middot; in fabrication</span></div>
+          <div class="board-actions">
+            <button type="button" class="board-btn view" data-act="view"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 3 7v10l9 5 9-5V7l-9-5Zm0 2.3L18.6 8 12 11.7 5.4 8 12 4.3ZM5 9.7l6 3.4v6.6l-6-3.4V9.7Zm8 10v-6.6l6-3.4v6.6l-6 3.4Z"/></svg>View</button>
+            <button type="button" class="board-btn download" data-act="download"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 3h2v9.6l3.3-3.3 1.4 1.4L12 16.4l-5.7-5.7 1.4-1.4 3.3 3.3V3ZM4 18h16v2H4v-2Z"/></svg>Download</button>
+          </div>
+        </article>
+        <article class="board-card" data-board="8x8" data-full="assets/boards/board-8x8-full.png" data-width="100" data-caption="The 8&times;8 board: 64 RGBC taxels at the same pitch and eight TCA9548A I&sup2;C switches, with the same readout scheme. Design."
+          data-model="assets/models/board-8x8.glb" data-tex="assets/boards/board-8x8-tex.jpg" data-frame="344.1192,48.9204,-1.065" data-pad="303.4,5.1,339.8,43.8"
+          data-gerber="assets/gerbers/luxtac-8x8-gerbers.zip">
+          <div class="board-thumb"><img src="assets/boards/board-8x8-head.png" alt="8&times;8 sensing pad, KiCad layout" loading="lazy" draggable="false"></div>
+          <div class="board-meta"><span class="board-name">8&times;8</span><span class="board-sub">64 taxels &middot; design</span></div>
+          <div class="board-actions">
+            <button type="button" class="board-btn view" data-act="view"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 3 7v10l9 5 9-5V7l-9-5Zm0 2.3L18.6 8 12 11.7 5.4 8 12 4.3ZM5 9.7l6 3.4v6.6l-6-3.4V9.7Zm8 10v-6.6l6-3.4v6.6l-6 3.4Z"/></svg>View</button>
+            <button type="button" class="board-btn download" data-act="download"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 3h2v9.6l3.3-3.3 1.4 1.4L12 16.4l-5.7-5.7 1.4-1.4 3.3 3.3V3ZM4 18h16v2H4v-2Z"/></svg>Download</button>
+          </div>
+        </article>
+      </div>
+      <button type="button" class="bc-nav next" aria-label="Next board">&#8250;</button>
+      <div class="bc-dots" role="tablist"></div>
     </div>
     <figure class="board-detail reveal reveal-up">
       <img id="boardFull" src="assets/boards/board-4x4-full.png" style="width:54.3%" alt="Full flexible PCB layout of the selected board (KiCad copper and silkscreen)">
-      <figcaption class="caption" id="boardCaption">The 4&times;4 prototype characterized in this work: 16 RGBC taxels at a 4.42 &times; 4.80 mm pitch and two TCA9548A I&sup2;C switches on the flexible PCB. Shown at the same scale; select a board above.</figcaption>
+      <figcaption class="caption" id="boardCaption">The 4&times;4 prototype characterized in this work: 16 RGBC taxels at a 4.42 &times; 4.80 mm pitch and two TCA9548A I&sup2;C switches on the flexible PCB. Shown at the same scale.</figcaption>
     </figure>
+
+    <dialog class="cad-modal" id="cadModal" aria-label="3D board viewer">
+      <div class="cad-head">
+        <div><h3 id="cadTitle">4&times;4 board</h3><p class="cad-hint">Drag to rotate &middot; scroll to zoom &middot; right-drag to pan</p></div>
+        <div class="cad-tools">
+          <button type="button" data-cam="board">Whole board</button>
+          <button type="button" data-cam="head">Sensing pad</button>
+          <button type="button" class="cad-close" aria-label="Close">&times;</button>
+        </div>
+      </div>
+      <div class="cad-stage" id="cadStage"><div class="cad-status" id="cadStatus">Loading 3D model&hellip;</div></div>
+      <p class="cad-note">Flexible PCB exported from KiCad with its copper and silkscreen. Sensor, LED and multiplexer bodies are KiCad library packages of the same size.</p>
+    </dialog>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
     <div class="gen-card reveal reveal-up">
       <div class="gen-text">
@@ -657,28 +684,7 @@
 
 
   <script src="assets/script.js"></script>
-<script>
-// board picker: select a board card to show its full flexible PCB below
-(function () {
-  const cards = document.querySelectorAll('.board-card');
-  const full = document.getElementById('boardFull'), cap = document.getElementById('boardCaption');
-  if (!cards.length || !full) return;
-  const pick = (c) => {
-    cards.forEach(x => { x.classList.toggle('is-selected', x === c); x.setAttribute('aria-checked', x === c ? 'true' : 'false'); });
-    full.src = c.dataset.full;
-    full.style.width = c.dataset.width + '%';
-    cap.innerHTML = c.dataset.caption + ' Shown at the same scale; select a board above.';
-  };
-  cards.forEach((c, i) => {
-    c.addEventListener('click', () => pick(c));
-    c.addEventListener('keydown', (e) => {
-      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
-      const n = cards[(i + (e.key === 'ArrowRight' ? 1 : cards.length - 1)) % cards.length];
-      n.focus(); pick(n); e.preventDefault();
-    });
-  });
-})();
-</script>
+<script type="module" src="assets/boards.js"></script>
 <script type="module">
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
