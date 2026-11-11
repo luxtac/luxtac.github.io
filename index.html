@@ -76,7 +76,7 @@
         </div>
       </figure>
       <div class="hero-stats">
-        <div class="stat"><b>Scalable</b><span>8&times;4, 8&times;8, 16&times;8, 16&times;16, &hellip;</span></div>
+        <div class="stat"><b>Scalable</b><span>same cell tiles to 8&times;4, 8&times;8, &hellip;</span></div>
         <div class="stat"><b>R&sup2; = 0.999</b><span>linear to force</span></div>
         <div class="stat"><b>104 mN</b><span>detection threshold</span></div>
         <div class="stat"><b>63.3% vs 36.7%</b><span>average robot success, with vs without touch</span></div>
@@ -136,7 +136,7 @@
     <div class="principle-wrap" style="grid-template-columns: 1fr;">
       <div class="reveal reveal-left">
         <p>Each taxel consists of a photodetector and nearby LEDs under a white translucent silicone layer, capped by a black opaque layer. LED light entering the white translucent silicone is scattered; part of it returns to the detector, and part reaches the black opaque layer and is absorbed. The black opaque layer also shields the detector from ambient light.</p>
-        <p>Indenting the surface reduces the local thickness and therefore reduces the returned light. A key consequence is that the raw reading decreases with load and depends on the deformation of the elastomer, not on force directly. Force enters only through the mechanics of the silicone, which we treat as a separate map.</p>
+        <p>Indenting the surface reduces the local thickness and therefore reduces the returned light. A key consequence is that the raw reading decreases with load and depends on the deformation of the elastomer, not on force directly.</p>
         <p>In the shear-encoded gel, four-color silicone walls separate the white translucent cubes above the taxels. Shear drags the colored walls sideways, so each detector sees a different mixture of colored light: a detector reports normal deformation through its brightness and shear through its chromaticity.</p>
       </div>
     </div>
@@ -173,14 +173,14 @@
           <img src="assets/pcb-4b4.jpg" alt="3D CAD render of the 4 by 4 sensing head, photodiodes and LEDs on the flexible PCB">
         </div>
         <figcaption class="caption">The LuxTac sensing head. TCS34725 RGBC converters and LEDs on the flexible PCB.</figcaption>
-        <p class="reveal reveal-up converter-note">Each converter integrates an IR-blocking filter, a photodiode array, and a 16-bit integrating ADC per channel, so the analog signal never leaves the package. All 16 converters share one fixed I&sup2;C address, so two TCA9548A switches give each sensor its own bus segment with dedicated 4.7 k&Omega; pull-ups.</p>
+        <p class="reveal reveal-up converter-note">Each converter integrates an IR-blocking filter, a photodiode array, and a 16-bit integrating ADC per channel, so the analog signal never leaves the package. All converters share one fixed I&sup2;C address, so two TCA9548A switches give each sensor its own bus segment with dedicated 4.7 k&Omega; pull-ups.</p>
       </figure>
       <div>
         <ul class="spec-list reveal reveal-up">
-          <li><b>Taxels:</b> 16 TCS34725 RGBC light-to-digital converters, pitch 4.42 mm (columns) &times; 4.80 mm (rows)</li>
+          <li><b>Taxels:</b> TCS34725 RGBC light-to-digital converters, pitch 4.42 mm (columns) &times; 4.80 mm (rows)</li>
           <li><b>Illumination:</b> nine 0603 LEDs in a 3&times;3 grid, each centered between four photodiodes, gated by one NMOS switch</li>
           <li><b>Head:</b> 21.8 &times; 23.8 mm region of a four-layer, 0.2 mm flexible PCB</li>
-          <li><b>Base:</b> 1 mm clear acrylic base plate, part of the stack, screwed to the PCB with four M2 screws</li>
+          <li><b>Base:</b> 0.5 mm soft, clear acrylic base plate, part of the stack, screwed to the PCB with four M2 screws</li>
           <li><b>Black opaque layer:</b> Psycho Paint Part A, Part B, black Silc Pig, NOVOCS, 1:1:0.5:1 by weight</li>
           <li><b>Readout:</b> Teensy 4.1, two TCA9548A I&sup2;C switches on two independent buses</li>
           <li><b>Frame rate:</b> 100 Hz over USB serial; 2.4 ms integration, 4&times; gain</li>
@@ -193,12 +193,12 @@
     <table class="mode-table">
       <tr><th></th><th>Mode 1: intensity-encoded gel</th><th>Mode 2: shear-encoded gel</th></tr>
       <tr><td>Senses</td><td>Normal deformation</td><td>Normal deformation and shear</td></tr>
-      <tr><td>Channels read</td><td>Clear (C) only, 16 values per frame</td><td>All four RGBC, 64 values per frame</td></tr>
-      <tr><td>White layer</td><td>One continuous white translucent layer, 21.5 &times; 21.5 mm cavity</td><td>16 white translucent cubes (about 3.8 &times; 3.4 mm), 16.4 &times; 18.0 mm cavity</td></tr>
+      <tr><td>Channels read</td><td>Clear (C) only, one value per taxel</td><td>All four RGBC, four values per taxel</td></tr>
+      <tr><td>White layer</td><td>One continuous white translucent layer, 21.5 &times; 21.5 mm cavity</td><td>One white translucent cube per taxel (about 3.8 &times; 3.4 mm), 16.4 &times; 18.0 mm cavity</td></tr>
       <tr><td>Color</td><td>None</td><td>Four-color silicone walls in 1 mm slits: rows alternate green / red, columns yellow / blue</td></tr>
       <tr><td>How it reads</td><td>Pressing thins the layer, so less light returns</td><td>Brightness for normal deformation, chromaticity for shear</td></tr>
       <tr><td>Stack</td><td>Black opaque layer, white translucent layer, soft acrylic layer, flexible PCB</td><td>Black opaque layer, white translucent layer, four-color silicone walls, soft acrylic layer, flexible PCB</td></tr>
-      <tr><td>Mold</td><td>1 mm acrylic base, 2 mm acrylic frame, heat-set inserts, M2 screws</td><td>Same, plus 3 column walls and 3 row walls with 1.25 mm half-lap notches</td></tr>
+      <tr><td>Mold</td><td>0.5 mm acrylic base, 2 mm acrylic frame, heat-set inserts, M2 screws</td><td>Same, plus 3 column walls and 3 row walls with 1.25 mm half-lap notches</td></tr>
       <tr><td>Stiffness</td><td>k<sub>n</sub> = 3.86 &plusmn; 0.09 N/mm per taxel (normal)</td><td>1.01 / 1.25 N/mm at 0.5 / 1.5 mm depth (shear)</td></tr>
       <tr><td>Trade-off</td><td>Default when only pressure is needed</td><td>About 3&times; lower optical sensitivity to pressure</td></tr>
     </table>
@@ -290,7 +290,7 @@
     <h2 class="reveal reveal-up">Characterization</h2>
     <div class="rainbow-bar"></div>
     <div class="lead reveal reveal-up">
-      <p>Raw readings differ strongly across the array: center taxels have baselines of 2364 &plusmn; 284 counts, edge taxels 1322 &plusmn; 203, and corner taxels 673 &plusmn; 100, consistent with edge and corner detectors collecting scattered light from fewer LEDs. After normalization the response is linear in force. The mean over taxels follows s = 0.02 + 0.170F with R&sup2; = 0.999 from 0.1 N to the 5.8 N limit of the test, and neither a dead zone nor saturation is reached.</p>
+      <p>Raw readings differ strongly across the array: center taxels have baselines of 2364 &plusmn; 284 counts, edge taxels 1322 &plusmn; 203, and corner taxels 673 &plusmn; 100, consistent with edge and corner detectors collecting scattered light from fewer LEDs. After normalization the response is linear in force. The mean over taxels follows s = 0.02 + 0.170F with R&sup2; = 0.999 from 0.1 N to the 5.8 N limit of the test, and neither a dead zone nor saturation is reached within the tested range.</p>
     </div>
     <h3 class="mode-heading reveal reveal-up">Normal force (Mode 1)</h3>
     <figure class="reveal reveal-up char-fig">
@@ -327,7 +327,9 @@
       <tr><td colspan="2"><b>Shear cartridge</b></td></tr>
       <tr><td>Whole-pad shear R&sup2;, x / y</td><td class="num">0.94 / 0.96</td></tr>
       <tr><td>Per-taxel shear R&sup2;, x / y</td><td class="num">0.86 / 0.90 (RMSE 0.29 mm)</td></tr>
-      <tr><td>Median direction error</td><td class="num">7&deg;</td></tr>
+      <tr><td>Median direction error (displacement)</td><td class="num">7&deg;</td></tr>
+      <tr><td>Per-taxel shear force R&sup2;, x / y</td><td class="num">0.88 / 0.89 (RMSE 0.048 N, 6&deg;)</td></tr>
+      <tr><td>Sum of per-taxel forces vs. total</td><td class="num">R&sup2; = 0.95 / 0.96</td></tr>
       <tr><td>Lateral force R&sup2;, x / y</td><td class="num">0.98 / 0.98 (RMSE 0.15 / 0.14 N)</td></tr>
       <tr><td>Normal linearity vs. load</td><td class="num">R&sup2; = 0.996</td></tr>
     </table>
@@ -433,8 +435,8 @@
     <div class="rainbow-bar"></div>
     <div class="sim-grid">
       <div class="sim-text reveal reveal-left">
-        <p>We simulate LuxTac in IsaacGym with TacSL, on the same Franka Panda arm and gripper as the real setup. Each taxel's penetration depth is turned into the reading the real taxel would give, using the depth curve fitted on the calibration bench, so no raw counts, baselines, or LED drift have to be simulated.</p>
-        <p>Over 12 grasps of four 3D-printed objects in three orientations, simulated contact patterns match the real pad with a mean cosine of <b>0.968</b>, against 0.61&ndash;0.78 for the wrong object, orientation, or taxel order.</p>
+        <p>We simulate LuxTac in IsaacGym with TacSL, on a Franka Panda arm and parallel-jaw gripper, as in the real comparison grasps. Each taxel's penetration depth is turned into the reading the real taxel would give, using the depth curve fitted on the calibration bench, so no raw counts, baselines, or LED drift have to be simulated.</p>
+        <p>Over 12 grasps of four 3D-printed objects in three orientations, simulated and real contact patterns agree with a mean cosine of <b>0.942</b>, against 0.59&ndash;0.76 for the wrong object, orientation, or taxel order.</p>
       </div>
       <div class="sim-video reveal reveal-right">
         <div class="corona"><video class="wide-video" src="assets/sim-episode.mp4" controls autoplay muted loop playsinline preload="metadata"></video></div>
@@ -608,7 +610,7 @@
 </section>
 
 <footer>
-  <p>This project is licensed under <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>. You may use, copy, and modify it for non-commercial purposes with attribution. If you distribute modified versions, you must do so under CC BY-NC-SA 4.0 and indicate changes. Commercial use is not permitted under this license. If your use supports a paid product/service, internal revenue-generating activities, or any monetization, you must obtain a separate commercial license from Stanford University. Provided "AS IS", without warranties; no trademark rights granted. (Stanford Office of Technology Licensing Ref. No. S24-339)</p>
+  <p>License terms for the hardware, code, and data will be announced with the release.</p>
   <p>Website template modified from <a href="https://nerfies.github.io/">NeRFies</a>. This means you are free to borrow the <a href="https://github.com/nerfies/nerfies.github.io">source code</a> of this website, we just ask that you link back to this page in the footer.</p>
 </footer>
 
@@ -629,14 +631,14 @@ function S(o) {
 }
 const PATHS = {
   1: [
-    S({ mold: 'A', screws: 'mold', title: 'Assemble the mold', caption: 'A 1 mm clear acrylic base plate, which stays in the final stack, and a 2 mm acrylic frame with heat-set inserts, fastened with four M2 screws from the top.' }),
+    S({ mold: 'A', screws: 'mold', title: 'Assemble the mold', caption: 'A 0.5 mm soft, clear acrylic base plate, which stays in the final stack, and a 2 mm acrylic frame with heat-set inserts, fastened with four M2 screws from the top.' }),
     S({ mold: 'A', screws: 'mold', gel: 'pour', title: 'Cast', caption: 'The degassed white translucent XP-565 mixture (15:1 by weight) is poured slowly into the mold to minimize air entrapment.' }),
     S({ mold: 'A', screws: 'mold', gel: 'full', level: true, title: 'Level', caption: 'An acrylic plate is pressed onto the white layer to remove the excess silicone and leave a flat layer of uniform thickness. Then heat cure for about 20 minutes.' }),
     S({ gel: 'full', coat: 'pour', title: 'Coat', caption: 'The mold frame comes off, leaving the white layer bonded to the acrylic base. The black mixture is poured over it and spreads across the acrylic, covering the top and sides and stopping short of the screw holes. Then heat cure for about 10 minutes.' }),
     S({ gel: 'full', coat: 'full', pcb: true, screws: 'base', title: 'Assemble', caption: 'The finished stack on its acrylic base is aligned over the photodiode array and secured with four M2 screws through the base plate into the PCB mounting holes.' })
   ],
   2: [
-    S({ mold: 'B', screws: 'mold', title: 'Assemble the mold', caption: 'The same 1 mm clear acrylic base plate and a 2 mm acrylic frame with slots for the wall inserts, fastened with four M2 screws from the top.' }),
+    S({ mold: 'B', screws: 'mold', title: 'Assemble the mold', caption: 'The same 0.5 mm soft, clear acrylic base plate and a 2 mm acrylic frame with slots for the wall inserts, fastened with four M2 screws from the top.' }),
     S({ mold: 'B', screws: 'mold', walls: true, title: 'Insert walls', caption: 'Three straight column walls go into the frame slots, then three row walls with 1.25 mm half-lap notches are lowered on top so the two sets interlock.' }),
     S({ mold: 'B', screws: 'mold', walls: true, gel: 'pour', title: 'Cast', caption: 'The white translucent mixture is poured around the walls, leveled, and heat cured for about 20 minutes.' }),
     S({ mold: 'B', screws: 'mold', gel: 'full', title: 'Remove walls', caption: 'Removing the grid leaves 16 translucent cubes (about 3.8 &times; 3.4 mm) separated by 1 mm slits.' }),
