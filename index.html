@@ -256,6 +256,28 @@
       </div>
     </div>
 
+    <div class="board-picker reveal reveal-up" role="radiogroup" aria-label="Board sizes">
+      <button type="button" class="board-card is-selected" role="radio" aria-checked="true" data-full="assets/boards/board-4x4-full.png" data-width="54.3" data-caption="The 4&times;4 prototype characterized in this work: 16 RGBC taxels at a 4.42 &times; 4.80 mm pitch and two TCA9548A I&sup2;C switches on the flexible PCB.">
+        <span class="board-thumb"><img src="assets/boards/board-4x4-head.png" alt="4&times;4 sensing head, KiCad layout" style="height:125px" loading="lazy"></span>
+        <span class="board-name">4&times;4</span>
+        <span class="board-sub">16 taxels &middot; prototype</span>
+      </button>
+      <button type="button" class="board-card" role="radio" aria-checked="false" data-full="assets/boards/board-4x8-full.png" data-width="87.6" data-caption="The 4&times;8 board: 32 RGBC taxels at the same pitch and four TCA9548A I&sup2;C switches, with the same readout scheme. In fabrication.">
+        <span class="board-thumb"><img src="assets/boards/board-4x8-head.png" alt="4&times;8 sensing head, KiCad layout" style="height:180px" loading="lazy"></span>
+        <span class="board-name">4&times;8</span>
+        <span class="board-sub">32 taxels &middot; in fabrication</span>
+      </button>
+      <button type="button" class="board-card" role="radio" aria-checked="false" data-full="assets/boards/board-8x8-full.png" data-width="100" data-caption="The 8&times;8 board: 64 RGBC taxels at the same pitch and eight TCA9548A I&sup2;C switches, with the same readout scheme. Design.">
+        <span class="board-thumb"><img src="assets/boards/board-8x8-head.png" alt="8&times;8 sensing head, KiCad layout" style="height:200px" loading="lazy"></span>
+        <span class="board-name">8&times;8</span>
+        <span class="board-sub">64 taxels &middot; design</span>
+      </button>
+    </div>
+    <figure class="board-detail reveal reveal-up">
+      <img id="boardFull" src="assets/boards/board-4x4-full.png" style="width:54.3%" alt="Full flexible PCB layout of the selected board (KiCad copper and silkscreen)">
+      <figcaption class="caption" id="boardCaption">The 4&times;4 prototype characterized in this work: 16 RGBC taxels at a 4.42 &times; 4.80 mm pitch and two TCA9548A I&sup2;C switches on the flexible PCB. Shown at the same scale; select a board above.</figcaption>
+    </figure>
+
     <div class="gen-card reveal reveal-up">
       <div class="gen-text">
         <p class="gen-eyebrow">Coming soon</p>
@@ -635,6 +657,28 @@
 
 
   <script src="assets/script.js"></script>
+<script>
+// board picker: select a board card to show its full flexible PCB below
+(function () {
+  const cards = document.querySelectorAll('.board-card');
+  const full = document.getElementById('boardFull'), cap = document.getElementById('boardCaption');
+  if (!cards.length || !full) return;
+  const pick = (c) => {
+    cards.forEach(x => { x.classList.toggle('is-selected', x === c); x.setAttribute('aria-checked', x === c ? 'true' : 'false'); });
+    full.src = c.dataset.full;
+    full.style.width = c.dataset.width + '%';
+    cap.innerHTML = c.dataset.caption + ' Shown at the same scale; select a board above.';
+  };
+  cards.forEach((c, i) => {
+    c.addEventListener('click', () => pick(c));
+    c.addEventListener('keydown', (e) => {
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      const n = cards[(i + (e.key === 'ArrowRight' ? 1 : cards.length - 1)) % cards.length];
+      n.focus(); pick(n); e.preventDefault();
+    });
+  });
+})();
+</script>
 <script type="module">
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
