@@ -789,15 +789,14 @@ a.link-btn:hover { background: #fff; }
     text-align: justify !important; text-align-last: center; hyphens: auto; -webkit-hyphens: auto;
   }
 
-  /* two mode branches running through their own content (assets/branches.js).
-     The SVG paints above the (static) section backgrounds; containers sit above the SVG. */
-  .mode-branches { position: absolute; top: 0; left: 0; width: 100%; pointer-events: none; z-index: 1; overflow: visible; }
-  .hero > .container, .section > .container { position: relative; z-index: 2; }
-  .mode-branches path { fill: none; stroke-width: 1.6; stroke-linecap: round; }
-  .mode-branches .mb-trunk { stroke: #8e8e94; opacity: 0.6; }
-  .mode-branches .mb-m1 { stroke: #d6d6db; opacity: 0.7; }
-  .mode-branches .mb-m2 { stroke: url(#mb-rainbow); opacity: 0.9; }
-  .mode-branches .mb-node-trunk { fill: var(--bg); stroke: #8e8e94; stroke-width: 1.4; }
-  .mode-branches .mb-node-1 { fill: #d6d6db; }
-  .mode-branches .mb-node-2 { fill: url(#mb-rainbow); }
-  @media print { .mode-branches { display: none; } }
+
+  /* more vertical breathing room between blocks */
+  .section { padding: 96px 24px; }
+  h2 { margin-bottom: 12px; }
+  .rainbow-bar { margin-bottom: 48px; }
+  figure { margin: 44px 0; }
+  .mode-heading { margin: 64px 0 28px; }
+  .paper-pages { margin-top: 48px; }
+  .section table { margin-top: 36px; margin-bottom: 36px; }
+  .section .container > * + *:not(.rainbow-bar) { margin-top: 28px; }
+  @media (max-width: 720px) { .section { padding: 64px 16px; } }
