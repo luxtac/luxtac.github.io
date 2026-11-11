@@ -760,3 +760,17 @@ a.link-btn:hover { background: #fff; }
   .cart-window .cart b { font-size: 14px; white-space: nowrap; }
   .hero-grid-2 .hero-stats { grid-auto-rows: auto; }
 }
+
+  /* paper page thumbnails under the abstract */
+  .paper-pages { margin-top: 36px; }
+  .paper-strip { display: grid; grid-template-columns: repeat(11, 1fr); gap: 8px; text-decoration: none; }
+  .paper-strip img {
+    display: block; width: 100%; height: auto; aspect-ratio: 612 / 792;
+    border-radius: 4px; background: #fff;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .paper-link { text-align: center; margin: 18px 0 0; color: var(--muted); font-size: 15px; }
+  @media (max-width: 720px) {
+    .paper-strip { grid-template-columns: repeat(11, 72px); gap: 6px; overflow-x: auto; padding-bottom: 6px; }
+  }
