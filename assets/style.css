@@ -789,16 +789,15 @@ a.link-btn:hover { background: #fff; }
     text-align: justify !important; text-align-last: center; hyphens: auto; -webkit-hyphens: auto;
   }
 
-  /* two parallel mode branches in the left margin (assets/branches.js) */
+  /* two mode branches running through their own content (assets/branches.js).
+     The SVG paints above the (static) section backgrounds; containers sit above the SVG. */
   .mode-branches { position: absolute; top: 0; left: 0; width: 100%; pointer-events: none; z-index: 1; overflow: visible; }
+  .hero > .container, .section > .container { position: relative; z-index: 2; }
   .mode-branches path { fill: none; stroke-width: 1.6; stroke-linecap: round; }
-  .mode-branches .mb-trunk { stroke: #8e8e94; opacity: 0.55; }
+  .mode-branches .mb-trunk { stroke: #8e8e94; opacity: 0.6; }
   .mode-branches .mb-m1 { stroke: #d6d6db; opacity: 0.7; }
-  .mode-branches .mb-m2 { stroke: url(#mb-rainbow); opacity: 0.85; }
+  .mode-branches .mb-m2 { stroke: url(#mb-rainbow); opacity: 0.9; }
   .mode-branches .mb-node-trunk { fill: var(--bg); stroke: #8e8e94; stroke-width: 1.4; }
-  .mode-branches .mb-node-1 { fill: #d6d6db; stroke: var(--bg); stroke-width: 1.5; }
-  .mode-branches .mb-node-2 { fill: url(#mb-rainbow); stroke: var(--bg); stroke-width: 1.5; }
-  .mode-branches .mb-label { font: 600 10px 'Noto Sans', sans-serif; letter-spacing: 0.5px; }
-  .mode-branches .mb-label-1 { fill: #a8a8ad; text-anchor: end; }
-  .mode-branches .mb-label-2 { fill: #a8a8ad; text-anchor: start; }
+  .mode-branches .mb-node-1 { fill: #d6d6db; }
+  .mode-branches .mb-node-2 { fill: url(#mb-rainbow); }
   @media print { .mode-branches { display: none; } }
