@@ -91,8 +91,8 @@
     <h2 class="reveal reveal-up">Abstract</h2>
     <div class="rainbow-bar"></div>
     <div class="lead reveal reveal-up">
-      <p>Dense, low-cost tactile arrays have made touch a practical input for robot learning, but the dominant piezoresistive designs report an electrical quantity that is only loosely tied to the physics of contact, which makes them hard to characterize, compare across units, or reproduce in simulation. We present LuxTac, a scalable optical taxel array in which each taxel is a digital RGBC light-to-digital converter that observes LED light back-scattered from a white translucent silicone layer capped by an opaque, light-absorbing black layer. Pressing the surface thins the scattering layer, so the reading falls monotonically with <em>local indentation depth</em> rather than with force directly. We exploit this to split calibration into two independent maps: an optical transfer function from depth to signal and a mechanical stiffness from force to depth, which is exactly the quantity a penalty-based tactile simulator needs.</p>
-      <p>The same board accepts two interchangeable gel cartridges: a plain cartridge for normal sensing and a cartridge with colored walls that also encodes shear in the color of the returned light. We characterize the array with an automated CNC indenter instrumented with a six-axis force/torque sensor, extending the protocol of 3D-ViTac with full loading&ndash;unloading cycles and every channel recorded on every press. Over 240 presses, the normal cartridge responds linearly to force (R&sup2; = 0.999) from a 104 mN detection threshold to at least 5.8 N, with 2.0% repeatability, 5.9% hysteresis, and a taxel-to-taxel coefficient of variation that drops from 38% to 6% after normalization. With the shear cartridge, LuxTac estimates the local shear direction within a median of 7&deg; and lateral force with R&sup2; = 0.98, at the cost of lower sensitivity to pressure. Adding LuxTac to an Action Chunking Transformer policy raises success in peg-in-hole insertion from 47% to 87%. Design files and code will be released.</p>
+      <p>Dense, low-cost tactile arrays have made touch a practical input for robot learning, but the dominant piezoresistive designs sense only pressure, while camera-based sensors that also resolve shear are too thick and bulky to tile over a gripper. We present LuxTac, a scalable optical taxel array, about 3&nbsp;mm thick and built from off-the-shelf parts, that senses pressure and shear at every taxel. Each taxel is a digital RGBC light-to-digital converter under a translucent white silicone layer capped by an opaque black film; pressing thins the layer, so the back-scattered LED light falls monotonically with <em>local indentation depth</em>.</p>
+      <p>The same board accepts two interchangeable gel cartridges: a plain cartridge for normal sensing, and a cartridge with colored walls that encodes the local shear above each taxel in the color of the returned light, with no camera, magnets, or bump overlay. To our knowledge, LuxTac is the first optical taxel array to resolve shear at the level of individual taxels. Characterized with an automated CNC indenter and a six-axis force/torque sensor, the normal cartridge responds linearly to force (R&sup2; = 0.999) from a 104&nbsp;mN threshold to at least 5.8&nbsp;N, with 2.0% repeatability, 5.9% hysteresis, and a taxel-to-taxel variation that drops from 38% to 6% after normalization. With the shear cartridge, LuxTac estimates the shear direction at each taxel within a median of 7&deg; and lateral force with R&sup2; = 0.98. Adding LuxTac to an Action Chunking Transformer policy substantially improves success in peg-in-hole insertion over a vision-only baseline. Design files, code, and videos will be available on this page.</p>
     </div>
   </div>
 </section>
@@ -104,7 +104,7 @@
     <div class="stat-grid">
       <div class="stat-card reveal reveal-up"><b>Scalable grid</b><span>TCS34725 RGBC converters on a 4.42 &times; 4.80 mm pitch, LEDs between the taxels, four-layer flexible PCB.</span></div>
       <div class="stat-card reveal reveal-up"><b>Depth, not force</b><span>Each reading is set by local indentation depth, a physical quantity. No camera, no analog front end.</span></div>
-      <div class="stat-card reveal reveal-up"><b>Separable calibration</b><span>Optical depth-to-signal and mechanical force-to-depth maps plug straight into a simulator.</span></div>
+      <div class="stat-card reveal reveal-up"><b>Shear at every taxel</b><span>Colored walls encode shear in the color of the returned light: 7&deg; median direction error, lateral force R&sup2; = 0.98.</span></div>
       <div class="stat-card reveal reveal-up"><b>R&sup2; = 0.999</b><span>Linear from 104 mN to at least 5.8 N. No dead zone, no saturation in range.</span></div>
       <div class="stat-card reveal reveal-up"><b>2.0% repeatability</b><span>5.9% hysteresis over 240 presses. Variation falls from 38% to 6% after normalization.</span></div>
       <div class="stat-card reveal reveal-up"><b>~$140</b><span>Bill of materials per setup, pad plus Teensy 4.1 readout board. A 32-taxel 4&times;8 board uses the same readout scheme.</span></div>
@@ -585,10 +585,13 @@
     <div class="rainbow-bar"></div>
     <div class="reveal reveal-up" style="max-width: 860px; margin: 0 auto;">
 <pre>@misc{prince2026luxtac,
-  title={LuxTac: An Optical Taxel Array with Separable
-    Optical-Mechanical Calibration for Tactile Robot Learning},
-  author={Prince, Md Rakibul Islam and Pelan, John and
-    Khera, Adyaa and Desai, Adeesh and Pesetski, Katherine and She, Yu},
+  title={LuxTac: A Thin, Scalable, and Open-Source Optical
+    Taxel Array for Tactile Robot Learning},
+  author={Prince, Md Rakibul Islam and Pelan, John and Zhang, Zhiyuan
+    and Khera, Adyaa and Pesetski, Katherine and Desai, Adeesh
+    and Sugiyama, Akimizu and Ki, Minwoo and Capelle, Benjamin Alan
+    and Xu, Zijie and Huang, Yihan and Wang, Long and Li, Wei
+    and Lin, Shaoting and She, Yu},
   year={2026}
 }</pre>
     </div>
