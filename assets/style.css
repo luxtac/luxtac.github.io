@@ -809,5 +809,5 @@ a.link-btn:hover { background: #fff; }
 
   /* Purdue logo under the link buttons */
   .hero .affiliation-logo { margin: 44px auto 48px; display: flex; justify-content: center; }
-  .hero .affiliation-logo img { height: 44px; width: auto; display: block; opacity: 0.95; }
+  .hero .affiliation-logo img { height: 56px; width: auto; display: block; }
   @media (max-width: 720px) { .hero .affiliation-logo { margin: 28px auto 24px; } .hero .affiliation-logo img { height: 36px; } }
