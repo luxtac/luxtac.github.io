@@ -781,3 +781,10 @@ a.link-btn:hover { background: #fff; }
     max-width: 860px; margin: 6px auto 0; letter-spacing: -0.2px;
   }
   @media (max-width: 820px) { .hero .paper-title { font-size: 20px; } }
+
+  /* justified body text; low specificity so centered labels/captions with their own class keep their alignment */
+  :where(.section) :where(p, li) { text-align: justify; hyphens: auto; -webkit-hyphens: auto; }
+  /* captions and centered intro paragraphs: justified, last line centered (single-line labels stay centered) */
+  .caption, figcaption, .section p.lead, footer p {
+    text-align: justify !important; text-align-last: center; hyphens: auto; -webkit-hyphens: auto;
+  }
