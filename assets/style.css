@@ -839,10 +839,10 @@ a.link-btn:hover { background: #fff; }
   @property --bc-a { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
   @keyframes bc-spin { to { --bc-a: 360deg; } }
   .board-carousel { position: relative; margin-top: 36px; padding-bottom: 30px; }
-  .bc-track { position: relative; height: 424px; perspective: 1400px; touch-action: pan-y; }
+  .bc-track { position: relative; height: 372px; perspective: 1400px; touch-action: pan-y; }
   .board-card {
-    position: absolute; left: 50%; top: 0; width: 272px; margin-left: -136px; box-sizing: border-box;
-    display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 20px 18px 18px;
+    position: absolute; left: 50%; top: 0; width: 236px; margin-left: -118px; box-sizing: border-box;
+    display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 16px 14px 16px;
     background: var(--card); border: 1px solid var(--card-border); border-radius: 18px; color: var(--text);
     text-align: center; user-select: none;
     transition: transform .6s cubic-bezier(.2,.8,.2,1), opacity .6s ease, filter .6s ease, box-shadow .3s ease;
@@ -874,7 +874,7 @@ a.link-btn:hover { background: #fff; }
   }
   .board-card[data-offset="0"]:hover { transform: translateY(-6px) scale(1.02); }
 
-  .board-thumb { position: relative; width: 100%; height: 244px; display: flex; align-items: center; justify-content: center;
+  .board-thumb { position: relative; width: 100%; height: 206px; display: flex; align-items: center; justify-content: center;
     border-radius: 12px; overflow: hidden; background: radial-gradient(circle at 50% 40%, #1d1d22, #121215); }
   .board-thumb img { max-width: 86%; max-height: 86%; width: auto; height: auto; display: block; border-radius: 3px;
     box-shadow: 0 8px 22px rgba(0,0,0,.55); transition: transform .5s ease; }
@@ -888,9 +888,10 @@ a.link-btn:hover { background: #fff; }
   .board-meta { display: flex; flex-direction: column; gap: 2px; }
   .board-name { font-size: 24px; font-weight: 900; letter-spacing: -0.3px; }
   .board-sub { font-size: 14px; color: var(--muted); }
-  .board-actions { display: flex; gap: 10px; width: 100%; }
+  .board-actions { display: flex; gap: 8px; width: 100%; }
+  .board-btn svg { flex-shrink: 0; }
   .board-btn { flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 7px; cursor: pointer;
-    padding: 10px 12px; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 700; color: var(--text);
+    padding: 9px 8px; min-width: 0; border-radius: 999px; font: inherit; font-size: 13px; font-weight: 700; color: var(--text);
     background: #1b1b1f; border: 1px solid #34343a; transition: background .2s ease, border-color .2s ease, transform .15s ease; }
   .board-btn svg { width: 17px; height: 17px; fill: currentColor; }
   .board-btn:hover { background: #26262b; border-color: #4a4a52; }
@@ -898,7 +899,7 @@ a.link-btn:hover { background: #fff; }
   .board-btn:focus-visible { outline: 2px solid #7cc4ff; outline-offset: 2px; }
   .board-btn.view { background: linear-gradient(#1b1b1f, #1b1b1f) padding-box, var(--rainbow) border-box; border: 1.5px solid transparent; }
 
-  .bc-nav { position: absolute; top: 205px; z-index: 5; width: 46px; height: 46px; margin-top: -23px; border-radius: 50%;
+  .bc-nav { position: absolute; top: 176px; z-index: 5; width: 46px; height: 46px; margin-top: -23px; border-radius: 50%;
     border: 1px solid #34343a; background: rgba(20,20,24,.85); color: var(--text); font-size: 30px; line-height: 1; cursor: pointer;
     display: flex; align-items: center; justify-content: center; padding-bottom: 4px; transition: background .2s, border-color .2s; }
   .bc-nav:hover { background: #26262b; border-color: #4a4a52; }
@@ -944,12 +945,12 @@ a.link-btn:hover { background: #fff; }
   .toast.show { opacity: 1; transform: translate(-50%, 0); }
 
   @media (max-width: 720px) {
-    .bc-track { height: 366px; }
-    .board-card { width: 232px; margin-left: -116px; padding: 14px 12px 14px; }
-    .board-thumb { height: 200px; }
+    .bc-track { height: 332px; }
+    .board-card { width: 208px; margin-left: -104px; padding: 12px 10px 12px; } .board-btn { font-size: 12px; gap: 5px; padding: 8px 6px; }
+    .board-thumb { height: 174px; }
     .board-card[data-offset="-1"] { transform: translateX(-62%) scale(.78) rotateY(20deg); }
     .board-card[data-offset="1"]  { transform: translateX(62%) scale(.78) rotateY(-20deg); }
-    .bc-nav { top: 150px; width: 38px; height: 38px; margin-top: -19px; font-size: 24px; }
+    .bc-nav { top: 136px; width: 38px; height: 38px; margin-top: -19px; font-size: 24px; }
     .board-btn { font-size: 13px; padding: 9px 8px; }
     .cad-head { flex-wrap: wrap; padding: 10px 12px; }
     .cad-tools button { padding: 6px 10px; }
