@@ -964,7 +964,7 @@ a.link-btn:hover { background: #fff; }
   .link-btn.get-pad { color: #fff; background: linear-gradient(#141417, #141417) padding-box, var(--rainbow) border-box;
     border: 2px solid transparent; padding: 8px 18px; transition: transform .15s ease, box-shadow .25s ease; }
   .link-btn.get-pad:hover { transform: translateY(-2px); box-shadow: -8px 0 22px rgba(255,45,120,.35), 8px 0 22px rgba(10,165,255,.35); }
-  #get-pad { scroll-margin-top: 96px; }
+  #get-pad { scroll-margin-top: 70px; }
 
   /* affiliations: four logos, equal height, one line */
   .hero .affiliation-logo { display: flex; flex-wrap: nowrap; align-items: center; justify-content: center;
@@ -972,3 +972,37 @@ a.link-btn:hover { background: #fff; }
   .hero .affiliation-logo img.aff { height: clamp(18px, 3.4vw, 38px); width: auto; max-width: none; min-width: 0; flex: 0 1 auto;
     object-fit: contain; display: block; opacity: .92; }
   .hero .affiliation-logo img.aff.stevens { height: clamp(30px, 5.6vw, 64px); }
+
+/* ---- "One design, many sizes" -> carousel -> LuxTac GEN fit in one screen ---- */
+#design .scales { padding: 18px 24px; }
+#design .scales h3 { margin: 0 0 6px; }
+#design .scales p { font-size: 15px; line-height: 1.55; }
+#design .board-carousel { margin-top: 18px; padding-bottom: 24px; }
+#design .gen-card { margin-top: 18px; padding: 20px 26px; gap: 20px; }
+#design .gen-card h3 { font-size: 26px; margin: 0 0 6px; }
+#design .gen-card p { font-size: 15px; line-height: 1.55; }
+#design .gen-eyebrow { font-size: 11px; }
+#design .gen-actions { gap: 10px; }
+#design .gen-btn { padding: 11px 20px; font-size: 16px; }
+@media (max-width: 720px) {
+  #design .scales { padding: 14px 16px; }
+  #design .scales h3 { font-size: 20px; }
+  #design .scales p { font-size: 13.5px; line-height: 1.5; text-align: center; }
+  #design .board-carousel { margin-top: 12px; padding-bottom: 20px; }
+  #design .gen-card { margin-top: 12px; padding: 14px 16px; gap: 10px; }
+  #design .gen-card h3 { font-size: 22px; margin: 0 0 4px; }
+  #design .gen-card p { font-size: 13.5px; line-height: 1.5; }
+  #design .gen-actions { flex-direction: row; gap: 8px; }
+  #design .gen-btn { flex: 1; justify-content: center; padding: 9px 10px; font-size: 14px; }
+  #design .gen-btn small { display: none; }
+}
+/* board image height follows the screen height so the three blocks always fit */
+#design .board-carousel { --th: clamp(140px, calc(100svh - 622px), 206px); }
+#design .board-thumb { height: var(--th); }
+#design .bc-track { height: calc(var(--th) + 166px); }
+#design .bc-nav { top: calc(var(--th) / 2 + 73px); }
+@media (max-width: 720px) {
+  #design .board-carousel { --th: clamp(120px, calc(100svh - 684px), 174px); }
+  #design .bc-track { height: calc(var(--th) + 158px); }
+  #design .bc-nav { top: calc(var(--th) / 2 + 63px); }
+}
