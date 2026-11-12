@@ -287,6 +287,17 @@
             <button type="button" class="board-btn download" data-act="download"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 3h2v9.6l3.3-3.3 1.4 1.4L12 16.4l-5.7-5.7 1.4-1.4 3.3 3.3V3ZM4 18h16v2H4v-2Z"/></svg>Download</button>
           </div>
         </article>
+        <article class="board-card ctrl" data-board="ctrl" data-full="assets/boards/board-ctrl-head.png" data-title="Acquisition board &middot; 3D model"
+          data-model="assets/models/board-ctrl.glb"
+          data-note="Acquisition board exported from KiCad with its copper, solder mask and silkscreen. The buck converter, inductor, MOSFET and FPC connector are KiCad library packages of the same size; the Teensy&nbsp;4.1 and the potentiometer are simplified blocks of their real size."
+          data-gerber="assets/downloads/LuxTac_Control_Board.zip">
+          <div class="board-thumb"><img src="assets/boards/board-ctrl-head.png" alt="Acquisition board, KiCad 3D render" loading="lazy" draggable="false"></div>
+          <div class="board-meta"><span class="board-name">Acquisition</span><span class="board-sub">Teensy 4.1 readout &middot; design</span></div>
+          <div class="board-actions">
+            <button type="button" class="board-btn view" data-act="view"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 3 7v10l9 5 9-5V7l-9-5Zm0 2.3L18.6 8 12 11.7 5.4 8 12 4.3ZM5 9.7l6 3.4v6.6l-6-3.4V9.7Zm8 10v-6.6l6-3.4v6.6l-6 3.4Z"/></svg>View</button>
+            <button type="button" class="board-btn download" data-act="download"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 3h2v9.6l3.3-3.3 1.4 1.4L12 16.4l-5.7-5.7 1.4-1.4 3.3 3.3V3ZM4 18h16v2H4v-2Z"/></svg>Download</button>
+          </div>
+        </article>
       </div>
       <button type="button" class="bc-nav next" aria-label="Next board">&#8250;</button>
       <div class="bc-dots" role="tablist"></div>
@@ -302,7 +313,7 @@
         </div>
       </div>
       <div class="cad-stage" id="cadStage"><div class="cad-status" id="cadStatus">Loading 3D model&hellip;</div></div>
-      <p class="cad-note">Flexible PCB exported from KiCad with its copper and silkscreen. Sensor, LED and multiplexer bodies are KiCad library packages of the same size.</p>
+      <p class="cad-note" id="cadNote">Flexible PCB exported from KiCad with its copper and silkscreen. Sensor, LED and multiplexer bodies are KiCad library packages of the same size.</p>
     </dialog>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 

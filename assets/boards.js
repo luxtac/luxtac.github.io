@@ -110,7 +110,10 @@ function webglOK() {
 
 async function openViewer(c) {
   current = c;
-  document.getElementById('cadTitle').innerHTML = c.querySelector('.board-name').innerHTML + ' board &middot; 3D model';
+  document.getElementById('cadTitle').innerHTML = c.dataset.title || (c.querySelector('.board-name').innerHTML + ' board &middot; 3D model');
+  const note = document.getElementById('cadNote');
+  if (note) { note.dataset.def ??= note.innerHTML; note.innerHTML = c.dataset.note || note.dataset.def; }
+  modal.querySelectorAll('[data-cam]').forEach(b => { b.hidden = !c.dataset.pad; });
   document.body.classList.add('modal-open');
   modal.showModal();
   if (!webglOK()) {
@@ -164,6 +167,7 @@ async function createViewer() {
   new ResizeObserver(resize).observe(stage);
 
   async function build(c) {
+    if (!c.dataset.tex) return buildPlain(c);
     const [gltf, tex] = await Promise.all([loader.loadAsync(c.dataset.model), texLoader.loadAsync(c.dataset.tex)]);
     tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
     const model = gltf.scene; model.scale.setScalar(1000);            // KiCad GLB is in metres
@@ -201,8 +205,20 @@ async function createViewer() {
     return { group: g, len: box.max.x - box.min.x, wid: box.max.z - box.min.z, head, padSize: Math.max(pad[2] - pad[0], pad[3] - pad[1]) };
   }
 
+  // boards with their own colours (no copper texture, no sensing pad), e.g. the acquisition board
+  async function buildPlain(c) {
+    const gltf = await loader.loadAsync(c.dataset.model);
+    const model = gltf.scene; model.scale.setScalar(1000); model.updateMatrixWorld(true);
+    const box = new THREE.Box3().setFromObject(model.getObjectByName('PCB'));
+    model.traverse((m) => { if (m.isMesh) m.material.envMapIntensity = 0.6; });
+    model.position.set(-(box.min.x + box.max.x) / 2, -box.max.y, -(box.min.z + box.max.z) / 2);
+    const g = new THREE.Group(); g.add(model);
+    return { group: g, len: Math.max(box.max.x - box.min.x, box.max.z - box.min.z) * 2.1, head: null };
+  }
+
   function frame(which, instant) {
     if (!info) return;
+    if (!info.head) which = 'board';
     const t = which === 'head' ? info.head.clone() : new THREE.Vector3(0, 0, 0);
     const size = which === 'head' ? info.padSize * 1.35 : info.len * 0.62;
     const dist = size / Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) / Math.max(1, camera.aspect) * 1;
@@ -233,7 +249,7 @@ async function createViewer() {
       const b = await cache.get(key);
       if (current !== c) return;                                         // another card was opened meanwhile
       pivot.clear(); pivot.add(b.group); info = b;
-      frame('board', true); frame('head');                                // start wide, glide to the pad
+      frame('board', true); if (b.head) frame('head');                    // start wide, glide to the pad
       if (!api.running) { api.running = true; loop(); }
     },
   };
