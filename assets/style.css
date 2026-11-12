@@ -1006,3 +1006,18 @@ a.link-btn:hover { background: #fff; }
   #design .bc-track { height: calc(var(--th) + 158px); }
   #design .bc-nav { top: calc(var(--th) / 2 + 63px); }
 }
+/* smaller cards (round 3) */
+#design .board-card { width: 206px; margin-left: -103px; padding: 13px 12px 13px; gap: 10px; border-radius: 16px; }
+#design .board-name { font-size: 20px; }
+#design .board-sub { font-size: 12.5px; }
+#design .board-btn { font-size: 12px; padding: 7px 6px; gap: 5px; }
+#design .board-btn svg { width: 13px; height: 13px; }
+#design .board-carousel { --th: clamp(130px, calc(100svh - 590px), 178px); }
+#design .bc-track { height: calc(var(--th) + 140px); }
+#design .bc-nav { top: calc(var(--th) / 2 + 58px); }
+@media (max-width: 720px) {
+  #design .board-card { width: 186px; margin-left: -93px; padding: 11px 10px; }
+  #design .board-carousel { --th: clamp(110px, calc(100svh - 650px), 152px); }
+  #design .bc-track { height: calc(var(--th) + 136px); }
+  #design .bc-nav { top: calc(var(--th) / 2 + 52px); }
+}
