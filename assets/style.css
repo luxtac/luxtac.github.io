@@ -1021,3 +1021,8 @@ a.link-btn:hover { background: #fff; }
   #design .bc-track { height: calc(var(--th) + 136px); }
   #design .bc-nav { top: calc(var(--th) / 2 + 52px); }
 }
+/* fallback when the carousel script has not run (e.g. page opened from file://): show the cards in a row */
+#design .bc-track:has(.board-card:not([data-offset])) {
+  height: auto; display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; perspective: none; }
+#design .board-card:not([data-offset]) { position: relative; left: auto; margin-left: 0; transform: none; opacity: 1; }
+#design .board-carousel:has(.board-card:not([data-offset])) .bc-nav { display: none; }
