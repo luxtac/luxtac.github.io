@@ -1,4 +1,4 @@
-// Board carousel ("One design, many sizes"), 3D viewer modal, and Gerber download.
+// Board carousel ("One design, many sizes"), 3D viewer modal, and download.
 const root = document.querySelector('.board-carousel');
 const cards = root ? [...root.querySelectorAll('.board-card')] : [];
 const dots = root ? root.querySelector('.bc-dots') : null;
@@ -89,7 +89,7 @@ async function download(c) {
     a.href = url; a.download = url.split('/').pop();
     document.body.appendChild(a); a.click(); a.remove();
   } catch {
-    showToast(`The ${name} Gerber files are not posted yet. They will be available here soon.`);
+    showToast(`The ${name} design files are not posted yet. They will be available here soon.`);
   }
 }
 
