@@ -1076,11 +1076,13 @@ a.link-btn:hover { background: #fff; }
 #robot { scroll-margin-top: 60px; }
 @media (prefers-reduced-motion: reduce) { .see-demo, .see-demo-fire { animation: none; } }
 
-/* ordering demos + step-by-step guides (below the board carousel) */
-.guide-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 28px; margin: 18px auto 6px; }
+/* ordering tutorials + step-by-step guides (below the board carousel) */
+.guide-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 32px; --gw: min(1040px, calc(100vw - 32px));
+  width: var(--gw); margin: 18px 0 6px calc((100% - var(--gw)) / 2); }
 .guide-group { display: flex; align-items: center; gap: 8px; }
+.guide-btns { display: flex; gap: 8px; }
 .guide-label { font-size: 13px; font-weight: 700; color: var(--muted); margin-right: 2px; white-space: nowrap; }
-.guide-row .board-btn { flex: 0 0 auto; padding: 8px 14px; font-size: 13px; text-decoration: none; }
+.guide-row .board-btn { flex: 0 0 auto; padding: 8px 13px; font-size: 13px; text-decoration: none; white-space: nowrap; }
 .guide-row .board-btn svg { width: 15px; height: 15px; }
 .guide-stage { background: #000; }
 .guide-stage video, .guide-stage iframe { display: block; width: 100%; height: 100%; border: 0; }
@@ -1092,6 +1094,7 @@ a.link-btn:hover { background: #fff; }
 .guide-open[hidden] { display: none; }
 @media (max-width: 720px) {
   .guide-row { flex-direction: column; align-items: center; }
-  .guide-group { flex-wrap: wrap; justify-content: center; }
-  .guide-label { width: 100%; text-align: center; }
+  .guide-group { flex-direction: column; gap: 7px; }
+  .guide-btns { flex-wrap: wrap; justify-content: center; }
+  .guide-label { margin-right: 0; }
 }
