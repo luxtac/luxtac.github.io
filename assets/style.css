@@ -1026,3 +1026,22 @@ a.link-btn:hover { background: #fff; }
   height: auto; display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; perspective: none; }
 #design .board-card:not([data-offset]) { position: relative; left: auto; margin-left: 0; transform: none; opacity: 1; }
 #design .board-carousel:has(.board-card:not([data-offset])) .bc-nav { display: none; }
+
+/* announcement card: next large board (image only, no view/download) */
+.mega-card {
+  max-width: 980px; margin: 28px auto 0; border-radius: 18px; overflow: hidden;
+  background: linear-gradient(#0e0e10, #0e0e10) padding-box, var(--rainbow) border-box;
+  border: 2px solid transparent; position: relative;
+}
+.mega-media { position: relative; line-height: 0; }
+.mega-media img { width: 100%; height: auto; display: block; user-select: none; -webkit-user-drag: none; pointer-events: none; }
+.mega-media::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, rgba(14,14,16,0) 55%, rgba(14,14,16,0.92) 100%); }
+.mega-text { position: absolute; left: 28px; right: 28px; bottom: 22px; }
+.mega-text h3 { margin: 0 0 6px; font-size: 34px; font-weight: 900; letter-spacing: -0.5px; }
+.mega-text p { margin: 0; color: var(--muted); max-width: 560px; }
+@media (max-width: 640px) {
+  .mega-text { position: static; padding: 18px 20px 22px; }
+  .mega-media::after { display: none; }
+  .mega-text h3 { font-size: 26px; }
+}
