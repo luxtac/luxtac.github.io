@@ -670,3 +670,44 @@ document.querySelectorAll('.pi-panel').forEach(function (panel) {
   }).observe(hero);
   loop();
 })();
+
+// Ordering demos (video) and step-by-step guides (embedded Google Doc) in a popup
+(function () {
+  var modal = document.getElementById('guideModal');
+  if (!modal) return;
+  var stage = document.getElementById('guideStage');
+  var title = document.getElementById('guideTitle');
+  var openLink = document.getElementById('guideOpen');
+
+  function close() { modal.close(); }
+  modal.addEventListener('close', function () {
+    if (modal.open) return;                     // reopened before this (async) event fired
+    stage.innerHTML = '';                       // stops the video / unloads the doc
+    document.body.classList.remove('modal-open');
+  });
+  modal.querySelector('.cad-close').addEventListener('click', close);
+  modal.addEventListener('click', function (e) { if (e.target === modal) close(); });
+
+  document.querySelectorAll('[data-guide]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var src = btn.dataset.src;
+      title.innerHTML = btn.dataset.title;
+      stage.innerHTML = '';
+      if (btn.dataset.guide === 'video') {
+        var v = document.createElement('video');
+        v.src = src; v.controls = true; v.autoplay = true; v.playsInline = true; v.preload = 'auto';
+        stage.appendChild(v);
+        openLink.hidden = true;
+      } else {
+        var f = document.createElement('iframe');
+        f.src = src + '/preview';
+        f.title = title.textContent;
+        stage.appendChild(f);
+        openLink.href = src + '/edit?usp=sharing';
+        openLink.hidden = false;
+      }
+      document.body.classList.add('modal-open');
+      modal.showModal();
+    });
+  });
+})();

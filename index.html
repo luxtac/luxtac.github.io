@@ -23,7 +23,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/style.css?v=guides1">
 <script type="importmap">
 {
   "imports": {
@@ -305,6 +305,30 @@
       <button type="button" class="bc-nav next" aria-label="Next board">&#8250;</button>
       <div class="bc-dots" role="tablist"></div>
     </div>
+
+    <div class="guide-row reveal reveal-up" aria-label="Ordering demos and guides">
+      <div class="guide-group">
+        <span class="guide-label">Acquisition board</span>
+        <button type="button" class="board-btn view" data-guide="video" data-src="assets/guides/luxtac-acquisition-ordering.mp4" data-title="Acquisition board &middot; ordering demo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7L8 5Z"/></svg>Demo</button>
+        <button type="button" class="board-btn" data-guide="doc" data-src="https://docs.google.com/document/d/16r_VZTjRcpteyZK67Sy5vjaclccWVJQjzQF9FCN9Uyw" data-title="Acquisition board &middot; step-by-step guide"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h8l6 6v14H6V2Zm7 1.5V9h5.5L13 3.5ZM8 12v2h10v-2H8Zm0 4v2h10v-2H8Z"/></svg>Step-by-step guide</button>
+      </div>
+      <div class="guide-group">
+        <span class="guide-label">LuxTac pad</span>
+        <button type="button" class="board-btn view" data-guide="video" data-src="assets/guides/luxtac-pad-ordering.mp4" data-title="LuxTac pad &middot; ordering demo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7L8 5Z"/></svg>Demo</button>
+        <button type="button" class="board-btn" data-guide="doc" data-src="https://docs.google.com/document/d/1vS89AZZtlSeijdeOBoUXTLiRWxul5v_CVmvLgj0FnvM" data-title="LuxTac pad &middot; step-by-step guide"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h8l6 6v14H6V2Zm7 1.5V9h5.5L13 3.5ZM8 12v2h10v-2H8Zm0 4v2h10v-2H8Z"/></svg>Step-by-step guide</button>
+      </div>
+    </div>
+
+    <dialog class="cad-modal guide-modal" id="guideModal" aria-labelledby="guideTitle">
+      <div class="cad-head">
+        <div><h3 id="guideTitle">Ordering guide</h3></div>
+        <div class="cad-tools">
+          <a class="guide-open" id="guideOpen" href="#" target="_blank" rel="noopener" hidden>Open in new tab &#8599;</a>
+          <button type="button" class="cad-close" aria-label="Close">&times;</button>
+        </div>
+      </div>
+      <div class="cad-stage guide-stage" id="guideStage"></div>
+    </dialog>
 
     <dialog class="cad-modal" id="cadModal" aria-label="3D board viewer">
       <div class="cad-head">
@@ -728,7 +752,7 @@
 
 
 
-  <script src="assets/script.js"></script>
+  <script src="assets/script.js?v=guides1"></script>
 <script type="module" src="assets/boards.js"></script>
 <script type="module">
 import * as THREE from 'three';
