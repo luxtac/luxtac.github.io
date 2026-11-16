@@ -1045,3 +1045,4 @@ a.link-btn:hover { background: #fff; }
   .mega-media::after { display: none; }
   .mega-text h3 { font-size: 26px; }
 }
+.mega-text .mega-btn { display: inline-flex; margin-top: 14px; width: auto; gap: 14px; }
