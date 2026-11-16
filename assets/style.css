@@ -1098,3 +1098,17 @@ a.link-btn:hover { background: #fff; }
   .guide-btns { flex-wrap: wrap; justify-content: center; }
   .guide-label { margin-right: 0; }
 }
+
+/* 64x64 card slogan, stacked top-left over the empty part of the render */
+.mega-slogan {
+  position: absolute; left: 30px; top: 26px; margin: 0; pointer-events: none;
+  display: flex; flex-direction: column; gap: 2px;
+  font-size: clamp(26px, 5.4vw, 58px); font-weight: 900; line-height: 0.98;
+  letter-spacing: 1px; text-transform: uppercase;
+}
+.mega-slogan span {
+  background: var(--rainbow); background-size: 100% 100%;
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  filter: drop-shadow(0 2px 10px rgba(0,0,0,0.6));
+}
+@media (max-width: 640px) { .mega-slogan { left: 18px; top: 16px; } }
