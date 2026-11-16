@@ -1047,3 +1047,31 @@ a.link-btn:hover { background: #fff; }
 }
 .mega-text .mega-btn { display: inline-flex; margin-top: 14px; width: auto; gap: 14px; }
 .mega-text .mega-sub { margin: -2px 0 8px; font-size: 14px; color: var(--muted); }
+
+/* hero: "See Demo" — solid animated rainbow, flickering fire glow; jumps to the real-time demo */
+.demo-cta-row { display: flex; justify-content: center; margin: 16px 0 28px; }
+.see-demo {
+  position: relative; isolation: isolate; display: inline-flex; align-items: center; gap: 9px;
+  padding: 12px 30px; border-radius: 999px; font-size: 17px; font-weight: 900; letter-spacing: .3px;
+  color: #fff; text-decoration: none; text-shadow: 0 1px 2px rgba(0,0,0,.45);
+  background: linear-gradient(90deg, #ff2d78, #ff7a18, #ffd60a, #30d158, #0aa5ff, #bf5af2,
+                                      #ff2d78, #ff7a18, #ffd60a, #30d158, #0aa5ff, #bf5af2, #ff2d78);
+  background-size: 200% 100%; animation: sd-flow 3.2s linear infinite;
+  transition: transform .15s ease;
+}
+.see-demo svg { width: 18px; height: 18px; }
+.see-demo:hover { transform: translateY(-2px) scale(1.03); }
+.see-demo-fire {
+  position: absolute; inset: -6px -10px; z-index: -1; border-radius: 999px; pointer-events: none;
+  background: inherit; background-size: 200% 100%; filter: blur(16px); opacity: .85;
+  animation: sd-flow 3.2s linear infinite, sd-flicker 1.6s ease-in-out infinite;
+}
+@keyframes sd-flow { from { background-position: 0% 0; } to { background-position: 100% 0; } }
+@keyframes sd-flicker {
+  0%, 100% { opacity: .7;  transform: scale(1, 1); }
+  20%      { opacity: .95; transform: scale(1.04, 1.12) translateY(-2px); }
+  45%      { opacity: .75; transform: scale(.99, 1.02); }
+  70%      { opacity: 1;   transform: scale(1.06, 1.18) translateY(-3px); }
+}
+#robot { scroll-margin-top: 60px; }
+@media (prefers-reduced-motion: reduce) { .see-demo, .see-demo-fire { animation: none; } }
