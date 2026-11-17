@@ -116,7 +116,7 @@
     <h2 class="reveal reveal-up">Abstract</h2>
     <div class="rainbow-bar"></div>
     <div class="lead reveal reveal-up">
-      <p>Low-cost tactile arrays have made touch a practical input for robot learning, but piezoresistive designs sense only pressure, while camera-based sensors that also resolve shear are too bulky to tile over a gripper. We present LuxTac, a scalable optical taxel array, about 3&nbsp;mm thick and built from off-the-shelf parts. Each taxel is a digital RGBC light-to-digital converter under a translucent white silicone layer capped by an opaque black film, so the back-scattered LED light falls monotonically with <em>local indentation depth</em>.</p>
+      <p>Low-cost tactile arrays have made touch a practical input for robot learning, but piezoresistive designs sense only pressure, while camera-based sensors that also resolve shear are too bulky to tile over a gripper. We present LuxTac, a scalable optical taxel array, about 3.5&nbsp;mm thick and built from off-the-shelf parts. Each taxel is a digital RGBC light-to-digital converter under a translucent white silicone layer capped by an opaque black film, so the back-scattered LED light falls monotonically with <em>local indentation depth</em>.</p>
       <p>The same board accepts two interchangeable gel cartridges: a plain one for normal sensing, and one with colored walls that encodes the local shear in the color of the returned light, with no camera, magnets, or bump overlay, making LuxTac, to our knowledge, the first optical taxel array to resolve shear at individual taxels. Characterized with an automated CNC indenter and a six-axis force/torque sensor, the normal cartridge responds linearly to force (R&sup2; = 0.999) from 104&nbsp;mN to at least 5.8&nbsp;N, with 2.0% repeatability, 5.9% hysteresis, and a taxel-to-taxel variation that drops from 38% to 6% after normalization. The shear cartridge estimates the per-taxel shear force with R&sup2; = 0.88 and a median direction error of 6&deg;, and the total lateral force with R&sup2; = 0.98. Adding LuxTac to an Action Chunking Transformer policy substantially improves peg-in-hole success over a vision-only baseline. Design files, code, and videos will be available on this page.</p>
     </div>
     <div class="paper-pages reveal reveal-up">
@@ -144,7 +144,7 @@
     <div class="rainbow-bar"></div>
     <div class="stat-grid">
       <div class="stat-card reveal reveal-up"><b>Scalable grid</b><span>TCS34725 RGBC converters on a 4.42 &times; 4.80 mm pitch, LEDs between the taxels, four-layer flexible PCB.</span></div>
-      <div class="stat-card reveal reveal-up"><b>3 mm thin, flexible</b><span>The whole sensing pad is only 3 mm thick, flexible PCB included. No camera, no analog front end.</span></div>
+      <div class="stat-card reveal reveal-up"><b>3.5 mm thin, flexible</b><span>The whole sensing pad is only 3.5 mm thick, flexible PCB included. No camera, no analog front end.</span></div>
       <div class="stat-card reveal reveal-up"><b>Shear at every taxel</b><span>Colored walls encode shear in the color of the returned light: per-taxel shear force R&sup2; = 0.88, 6&deg; median direction error.</span></div>
       <div class="stat-card reveal reveal-up"><b>R&sup2; = 0.999</b><span>Linear from 104 mN to at least 5.8 N. No dead zone, no saturation in range.</span></div>
       <div class="stat-card reveal reveal-up"><b>2.0% repeatability</b><span>5.9% hysteresis over 240 presses. Variation falls from 38% to 6% after normalization.</span></div>
