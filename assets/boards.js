@@ -70,7 +70,8 @@ if (root) {
   // buttons
   cards.forEach((c) => {
     c.querySelector('[data-act="view"]').addEventListener('click', () => openViewer(c));
-    c.querySelector('[data-act="download"]').addEventListener('click', () => download(c));
+    const dl = c.querySelector('[data-act="download"]');           // download option removed on main
+    if (dl) dl.addEventListener('click', () => download(c));
   });
   layout(); auto();
   // deep link: #view-4x4 / #view-4x8 / #view-8x8 opens that board's 3D view
