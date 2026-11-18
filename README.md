@@ -14,11 +14,17 @@ Serve the site over HTTP. Opening `index.html` directly will not reliably load t
 
 To stop the server, press Ctrl+C in the terminal.
 
+## Branches
+
+- `beta`: work here. Everyone with write access can push to it.
+- `main`: the live site at https://luxtac.github.io. Only Prince can push or merge to it; open a pull request from `beta` when a change is ready.
+
+To preview `beta`: `git checkout beta`, then serve the folder as above. The board carousel and the 3D viewer need the page served over HTTP; from a `file://` address the cards only show as a plain row.
+
 ## Files
 
-- `index.html` — the whole page (styles and scripts are embedded).
-- `assets/` — paper figures, photos, and white placeholder images for visuals still to come.
-
-## Pushing
-
-Pushes go through the GitHub web upload route, replacing `index.html` and adding files under `assets/` as needed. The repo is private and GitHub Pages is off until Prince makes it live.
+- `index.html`: the page.
+- `assets/style.css`, `assets/boards.js`: styles; board carousel, 3D viewer and downloads.
+- `assets/boards/`, `assets/models/`: board card images and 3D models (GLB) for the viewer.
+- `assets/downloads/`: the zip files each card's Download button serves.
+- `assets/`: paper figures, photos and logos.
