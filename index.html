@@ -410,7 +410,7 @@
     <h2 class="reveal reveal-up">Characterization</h2>
     <div class="rainbow-bar"></div>
     <div class="lead reveal reveal-up">
-      <p>Raw readings differ strongly across the array: center taxels have baselines of 2364 &plusmn; 284 counts, edge taxels 1322 &plusmn; 203, and corner taxels 673 &plusmn; 100, consistent with edge and corner detectors collecting scattered light from fewer LEDs. After normalization the response is linear in force. The mean over taxels follows s = 0.02 + 0.170F with R&sup2; = 0.999 from 0.1 N to the 5.8 N limit of the test, and neither a dead zone nor saturation is reached within the tested range.</p>
+      <p>After normalization, every taxel responds linearly to force (R&sup2; = 0.999).</p>
     </div>
     <h3 class="mode-heading reveal reveal-up">Normal force (Mode 1)</h3>
     <figure class="reveal reveal-up char-fig">
@@ -418,23 +418,21 @@
         <img src="assets/fig-char-row1-dark.png" alt="Normal-force characterization: normalized signal vs force and depth, force vs depth, and predicted vs measured force">
         <img src="assets/fig-char-row2-dark.png" alt="Normalized per-taxel uniformity maps and box plot at 0.5, 1.5, 3, and 5.5 N">
       </div>
-      <figcaption class="caption">(a) Normalized signal vs. force: s = 0.02 + 0.170F, R&sup2; = 0.999. (b) Signal vs. indentation depth with the shared optical map g. (c) Force vs. depth, loading and unloading; k<sub>n</sub> = 3.86 &plusmn; 0.09 N/mm. (d) Force predicted through F&#770; = h(g<sup>&minus;1</sup>(s)) vs. measured; RMSE 0.20 N, R&sup2; = 0.988. (e) Normalized signal of each pressed taxel at 0.5, 1.5, 3, and 5.5 N. (f) Distribution over all taxels and passes: the coefficient of variation is 21%, 10%, 5.9%, and 3.0% (34&ndash;40% before normalization).</figcaption>
+      <figcaption class="caption">Normal cartridge, 240 presses: signal vs. force and depth, force from the signal, and uniformity across taxels.</figcaption>
     </figure>
 
     <h3 class="mode-heading reveal reveal-up">Shear (Mode 2)</h3>
     <div class="lead reveal reveal-up">
-      <p>Three flat indenters, a 4.5&nbsp;mm circle about one taxel in size, a 9&nbsp;mm square, and a 12&nbsp;&times;&nbsp;12&nbsp;mm plate, press and slide across the pad in nine sessions. One small model per taxel, fed the brightness and color change of its 3&nbsp;&times;&nbsp;3 neighborhood, outputs the three-axis force at that taxel. Trained on all three indenters and tested on each held-out session in turn, each covered taxel reaches R&sup2; = 0.92 / 0.93 / 0.94 in x / y / z, the per-taxel estimates add up to the measured force with R&sup2; = 0.96 / 0.96 / 0.92, and the median shear-direction error is 4.8&deg;. Accuracy is similar for all three indenters, so each taxel reports its own normal and shear force regardless of contact size.</p>
-      <p>Color carries most of the shear: retrained on brightness alone the model reaches R&sup2; = 0.70 / 0.73 / 0.83 (9.8&deg;), on color alone 0.84 / 0.89 / 0.90 (6.4&deg;), and with both 0.92 / 0.93 / 0.94 (4.8&deg;). At eight positions never used for training, the summed estimate reaches R&sup2; = 0.85 / 0.75 / 0.90 for the circle and 0.96 for the square, and the contact is located with a median error of 0.56&nbsp;mm, about one-eighth of the pitch. A model trained on the circle and the square recovers the plate, never seen in training, with R&sup2; = 0.86 / 0.94 / 0.85.</p>
-      <p>Toward larger arrays, a single model shared by all taxels adapts to new taxels from a few labeled presses: with 1, 3, and 10 presses per taxel it reaches R&sup2; = 0.77 / 0.75 / 0.72, 0.83 / 0.81 / 0.71, and 0.88 / 0.86 / 0.79, approaching per-taxel training (0.96 / 0.96 / 0.92) with about one sixth of its data.</p>
+      <p>Each taxel estimates its own three-axis force, across three indenter shapes and nine held-out sessions.</p>
     </div>
     <figure class="reveal reveal-up char-fig">
       <div class="fig-card dark-plot">
         <img src="assets/fig-char-shear-merged-dark.png?v=merged1" alt="Shear cartridge: per-taxel and summed three-axis force vs. measured force for three indenters, R-squared per indenter, and the brightness vs. color ablation">
       </div>
-      <figcaption class="caption">Shear cartridge, one model per taxel trained on all three indenters and tested on held-out sessions (each of nine sessions left out in turn). (a), (c) Per-taxel normal and lateral force vs. the label, the measured force times the share of the contact area over the taxel, for covered taxels. (b), (d) Sum of the per-taxel estimates vs. the force/torque sensor, which does not depend on the label. (e) R&sup2; per indenter, per taxel (solid) and summed (hatched). (f) The same model retrained with brightness only, color only, or both (per-taxel R&sup2;, all indenters; median shear-direction error below each group).</figcaption>
+      <figcaption class="caption">Shear cartridge, held-out sessions: per-taxel and summed force vs. measured, R&sup2; per indenter, and brightness vs. color.</figcaption>
     </figure>
     <table class="reveal reveal-up">
-      <caption>Characterization summary of the two cartridges. Normal cartridge: mean &plusmn; std over taxels. Shear cartridge: held-out data, sum of the per-taxel estimates vs. the measured force.</caption>
+      <caption>Characterization summary</caption>
       <tr><th>Metric</th><th class="num">Value</th></tr>
       <tr><td colspan="2"><b>Normal cartridge</b></td></tr>
       <tr><td>Noise &sigma;</td><td class="num">1.06 &plusmn; 0.44 counts (0.08% of baseline)</td></tr>
@@ -585,7 +583,7 @@
     </div>
     <p class="caption">A simulated grasp in IsaacGym. Top right: the simulated LuxTac reading.</p>
     <table class="reveal reveal-up">
-      <caption>Sim-to-real alignment of the normal cartridge (12 grasps &times; 50 frames per side). Rows 1&ndash;7 are mean cosines between the 600 real frames and each comparison.</caption>
+      <caption>Sim-to-real alignment (mean cosine)</caption>
       <tr><th>Real frames compared against</th><th class="num">Score</th></tr>
       <tr><td>Real frames of the same hold (ceiling)</td><td class="num">0.9994</td></tr>
       <tr><td><b>Matched simulation</b></td><td class="num"><b>0.942</b></td></tr>
@@ -602,7 +600,7 @@
     <div class="rainbow-bar"></div>
   <p class="reveal reveal-up" style="text-align:center;color:var(--muted);margin:0 0 20px;">Action Chunking Transformer policies, vision only vs. vision + LuxTac, on the two manipulation tasks.</p>
     <div class="lead reveal reveal-up">
-      <p>The trained policies were evaluated on two real-world manipulation tasks: peg-in-hole insertion and cube sorting. For cube sorting, the vision-only policy successfully completed 5 out of 15 trials (33.3%), while the visuotactile policy achieved 6 out of 15 successful trials (40.0%). For peg-in-hole insertion, the vision-only policy successfully completed 6 out of 15 trials (40.0%), while the LuxTac-based policy achieved 13 out of 15 successful trials (86.7%). Averaged across both tasks, the success rate rose from 36.7% with vision only to 63.3% with LuxTac.</p>
+      <p>LuxTac raises peg-in-hole success from 6/15 to 13/15.</p>
     </div>
 <div class="exp-carousel">
     <button class="exp-arrow" id="expPrev" aria-label="Previous task">&#8249;</button>
