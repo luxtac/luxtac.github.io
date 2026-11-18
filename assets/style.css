@@ -1099,7 +1099,7 @@ a.link-btn:hover { background: #fff; }
   .guide-label { margin-right: 0; }
 }
 
-/* 64x64 card slogan, stacked top-left over the empty part of the render */
+/* 32x32 card slogan, stacked top-left over the empty part of the render */
 .mega-slogan {
   position: absolute; left: 30px; top: 26px; margin: 0; pointer-events: none;
   display: flex; flex-direction: column; gap: 2px;
