@@ -116,8 +116,8 @@
     <h2 class="reveal reveal-up">Abstract</h2>
     <div class="rainbow-bar"></div>
     <div class="lead reveal reveal-up">
-      <p>Low-cost tactile arrays have made touch a practical input for robot learning, but piezoresistive designs sense only pressure, while camera-based sensors that also resolve shear are too bulky to tile over a gripper. We present LuxTac, a flexible, scalable optical taxel array, about 3.5&nbsp;mm thick and built from off-the-shelf parts. Each taxel is a digital RGBC light-to-digital converter under a translucent white silicone layer capped by an opaque black film, so the back-scattered LED light falls monotonically with <em>local indentation depth</em>.</p>
-      <p>The same board accepts two interchangeable gel cartridges: a plain one for normal sensing, and one with colored walls that encodes the local shear in the color of the returned light, with no camera, magnets, or bump overlay, making LuxTac, to our knowledge, the first optical taxel array to resolve shear at individual taxels. Characterized with an automated CNC indenter and a six-axis force/torque sensor, the normal cartridge responds linearly to force (R&sup2; = 0.999) from 104&nbsp;mN to at least 5.8&nbsp;N, with 2.0% repeatability, 5.9% hysteresis, and a taxel-to-taxel variation that drops from 38% to 6% after normalization. The shear cartridge estimates the per-taxel shear force with R&sup2; = 0.88 and a median direction error of 6&deg;, and the total lateral force with R&sup2; = 0.98. Adding LuxTac to an Action Chunking Transformer policy substantially improves peg-in-hole success over a vision-only baseline. Design files, code, and videos will be available on this page.</p>
+      <p>Low-cost tactile arrays have made touch a practical input for robot learning, but piezoresistive designs sense only pressure, while camera-based sensors that also resolve shear are too bulky to tile over a gripper. To solve this problem, we present LuxTac, a flexible, scalable optical taxel array, about 3.5&nbsp;mm thick and built from off-the-shelf parts. Each taxel is a digital RGBC light-to-digital converter under a translucent white silicone layer capped by an opaque black film, so the back-scattered LED light falls monotonically with <em>local indentation depth</em>.</p>
+      <p>The same board accepts two interchangeable gel cartridges: a plain one for normal sensing, and one with colored walls that encodes the local shear in the color of the returned light, with no camera, magnets, or bump overlay, making LuxTac, to our knowledge, the first optical taxel array to resolve shear at individual taxels. Characterized with an automated CNC indenter and a six-axis force/torque sensor, the normal cartridge responds linearly to force (R&sup2; = 0.999) from 104&nbsp;mN to at least 5.8&nbsp;N, with 2.0% repeatability, 5.9% hysteresis, and a taxel-to-taxel variation of 6&ndash;10% after normalization. With the shear cartridge, per-taxel models estimate the three-axis force at every taxel; across three indenter shapes and nine held-out sessions, the summed estimates reach R&sup2; = 0.96 / 0.96 / 0.92 in x / y / z, each taxel&rsquo;s estimate 0.92 / 0.93 / 0.94, and the median shear-direction error is 4.8&deg;. Adding LuxTac pressure readings to an Action Chunking Transformer policy substantially improves peg-in-hole success over a vision-only baseline. Design files, code, and videos will be available on this page.</p>
     </div>
     <div class="paper-pages reveal reveal-up">
       <div class="paper-strip" aria-label="Paper pages (preview)">
@@ -145,7 +145,7 @@
     <div class="stat-grid">
       <div class="stat-card reveal reveal-up"><b>Scalable grid</b><span>TCS34725 RGBC converters on a 4.42 &times; 4.80 mm pitch, LEDs between the taxels, four-layer flexible PCB.</span></div>
       <div class="stat-card reveal reveal-up"><b>3.5 mm thin, flexible</b><span>The whole sensing pad is only 3.5 mm thick, flexible PCB included. No camera, no analog front end.</span></div>
-      <div class="stat-card reveal reveal-up"><b>Shear at every taxel</b><span>Colored walls encode shear in the color of the returned light: per-taxel shear force R&sup2; = 0.88, 6&deg; median direction error.</span></div>
+      <div class="stat-card reveal reveal-up"><b>Shear at every taxel</b><span>Colored walls encode shear in the color of the returned light: three-axis force at each taxel with R&sup2; = 0.92 / 0.93 / 0.94 (x / y / z) and a 4.8&deg; median direction error.</span></div>
       <div class="stat-card reveal reveal-up"><b>R&sup2; = 0.999</b><span>Linear from 104 mN to at least 5.8 N. No dead zone, no saturation in range.</span></div>
       <div class="stat-card reveal reveal-up"><b>2.0% repeatability</b><span>5.9% hysteresis over 240 presses. Variation falls from 38% to 6% after normalization.</span></div>
       <div class="stat-card reveal reveal-up"><b>Open source</b><span>PCB design files for every pad size and the readout board are free to download. Off-the-shelf parts, read out at 100&nbsp;Hz by a Teensy&nbsp;4.1.</span></div>
@@ -423,16 +423,18 @@
 
     <h3 class="mode-heading reveal reveal-up">Shear (Mode 2)</h3>
     <div class="lead reveal reveal-up">
-      <p>With the shear cartridge, the lateral force grows almost linearly with plate displacement up to the 2 mm limit, and the shear stiffness rises from 1.01 N/mm at 0.5 mm depth to 1.25 N/mm at 1.5 mm. The per-taxel model recovers the local shear with R&sup2; = 0.86 / 0.90 (x / y), an RMSE of 0.29 mm, and a median direction error of 7&deg;. Retrained on force, it estimates the shear force at each taxel with R&sup2; = 0.88 / 0.89 and a 6&deg; median direction error, and the per-taxel forces add up to the measured total with R&sup2; = 0.95 / 0.96. Decoded as force over the whole pad, the lateral components reach R&sup2; = 0.98 with an RMSE of 0.15 / 0.14 N.</p>
+      <p>Three flat indenters, a 4.5&nbsp;mm circle about one taxel in size, a 9&nbsp;mm square, and a 12&nbsp;&times;&nbsp;12&nbsp;mm plate, press and slide across the pad in nine sessions. One small model per taxel, fed the brightness and color change of its 3&nbsp;&times;&nbsp;3 neighborhood, outputs the three-axis force at that taxel. Trained on all three indenters and tested on each held-out session in turn, each covered taxel reaches R&sup2; = 0.92 / 0.93 / 0.94 in x / y / z, the per-taxel estimates add up to the measured force with R&sup2; = 0.96 / 0.96 / 0.92, and the median shear-direction error is 4.8&deg;. Accuracy is similar for all three indenters, so each taxel reports its own normal and shear force regardless of contact size.</p>
+      <p>Color carries most of the shear: retrained on brightness alone the model reaches R&sup2; = 0.70 / 0.73 / 0.83 (9.8&deg;), on color alone 0.84 / 0.89 / 0.90 (6.4&deg;), and with both 0.92 / 0.93 / 0.94 (4.8&deg;). At eight positions never used for training, the summed estimate reaches R&sup2; = 0.85 / 0.75 / 0.90 for the circle and 0.96 for the square, and the contact is located with a median error of 0.56&nbsp;mm, about one-eighth of the pitch. A model trained on the circle and the square recovers the plate, never seen in training, with R&sup2; = 0.86 / 0.94 / 0.85.</p>
+      <p>Toward larger arrays, a single model shared by all taxels adapts to new taxels from a few labeled presses: with 1, 3, and 10 presses per taxel it reaches R&sup2; = 0.77 / 0.75 / 0.72, 0.83 / 0.81 / 0.71, and 0.88 / 0.86 / 0.79, approaching per-taxel training (0.96 / 0.96 / 0.92) with about one sixth of its data.</p>
     </div>
     <figure class="reveal reveal-up char-fig">
       <div class="fig-card dark-plot">
-        <img src="assets/fig-char-row3-dark.png?v=force" alt="Shear characterization: per-taxel shear force predicted vs label, sum of per-taxel forces vs measured total, and the shear cartridge normal response">
+        <img src="assets/fig-char-shear-merged-dark.png?v=merged1" alt="Shear cartridge: per-taxel and summed three-axis force vs. measured force for three indenters, R-squared per indenter, and the brightness vs. color ablation">
       </div>
-      <figcaption class="caption">Shear cartridge, 9 plate positions &times; 4 depths &times; 8 directions &times; 3 repeats (12 &times; 12 mm flat plate). (g) Per-taxel shear force on the held-out repeat, predicted vs. label (x and y pooled, by depth); labels split the measured lateral force among the covered taxels by covered area. (h) Sum of the per-taxel predictions vs. the total lateral force measured by the force/torque sensor, a check that does not depend on that split. (i) Normal response of the shear cartridge: normalized clear-channel signal vs. normal force, linear fit R&sup2; = 0.996.</figcaption>
+      <figcaption class="caption">Shear cartridge, one model per taxel trained on all three indenters and tested on held-out sessions (each of nine sessions left out in turn). (a), (c) Per-taxel normal and lateral force vs. the label, the measured force times the share of the contact area over the taxel, for covered taxels. (b), (d) Sum of the per-taxel estimates vs. the force/torque sensor, which does not depend on the label. (e) R&sup2; per indenter, per taxel (solid) and summed (hatched). (f) The same model retrained with brightness only, color only, or both (per-taxel R&sup2;, all indenters; median shear-direction error below each group).</figcaption>
     </figure>
     <table class="reveal reveal-up">
-      <caption>Characterization summary. Normal cartridge: mean &plusmn; std over all taxels. Shear cartridge: held-out repeat.</caption>
+      <caption>Characterization summary of the two cartridges. Normal cartridge: mean &plusmn; std over taxels. Shear cartridge: held-out data, sum of the per-taxel estimates vs. the measured force.</caption>
       <tr><th>Metric</th><th class="num">Value</th></tr>
       <tr><td colspan="2"><b>Normal cartridge</b></td></tr>
       <tr><td>Noise &sigma;</td><td class="num">1.06 &plusmn; 0.44 counts (0.08% of baseline)</td></tr>
@@ -441,17 +443,18 @@
       <tr><td>Sensitivity, linearity</td><td class="num">0.170 FS/N, R&sup2; = 0.999</td></tr>
       <tr><td>Hysteresis</td><td class="num">5.9 &plusmn; 1.1 %FS</td></tr>
       <tr><td>Repeatability</td><td class="num">2.0 &plusmn; 0.3 %FS</td></tr>
-      <tr><td>Crosstalk, &minus;x / &plusmn;y / diagonal neighbor</td><td class="num">0.7 / 5.2 / 0.8 %</td></tr>
+      <tr><td>Crosstalk, &minus;x / &plusmn;y neighbor</td><td class="num">0.7 &plusmn; 1.2 / 5.2 &plusmn; 6.0 %</td></tr>
+      <tr><td>Crosstalk, diagonal neighbor</td><td class="num">0.8 &plusmn; 1.6 %</td></tr>
       <tr><td>Per-taxel stiffness k<sub>n</sub></td><td class="num">3.86 &plusmn; 0.09 N/mm</td></tr>
       <tr><td>Force from h &#8728; g<sup>&minus;1</sup>, RMSE</td><td class="num">0.20 N (R&sup2; = 0.988)</td></tr>
       <tr><td colspan="2"><b>Shear cartridge</b></td></tr>
-      <tr><td>Whole-pad shear R&sup2;, x / y</td><td class="num">0.94 / 0.96</td></tr>
-      <tr><td>Per-taxel shear R&sup2;, x / y</td><td class="num">0.86 / 0.90 (RMSE 0.29 mm)</td></tr>
-      <tr><td>Median direction error (displacement)</td><td class="num">7&deg;</td></tr>
-      <tr><td>Per-taxel shear force R&sup2;, x / y</td><td class="num">0.88 / 0.89 (RMSE 0.048 N, 6&deg;)</td></tr>
-      <tr><td>Sum of per-taxel forces vs. total</td><td class="num">R&sup2; = 0.95 / 0.96</td></tr>
-      <tr><td>Lateral force R&sup2;, x / y</td><td class="num">0.98 / 0.98 (RMSE 0.15 / 0.14 N)</td></tr>
-      <tr><td>Normal linearity vs. load</td><td class="num">R&sup2; = 0.996</td></tr>
+      <tr><td>Force R&sup2;, x / y / z, unseen positions</td><td class="num">0.85 / 0.75 / 0.90</td></tr>
+      <tr><td>Force R&sup2;, x / y / z, held-out session</td><td class="num">0.96 / 0.96 / 0.92</td></tr>
+      <tr><td>Per-taxel force R&sup2;, held-out session</td><td class="num">0.92 / 0.93 / 0.94</td></tr>
+      <tr><td>Shear direction error, unseen positions (circle) / session</td><td class="num">14&deg; / 4.8&deg;</td></tr>
+      <tr><td>Contact location error, unseen positions</td><td class="num">0.56 mm</td></tr>
+      <tr><td>Force repeatability between sessions</td><td class="num">0.05&ndash;0.10 N</td></tr>
+      <tr><td>Normal linearity R&sup2;; noise</td><td class="num">0.996; 0.10% of baseline</td></tr>
     </table>
   </div>
 </section>
@@ -581,6 +584,19 @@
       </div>
     </div>
     <p class="caption">A simulated grasp in IsaacGym. Top right: the simulated LuxTac reading.</p>
+    <table class="reveal reveal-up">
+      <caption>Sim-to-real alignment of the normal cartridge (12 grasps &times; 50 frames per side). Rows 1&ndash;7 are mean cosines between the 600 real frames and each comparison.</caption>
+      <tr><th>Real frames compared against</th><th class="num">Score</th></tr>
+      <tr><td>Real frames of the same hold (ceiling)</td><td class="num">0.9994</td></tr>
+      <tr><td><b>Matched simulation</b></td><td class="num"><b>0.942</b></td></tr>
+      <tr><td>Uniform pad</td><td class="num">0.763</td></tr>
+      <tr><td>Simulation of a different object</td><td class="num">0.674</td></tr>
+      <tr><td>Same object, different orientation</td><td class="num">0.642</td></tr>
+      <tr><td>Matched simulation, taxels shuffled</td><td class="num">0.594</td></tr>
+      <tr><td>45&deg; grasps: correct / mirrored diagonal</td><td class="num">0.946 / 0.264</td></tr>
+      <tr><td>One-to-one assignment, object recovered</td><td class="num">10 / 12</td></tr>
+      <tr><td>Wasserstein-1 distance of pooled values</td><td class="num">0.067</td></tr>
+    </table>
 
     <h2 class="reveal reveal-up exp-heading">Robot Experiments</h2>
     <div class="rainbow-bar"></div>
