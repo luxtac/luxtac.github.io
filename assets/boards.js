@@ -88,6 +88,7 @@ async function download(c) {
     const a = document.createElement('a');
     a.href = url; a.download = url.split('/').pop();
     document.body.appendChild(a); a.click(); a.remove();
+    try { if (window.gtag) gtag('event', 'gerber_download', { board: c.dataset.board, file_name: a.download }); } catch {}
   } catch {
     showToast(`The ${name} design files are not posted yet. They will be available here soon.`);
   }
