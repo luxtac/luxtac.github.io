@@ -6,8 +6,8 @@ def hue_grad(h0,h1,n):
     return [tuple(int(255*c) for c in colorsys.hsv_to_rgb((h0+(h1-h0)*t)%1,1,1)) for t in np.linspace(0,1,n)]
 def lines_layer(width):
     L=Image.new('RGBA',(S,S),(0,0,0,0)); d=ImageDraw.Draw(L)
-    a,b=int(S*0.18),int(S*0.82)          # line extent
-    p1,p2=int(S*0.385),int(S*0.615)       # grid positions
+    a,b=int(S*0.10),int(S*0.90)          # line extent
+    p1,p2=int(S*0.367),int(S*0.633)       # grid positions
     # each line: rainbow gradient along its length, distinct hue ranges
     segs=[('v',p1,0.00,0.18),('v',p2,0.50,0.68),('h',p1,0.25,0.43),('h',p2,0.75,0.93)]
     for o,p,h0,h1 in segs:
@@ -39,9 +39,9 @@ def make(width, glow):
     out=Image.alpha_composite(out,Image.fromarray(a.clip(0,255).astype('uint8')))
     # clip glow to rounded square
     o=np.array(out); o[...,3]=np.minimum(o[...,3],np.array(m)); return Image.fromarray(o)
-big=make(S*0.075,[(70,1.6),(30,1.4),(12,1.0)])
+big=make(S*0.045,[(40,1.4),(18,1.2),(7,1.0)])
 big.save('icon_1024.png')
-small=make(S*0.11,[(40,1.3),(14,1.0)])   # thicker lines for tiny sizes
+small=make(S*0.075,[(26,1.2),(10,1.0)])   # thicker lines for tiny sizes
 for n,src in [(512,big),(180,big),(128,big),(64,small),(48,small),(32,small),(16,small)]:
     src.resize((n,n),Image.LANCZOS).save(f'icon_{n}.png')
 # preview sheet
