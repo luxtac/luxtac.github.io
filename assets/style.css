@@ -1051,7 +1051,22 @@ a.link-btn:hover { background: #fff; }
 .mega-text .mega-sub { margin: -2px 0 8px; font-size: 14px; color: var(--muted); }
 
 /* hero: "See Demo" — solid animated rainbow, flickering fire glow; jumps to the real-time demo */
-.demo-cta-row { display: flex; justify-content: center; margin: 16px 0 28px; }
+.demo-cta-row { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 18px; margin: 16px 0 28px; }
+/* hero: "Request a Sample!" — same size as See Demo, dark fill with flowing rainbow border */
+.request-sample {
+  display: inline-flex; align-items: center; gap: 9px;
+  padding: 10px 28px; border-radius: 999px; font-size: 17px; font-weight: 900; letter-spacing: .3px;
+  color: #fff; text-decoration: none; border: 2px solid transparent;
+  background: linear-gradient(#141417, #141417) padding-box,
+              linear-gradient(90deg, #ff2d78, #ff7a18, #ffd60a, #30d158, #0aa5ff, #bf5af2, #ff2d78) border-box;
+  background-size: 100% 100%, 200% 100%; animation: rs-flow 3.2s linear infinite;
+  box-shadow: -6px 0 18px rgba(255,45,120,.25), 6px 0 18px rgba(10,165,255,.25);
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.request-sample svg { width: 18px; height: 18px; }
+.request-sample:hover { transform: translateY(-2px) scale(1.03); box-shadow: -8px 0 24px rgba(255,45,120,.4), 8px 0 24px rgba(10,165,255,.4); }
+@keyframes rs-flow { from { background-position: 0 0, 0% 0; } to { background-position: 0 0, 100% 0; } }
+@media (prefers-reduced-motion: reduce) { .request-sample { animation: none; } }
 .see-demo {
   position: relative; isolation: isolate; display: inline-flex; align-items: center; gap: 9px;
   padding: 12px 30px; border-radius: 999px; font-size: 17px; font-weight: 900; letter-spacing: .3px;
