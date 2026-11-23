@@ -890,7 +890,7 @@
         function style(c, col, r) {
           if (c.style.fill === col && c.style.r === r + 'px') return;
           c.style.fill = col; c.style.stroke = 'none'; c.style.r = r + 'px';
-          c.style.filter = 'drop-shadow(0 0 1.5px ' + col + ')';
+          c.style.filter = 'drop-shadow(0 0 2.5px ' + col + ') drop-shadow(0 0 4px ' + col + ')';
         }
         function paint(root) {
           var svg = root.querySelector('svg'), g0 = svg && svg.querySelector('g');
