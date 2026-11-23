@@ -1133,3 +1133,6 @@ a.link-btn:hover { background: #fff; }
 /* visitor map (mapmyvisitors) in the footer */
 .visitor-map { max-width: 320px; margin: 0 auto 1.5rem; text-align: center; opacity: .9; }
 .visitor-map img, .visitor-map canvas, .visitor-map iframe { max-width: 100%; height: auto; }
+.visitor-map #mapmyvisitors-widget .jvectormap-zoomin,
+.visitor-map #mapmyvisitors-widget .jvectormap-zoomout { background: #222226 !important; color: #aaa !important; border-color: #333 !important; }
+.visitor-map .mapmyvisitors-map-container { border-radius: 10px; overflow: hidden; }
