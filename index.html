@@ -112,7 +112,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=visitors8">
+<link rel="stylesheet" href="assets/style.css?v=bibcopy1">
 <script type="importmap">
 {
   "imports": {
@@ -946,8 +946,9 @@
   <div class="container">
     <h2 class="reveal reveal-up">BibTeX</h2>
     <div class="rainbow-bar"></div>
-    <div class="reveal reveal-up" style="max-width: 860px; margin: 0 auto;">
-<pre>@misc{prince2026luxtacflexiblescalableopensource,
+    <div class="reveal reveal-up bib-wrap" style="max-width: 860px; margin: 0 auto;">
+<button type="button" class="bib-copy" aria-label="Copy BibTeX">Copy</button>
+<pre id="bibtex-text">@misc{prince2026luxtacflexiblescalableopensource,
       title={LuxTac: A Flexible, Scalable, and Open-Source Optical Taxel Array with Distributed Three-Axis Force Sensing for Tactile Robot Learning}, 
       author={Md Rakibul Islam Prince and John Pelan and Zhiyuan Zhang and Adyaa Khera and Katherine Pesetski and Adeesh Desai and Akimizu Sugiyama and Minwoo Ki and Benjamin Alan Capelle and Temitope Ibrahim Amosa and Zijie Xu and Yihan Huang and Taehun Chung and Long Wang and Wei Li and Shaoting Lin and Yu She},
       year={2026},
@@ -956,6 +957,29 @@
       primaryClass={cs.RO},
       url={https://arxiv.org/abs/2611.23575}, 
 }</pre>
+<script>
+(function () {
+  var b = document.querySelector('.bib-copy'), pre = document.getElementById('bibtex-text');
+  if (!b || !pre) return;
+  function done(ok) {
+    b.textContent = ok ? 'Copied!' : 'Press Ctrl+C';
+    b.classList.toggle('copied', ok);
+    setTimeout(function () { b.textContent = 'Copy'; b.classList.remove('copied'); }, 1800);
+  }
+  function fallback(t) {
+    var ta = document.createElement('textarea');
+    ta.value = t; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    var ok = false; try { ok = document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta); done(ok);
+  }
+  b.addEventListener('click', function () {
+    var t = pre.textContent.replace(/[ \t]+$/gm, '');
+    if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(t).then(function () { done(true); }, function () { fallback(t); });
+    else fallback(t);
+  });
+})();
+</script>
     </div>
   </div>
 </section>
