@@ -1152,8 +1152,5 @@ a.link-btn:hover { background: #fff; }
 .bib-copy:hover { color: #fff; transform: translateY(-1px); }
 .bib-copy.copied { color: #30d158; }
 .bib-wrap pre { padding-top: 46px; }
-/* continents tinted with the site rainbow (west -> east), kept dim so the dots stay brighter */
-.visitor-map .mapmyvisitors-map::before { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
-  background: var(--rainbow); mix-blend-mode: multiply; }
-.visitor-map .mapmyvisitors-map::after { z-index: 0; }
-.visitor-map .jvectormap-container { z-index: 2; }
+/* continents: one flat, muted colour each (svg overlay, multiply blend so the black ocean stays black) */
+.visitor-map .continent-tint { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; mix-blend-mode: multiply; }

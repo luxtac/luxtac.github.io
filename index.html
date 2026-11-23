@@ -112,7 +112,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=landtint2">
+<link rel="stylesheet" href="assets/style.css?v=continents1">
 <script type="importmap">
 {
   "imports": {
@@ -863,7 +863,7 @@
     <div class="rainbow-bar"></div>
     <div class="visitor-stage reveal reveal-up">
       <div class="visitor-map" aria-label="Visitor map">
-        <script type="text/javascript" id="mapmyvisitors" src="https://mapmyvisitors.com/map.js?d=EJeWyastq8xx8vqp0GOba5H5lSQWz-AcA97fK5pLSAA&cl=4e4e54&co=000000&ct=9a9aa0&w=a"></script>
+        <script type="text/javascript" id="mapmyvisitors" src="https://mapmyvisitors.com/map.js?d=EJeWyastq8xx8vqp0GOba5H5lSQWz-AcA97fK5pLSAA&cl=56565c&co=000000&ct=9a9aa0&w=a"></script>
       </div>
       <script>
       // Visitor map. MapMyVisitors records visits from Nov 23, 2026 on. Earlier visits (site launch Nov 11 to Nov 23)
@@ -882,11 +882,23 @@
         var B = [-20004297.151525836, -12671671.123330014, 20026572.39474939, 6930392.02513512], MW = 900, MH = 440.70631074413296;
         function mill(lat, lng) {
           var d = Math.PI / 180, R = 6381372;
-          if (lng < -180 + 11.5) lng += 360;
+          if (lng < -180 + 11.5) lng += 360;   // (lng up to 191.5 is passed through as is)
           var x = R * (lng - 11.5) * d, y = -R * Math.log(Math.tan((45 + 0.4 * lat) * d)) / 0.8;
           return [(x - B[0]) / (B[2] - B[0]) * MW, (y - B[1]) / (B[3] - B[1]) * MH];
         }
         var NS = 'http://www.w3.org/2000/svg';
+        // continents (rough outlines in lat/lng), one muted colour each: the site rainbow mixed 65 % toward white,
+        // multiplied onto the grey land, so each continent gets only a faint hue
+        var EU_S = [[42,42],[41.2,29.2],[40.3,26.5],[36.8,28.2],[34.7,28],[34.7,22],[35.8,15.5],[37.8,11.2],[38.2,8.5],[37.6,5],[36.3,-2],[36,-5.6]];
+        var CONT = [
+          ['#ff2d78', [[84,-168.5],[84,-12],[62,-30],[40,-45],[18,-58],[10,-62],[8,-77],[5,-82],[5,-168.5]]],
+          ['#ff7a18', [[10,-62],[10,-28],[-60,-28],[-60,-95],[5,-95],[5,-82],[8,-77]]],
+          ['#ffd60a', [[84,-12],[84,62],[67,65],[55,60],[48,52],[45,47]].concat(EU_S, [[36,-30],[62,-30]])],
+          ['#30d158', [[36,-5.6],[36.3,-2],[37.6,5],[38.2,8.5],[37.8,11.2],[35.8,15.5],[34.7,22],[34.7,28],[31.3,32.3],[29.5,32.6],[12.6,43.4],[12,55],[-40,60],[-40,-26],[36,-26]]],
+          ['#0aa5ff', [[84,62],[84,191.5],[55,191.5],[20,150],[0,141],[-11,141],[-12,105],[-12,57.3],[12,55],[12.6,43.4],[29.5,32.6],[31.3,32.3],[34.7,28],[36.8,28.2],[40.3,26.5],[41.2,29.2],[42,42],[45,47],[48,52],[55,60],[67,65]]],
+          ['#bf5af2', [[0,141],[20,150],[30,191.5],[-60,191.5],[-60,105],[-12,105],[-11,141]]]
+        ];
+        function soft(c) { return 'rgb(' + hex(c).map(function (v) { return Math.round(v * 0.35 + 255 * 0.65); }).join(',') + ')'; }
         var K = 1;   // dot scale: 1 on a full-width map, smaller on phones
         function style(c, col, r) {
           r = +(r * K).toFixed(2);
@@ -904,6 +916,21 @@
           // cover the widget's non-working +/- (drawn into its background image, scales with the map width)
           var mp = root.querySelector('.mapmyvisitors-map');
           if (mp) { mp.style.setProperty('--bw', Math.round(26 + (W - 261) * 0.018) + 'px'); mp.style.setProperty('--bh', Math.round(42 + (W - 261) * 0.036) + 'px'); }
+          if (mp) {
+            var ov = mp.querySelector('svg.continent-tint');
+            if (!ov) {
+              ov = document.createElementNS(NS, 'svg'); ov.setAttribute('class', 'continent-tint');
+              CONT.forEach(function (k) { var pg = document.createElementNS(NS, 'polygon'); pg.setAttribute('fill', soft(k[0])); pg.__ll = k[1]; ov.appendChild(pg); });
+              mp.insertBefore(ov, mp.firstChild);
+            }
+            var key = s + ',' + tx + ',' + ty;
+            if (ov.__key !== key) {
+              ov.__key = key;
+              ov.querySelectorAll('polygon').forEach(function (pg) {
+                pg.setAttribute('points', pg.__ll.map(function (ll) { var q = mill(ll[0], ll[1]); return ((q[0] + tx) * s).toFixed(1) + ',' + ((q[1] + ty) * s).toFixed(1); }).join(' '));
+              });
+            }
+          }
           var layer = svg.querySelector('g.ga-dots');
           if (!layer) {
             layer = document.createElementNS(NS, 'g'); layer.setAttribute('class', 'ga-dots');
