@@ -1143,3 +1143,12 @@ a.link-btn:hover { background: #fff; }
 .visitor-map .mapmyvisitors-map::after { content: ""; position: absolute; left: 0; bottom: 0; width: var(--bw, 38px); height: var(--bh, 66px); background: #141416; pointer-events: none; }
 /* map is display-only: no link to mapmyvisitors, no drag, no scroll-zoom */
 .visitor-map #mapmyvisitors-widget, .visitor-map #mapmyvisitors-widget * { pointer-events: none !important; cursor: default !important; }
+
+/* BibTeX copy button */
+.bib-wrap { position: relative; }
+.bib-copy { position: absolute; top: 10px; right: 10px; z-index: 2; font: 600 13px/1 "Noto Sans", sans-serif; color: #ddd;
+  padding: 7px 14px; border-radius: 8px; cursor: pointer; border: 1.5px solid transparent;
+  background: linear-gradient(#1c1c1f, #1c1c1f) padding-box, var(--rainbow) border-box; transition: transform .15s, color .15s; }
+.bib-copy:hover { color: #fff; transform: translateY(-1px); }
+.bib-copy.copied { color: #30d158; }
+.bib-wrap pre { padding-top: 46px; }
