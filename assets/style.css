@@ -1131,7 +1131,7 @@ a.link-btn:hover { background: #fff; }
 @media (max-width: 640px) { .mega-slogan { left: 18px; top: 16px; } }
 
 /* visitor map (mapmyvisitors): own section "LuxTac Around the World" */
-.visitor-stage { max-width: 960px; margin: 36px auto 0; padding: 3px; border-radius: 18px;
+.visitor-stage { max-width: 860px; margin: 36px auto 0; padding: 3px; border-radius: 18px;
     background: linear-gradient(#141416, #141416) padding-box, var(--rainbow) border-box; border: 2px solid transparent;
     box-shadow: 0 0 30px rgba(191, 90, 242, .08); }
 .visitor-map { width: 100%; margin: 0 auto; text-align: center; padding: 14px 12px 10px; }
