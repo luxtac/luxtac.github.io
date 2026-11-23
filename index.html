@@ -112,7 +112,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=visitors4">
+<link rel="stylesheet" href="assets/style.css?v=visitors5">
 <script type="importmap">
 {
   "imports": {
@@ -861,7 +861,6 @@
   <div class="container">
     <h2 class="reveal reveal-up">LuxTac Around the World</h2>
     <div class="rainbow-bar"></div>
-    <p class="lead reveal reveal-up" style="text-align:center;">Researchers and builders everywhere are exploring LuxTac. Every dot is a place where someone has visited.</p>
     <div class="visitor-stage reveal reveal-up">
       <div class="visitor-map" aria-label="Visitor map">
         <script type="text/javascript" id="mapmyvisitors" src="https://mapmyvisitors.com/map.js?d=EJeWyastq8xx8vqp0GOba5H5lSQWz-AcA97fK5pLSAA&cl=3a3a40&co=141416&ct=9a9aa0&w=a"></script>
@@ -891,7 +890,7 @@
         function style(c, col, r) {
           if (c.style.fill === col && c.style.r === r + 'px') return;
           c.style.fill = col; c.style.stroke = 'none'; c.style.r = r + 'px';
-          c.style.filter = 'drop-shadow(0 0 4px ' + col + ') drop-shadow(0 0 10px ' + col + ')';
+          c.style.filter = 'drop-shadow(0 0 1.5px ' + col + ')';
         }
         function paint(root) {
           var svg = root.querySelector('svg'), g0 = svg && svg.querySelector('g');
@@ -908,11 +907,11 @@
           layer.querySelectorAll('circle').forEach(function (c) {
             var q = mill(c.__p[0], c.__p[1]), X = (q[0] + tx) * s, Y = (q[1] + ty) * s;
             if (c.getAttribute('cx') != X.toFixed(1)) { c.setAttribute('cx', X.toFixed(1)); c.setAttribute('cy', Y.toFixed(1)); }
-            style(c, rainbow(X / W), Math.min(4 + 1.6 * Math.sqrt(c.__p[2]), 12));
+            style(c, rainbow(X / W), Math.min(2.2 + 0.6 * Math.sqrt(c.__p[2]), 5.5));
           });
           root.querySelectorAll('circle.jvectormap-marker').forEach(function (c) {
             var r = c.getBoundingClientRect();
-            style(c, rainbow((r.left + r.width / 2 - x0) / W), 6);
+            style(c, rainbow((r.left + r.width / 2 - x0) / W), 2.8);
           });
           var v = root.querySelector('.mapmyvisitors-visitors'), dt = root.querySelector('.mapmyvisitors-date');
           if (v && !v.dataset.done) {
