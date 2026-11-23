@@ -1130,9 +1130,14 @@ a.link-btn:hover { background: #fff; }
 }
 @media (max-width: 640px) { .mega-slogan { left: 18px; top: 16px; } }
 
-/* visitor map (mapmyvisitors) in the footer */
-.visitor-map { max-width: 320px; margin: 0 auto 1.5rem; text-align: center; opacity: .9; }
+/* visitor map (mapmyvisitors): own section "LuxTac Around the World" */
+.visitor-stage { max-width: 960px; margin: 36px auto 0; padding: 3px; border-radius: 18px;
+    background: linear-gradient(#141416, #141416) padding-box, var(--rainbow) border-box; border: 2px solid transparent;
+    box-shadow: 0 0 40px rgba(191, 90, 242, .12), 0 0 80px rgba(10, 165, 255, .08); }
+.visitor-map { width: 100%; margin: 0 auto; text-align: center; padding: 18px 12px 10px; }
+.visitor-map .mapmyvisitors-visitors { font-size: 22px !important; font-weight: 700; color: #fff !important; letter-spacing: .3px; margin-bottom: 4px; }
+.visitor-map .mapmyvisitors-date { font-size: 13px !important; color: #888 !important; margin-bottom: 10px; }
 .visitor-map img, .visitor-map canvas, .visitor-map iframe { max-width: 100%; height: auto; }
-.visitor-map #mapmyvisitors-widget .jvectormap-zoomin,
-.visitor-map #mapmyvisitors-widget .jvectormap-zoomout { background: #222226 !important; color: #aaa !important; border-color: #333 !important; }
-.visitor-map .mapmyvisitors-map-container { border-radius: 10px; overflow: hidden; }
+.visitor-map .mapmyvisitors-map-container { border-radius: 14px; overflow: hidden; }
+/* the +/- in the widget's background image do nothing: cover them */
+.visitor-map .mapmyvisitors-map::after { content: ""; position: absolute; left: 0; bottom: 0; width: 48px; height: 72px; background: #141416; pointer-events: none; }
